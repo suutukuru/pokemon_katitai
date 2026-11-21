@@ -355,5 +355,11 @@ describe("replay page", () => {
     expect(payload.books.map((b: { label: string }) => b.label)).toEqual(["M-7 4位", "M-7 27位"]);
     expect(payload.n["s:archaludon"]).toBe("ブリジュラス");
     expect(payload.n["s:kingambit"]).toBe("ドドゲザン");
+    const { toArtifactPage } = await import("../src/index.js");
+    const art = toArtifactPage(book, "M-C 対戦ブック");
+    expect(art.startsWith("<title>M-C 対戦ブック</title>")).toBe(true);
+    expect(art).not.toMatch(/<!doctype|<html|<head|<body/i);
+    expect(art).toContain('content="cover"');
+    expect(art).toContain('id="payload"');
   });
 });

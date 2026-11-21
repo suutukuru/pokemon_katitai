@@ -6,7 +6,12 @@ import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
-import { renderReplayBook, renderReplayPage, type ReplayBookEntry } from "./replay-report.js";
+import {
+  renderReplayBook,
+  renderReplayPage,
+  toArtifactPage,
+  type ReplayBookEntry,
+} from "./replay-report.js";
 import { screenshotPages } from "./screenshot.js";
 import { candidatePairs } from "./fill.js";
 import { formatShowdown } from "@ca/ingest";
@@ -395,6 +400,13 @@ try {
       mkdirSync(outDir, { recursive: true });
       const out = resolvePath(outDir, `${name}-book.html`);
       writeFileSync(out, html);
+      // Artifact version (no doctype/head/body) for publishing as a browser page
+      const artDir = resolvePath(outDir, "artifact");
+      mkdirSync(artDir, { recursive: true });
+      writeFileSync(
+        resolvePath(artDir, `${name}-book.html`),
+        toArtifactPage(html, "M-C 対戦ブック"),
+      );
       io.out(out);
       code = 0;
       break;

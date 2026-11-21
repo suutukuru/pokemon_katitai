@@ -109,7 +109,7 @@ export function renderReplayBook(r: ReplayBookInput): string {
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b2029;--fg:#e7eaf0;--muted:#9aa3b2;--line:#2d3340;--me:#7d9bff;--op:#ff8a66;--good:#5fd39a;--warn:#f0b443;--bad:#ff7b72;--hp:#41c27a;--hpmid:#e8b23a;--hplow:#ff6b5b;--chip:#252b36;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#12151c;--card:#1b2029;--fg:#e7eaf0;--muted:#9aa3b2;--line:#2d3340;--me:#7d9bff;--op:#ff8a66;--good:#5fd39a;--warn:#f0b443;--bad:#ff7b72;--hp:#41c27a;--hpmid:#e8b23a;--hplow:#ff6b5b;--chip:#252b36;color-scheme:dark}
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--fg);font:14px/1.5 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
-main{max-width:620px;margin:0 auto;padding:12px max(14px,env(safe-area-inset-right)) 120px max(14px,env(safe-area-inset-left));display:grid;gap:10px}
+main{max-width:620px;margin:0 auto;padding-block:12px 130px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:10px}
 h1{font-size:17px;margin:0}h2{font-size:15px;margin:0}.sub{color:var(--muted);font-size:12px;margin:2px 0 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
 .res{font-weight:800}.win{color:var(--good)}.lose{color:var(--bad)}
@@ -135,7 +135,7 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}td,th{padding:4px 3px
 td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.bar{display:block;height:5px;background:var(--line);border-radius:3px;margin-top:3px;overflow:hidden}.bar i{display:block;height:100%;background:var(--me)}.opp .bar i{background:var(--op)}
 tr.chosen td{background:var(--chip);font-weight:700}.best{color:var(--good);font-weight:700}.blunder{color:var(--bad);font-weight:700}.plus{color:var(--good)}.minus{color:var(--bad)}
 h4{margin:8px 0 4px;font-size:13.5px}
-.controls{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));display:grid;gap:6px}
+.controls{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-block:8px calc(8px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:6px;z-index:5}
 .btns{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:620px;margin:0 auto;width:100%}
 button{font:inherit;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--fg)}button.play{background:var(--me);color:#fff;border-color:var(--me)}
 button:focus-visible{outline:2px solid var(--me);outline-offset:2px}
@@ -338,4 +338,14 @@ if (books.length < 2) document.getElementById("sum").hidden = true;
 load(0);
 })();
 </script></body></html>`;
+}
+
+/**
+ * Convert a full page into a claude.ai Artifact page body: the host adds doctype/head/body, so keep
+ * only the title, styles, content and scripts (plus the side-gutter meta the host expects).
+ */
+export function toArtifactPage(html: string, title: string): string {
+  const style = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1] ?? "";
+  const body = /<body>([\s\S]*)<\/body>/.exec(html)?.[1] ?? html;
+  return `<title>${esc(title)}</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n<style>${style}</style>\n${body}\n`;
 }
