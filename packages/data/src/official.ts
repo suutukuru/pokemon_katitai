@@ -69,6 +69,8 @@ export function officialEnglishToId(name: string): string | undefined {
 
 /** Entries whose official English name does not distinguish the forme. Keyed by official code. */
 const CODE_TO_ID: Record<string, string> = {
+  // listed as plain "Floette", but form 005 is the Eternal Flower (the Mega-capable forme)
+  "0670-005": "floetteeternal",
   "0931-001": "squawkabillyblue",
   "0931-002": "squawkabillyyellow",
   "0931-003": "squawkabillywhite",

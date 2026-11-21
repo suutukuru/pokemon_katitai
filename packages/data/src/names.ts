@@ -8,6 +8,7 @@ import {
 } from "@ca/schema";
 import raw from "../i18n/names.json" with { type: "json" };
 import rawMoves from "../base/moves.json" with { type: "json" };
+import rawExtra from "../i18n/names.extra.json" with { type: "json" };
 
 let cachedMoves: MoveMeta | undefined;
 /** Mainline move metadata (accuracy etc.) from PokeAPI; pack overrides apply on top. */
@@ -17,7 +18,17 @@ export function moveMeta(id: string): MoveMeta["moves"][string] | undefined {
 
 let cached: I18nNames | undefined;
 export function names(): I18nNames {
-  return (cached ??= I18nNamesSchema.parse(raw));
+  if (!cached) {
+    const base = I18nNamesSchema.parse(raw);
+    // Japanese names learned from other sources (names.extra.json) fill gaps; they never override.
+    const extra = rawExtra as { items?: Record<string, { ja: string; source: string }> };
+    for (const [id, v] of Object.entries(extra.items ?? {})) {
+      const cur = base.items[id];
+      if (cur && cur.ja === undefined) base.items[id] = { ...cur, ja: v.ja };
+    }
+    cached = base;
+  }
+  return cached;
 }
 
 export type Lang = "ja" | "en";

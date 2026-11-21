@@ -9,3 +9,5 @@ export * from "./game.js";
 export * from "./official.js";
 export * from "./names.js";
 export * from "./engine-data.js";
+export * from "./pokedb.js";
+export * from "./teamdb.js";

@@ -73,3 +73,29 @@ export const UsageSnapshotSchema = z.object({
     .min(1),
 });
 export type UsageSnapshot = z.infer<typeof UsageSnapshotSchema>;
+
+export const ArchetypesSchema = z.object({
+  note: z.string().optional(),
+  archetypes: z.array(
+    z.object({
+      id: z.string(),
+      name: z.object({ ja: z.string(), en: z.string() }),
+      minMatches: z.number().int().positive().default(1),
+      conditions: z
+        .array(
+          z
+            .object({
+              species: z.string().optional(),
+              item: z.string().optional(),
+              basis: z.enum(["computed", "estimated"]),
+              why: z.string(),
+            })
+            .refine((c) => c.species !== undefined || c.item !== undefined, {
+              message: "species or item required",
+            }),
+        )
+        .min(1),
+    }),
+  ),
+});
+export type Archetypes = z.infer<typeof ArchetypesSchema>;

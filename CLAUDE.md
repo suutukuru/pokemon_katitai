@@ -44,6 +44,8 @@ pnpm team:check <team.txt>                       # パーティを読み、実�
 pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weather Sun] [--def-team 相手.txt]
 pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
 pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
+pnpm meta [--from 5] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型
+pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
 pnpm web:dev / pnpm web:build                    # Web 画面
 pnpm e2e                                         # Playwright（Pixel 7 表示、ビルドして preview で実行）
 ```
@@ -76,6 +78,11 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 - 実数値の式は `packages/calc/src/stats.ts` の `calcStat` だけに書く。アダプターは @smogon/calc が出した実数値をこれで上書きする。
 - ゴールデン: `packages/calc/test/golden/ingame-stats.json` は実機の値（変更禁止）。`damage-cases.json` は独立実装の式で検証する。
 - `legal.json` の `provenance` に、リストごとの出典と確度を書く。
+
+## 外部データの扱い
+
+- pokedb（champs.pokedb.tokyo）は**公開データ（/opendata/）だけ**を使う。使用率ページ・記事ページを取得するコードは書かない（ADR-0008）。
+- 外部サイトには実行時にアクセスしない。取得したファイルは `data:*` コマンドで正規化してコミットする。
 
 ## ルールを追加・調整する手順
 

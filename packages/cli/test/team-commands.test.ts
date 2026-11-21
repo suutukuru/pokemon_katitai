@@ -89,3 +89,25 @@ describe("calc", () => {
     expect(calcCommand(["team.txt"], env, io())).toBe(2);
   });
 });
+
+describe("meta", () => {
+  it("prints usage, pairs, archetypes and teams with the source", async () => {
+    const { metaCommand } = await import("../src/index.js");
+    const { readTeamDbFiles } = await import("@ca/data/node");
+    const x = io();
+    expect(
+      metaCommand(
+        ["--from", "5", "--to", "7", "--top", "3", "--teams"],
+        readTeamDbFiles(),
+        env.pack.legal.species,
+        x,
+      ),
+    ).toBe(0);
+    const out = x.o.join("\n");
+    expect(out).toContain(
+      "上位構築 45件（M-5, M-6, M-7・ダブル）出典: バトルデータベース チャンピオンズ",
+    );
+    expect(out).toContain("ブリジュラス＋ペリッパー  9件（20%）");
+    expect(out).toMatch(/M-7 +4位 2354\.916 +リザードン・/);
+  });
+});

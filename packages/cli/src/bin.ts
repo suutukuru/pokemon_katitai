@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
 import { gameSpec, loadPack, PackValidationError } from "@ca/data";
-import { FsPackSource } from "@ca/data/node";
+import { FsPackSource, readTeamDbFiles } from "@ca/data/node";
+import { metaCommand } from "./meta-commands.js";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
 import { regDiff, regNew, regValidate, type Io } from "./commands.js";
-import { buildI18n, importOfficial } from "./data-commands.js";
+import { buildI18n, importOfficial, importPokedbCommand } from "./data-commands.js";
 
 const io: Io = { out: (l) => console.log(l), err: (l) => console.error(l) };
 const [cmd, ...args] = process.argv.slice(2);
@@ -31,11 +32,17 @@ try {
     case "data:import-official":
       code = importOfficial(args, io);
       break;
+    case "data:import-pokedb":
+      code = importPokedbCommand(args, io);
+      break;
     case "data:build-i18n":
       code = buildI18n(args, io);
       break;
     case "team:check":
       code = teamCheck(args, teamEnv(), io);
+      break;
+    case "meta":
+      code = metaCommand(args, readTeamDbFiles(), teamEnv().pack.legal.species, io);
       break;
     case "calc":
       code = calcCommand(args, teamEnv(), io);

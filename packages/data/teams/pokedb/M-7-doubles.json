@@ -1,0 +1,727 @@
+{
+ "dataset": "pokedb-opendata",
+ "season": "M-7",
+ "format": "doubles",
+ "updatedAt": "2026-11-18 17:45:56",
+ "source": {
+  "title": "バトルデータベース チャンピオンズ 上位構築データ",
+  "url": "https://champs.pokedb.tokyo/guide/opendata"
+ },
+ "license": "公開データ（順位・レート・ポケモン・持ち物）。プログラムでの取得は過度な負荷をかけない範囲で可、アプリでは一度自前で保存して利用（同サイトの案内, 2026-11-21確認）。利用規約 第3条（競合サービス関係者のデータ取得の禁止）は商用化前に要確認: docs/OPEN_QUESTIONS.md L-07",
+ "teams": [
+  {
+   "id": "pokedb-M-7-doubles-4",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 4,
+   "rating": 2354.916,
+   "members": [
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "swampert",
+     "item": "swampertite"
+    },
+    {
+     "species": "archaludon",
+     "item": "magnet"
+    },
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "armarouge",
+     "item": "focussash"
+    },
+    {
+     "species": "indeedeef",
+     "item": "rockyhelmet"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-25",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 25,
+   "rating": 2304.189,
+   "members": [
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "salamence",
+     "item": "salamencite"
+    },
+    {
+     "species": "basculegion",
+     "item": "focussash"
+    },
+    {
+     "species": "indeedeef",
+     "item": "rockyhelmet"
+    },
+    {
+     "species": "kingambit",
+     "item": "lifeorb"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-27",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 27,
+   "rating": 2303.881,
+   "members": [
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "basculegionf",
+     "item": "focussash"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "archaludon",
+     "item": "dragonfang"
+    },
+    {
+     "species": "raichu",
+     "item": "raichunitey"
+    },
+    {
+     "species": "golisopod",
+     "item": "golisopite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-36",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 36,
+   "rating": 2285.066,
+   "members": [
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "indeedeef",
+     "item": "psychicseed"
+    },
+    {
+     "species": "gengar",
+     "item": "gengarite"
+    },
+    {
+     "species": "incineroar",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "kommoo",
+     "item": "leftovers"
+    },
+    {
+     "species": "rillaboom",
+     "item": "occaberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-68",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 68,
+   "rating": 2248.016,
+   "members": [
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "basculegionf",
+     "item": "lifeorb"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "golisopod",
+     "item": "golisopite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-179",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 179,
+   "rating": 2210.606,
+   "members": [
+    {
+     "species": "raichu",
+     "item": "raichunitex"
+    },
+    {
+     "species": "staraptor",
+     "item": "staraptite"
+    },
+    {
+     "species": "farigiraf",
+     "item": "colburberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "focussash"
+    },
+    {
+     "species": "slowking",
+     "item": "electricseed"
+    },
+    {
+     "species": "arboliva",
+     "item": "lifeorb"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-219",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 219,
+   "rating": 2207.359,
+   "members": [
+    {
+     "species": "incineroar"
+    },
+    {
+     "species": "basculegion"
+    },
+    {
+     "species": "floetteeternal"
+    },
+    {
+     "species": "talonflame"
+    },
+    {
+     "species": "sneasler"
+    },
+    {
+     "species": "kingambit"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-228",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 228,
+   "rating": 2206.859,
+   "members": [
+    {
+     "species": "tyranitar",
+     "item": "tyranitarite"
+    },
+    {
+     "species": "excadrill",
+     "item": "focussash"
+    },
+    {
+     "species": "salamence",
+     "item": "salamencite"
+    },
+    {
+     "species": "sneasler",
+     "item": "psychicseed"
+    },
+    {
+     "species": "indeedeef",
+     "item": "rockyhelmet"
+    },
+    {
+     "species": "milotic",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-282",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 282,
+   "rating": 2201.73,
+   "members": [
+    {
+     "species": "golisopod",
+     "item": "golisopite"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "archaludon",
+     "item": "magnet"
+    },
+    {
+     "species": "basculegionf",
+     "item": "focussash"
+    },
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "raichu",
+     "item": "raichunitey"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-288",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 288,
+   "rating": 2201.024,
+   "members": [
+    {
+     "species": "gengar",
+     "item": "gengarite"
+    },
+    {
+     "species": "charizard",
+     "item": "charizarditex"
+    },
+    {
+     "species": "milotic",
+     "item": "grassyseed"
+    },
+    {
+     "species": "garchomp",
+     "item": "choicescarf"
+    },
+    {
+     "species": "incineroar",
+     "item": "chopleberry"
+    },
+    {
+     "species": "rillaboom",
+     "item": "miracleseed"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-463",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 463,
+   "rating": 2115.312,
+   "members": [
+    {
+     "species": "gardevoir",
+     "item": "gardevoirite"
+    },
+    {
+     "species": "indeedeef",
+     "item": "rockyhelmet"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "choicescarf"
+    },
+    {
+     "species": "sneasler",
+     "item": "psychicseed"
+    },
+    {
+     "species": "dragonite",
+     "item": "dragoninite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-493",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 493,
+   "rating": 2108.996,
+   "members": [
+    {
+     "species": "staraptor",
+     "item": "staraptite"
+    },
+    {
+     "species": "gardevoir",
+     "item": "gardevoirite"
+    },
+    {
+     "species": "whimsicott",
+     "item": "focussash"
+    },
+    {
+     "species": "indeedeef",
+     "item": "psychicseed"
+    },
+    {
+     "species": "armarouge",
+     "item": "lifeorb"
+    },
+    {
+     "species": "drampa",
+     "item": "habanberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-528",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 528,
+   "rating": 2100.675,
+   "members": [
+    {
+     "species": "indeedeef",
+     "item": "colburberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "psychicseed"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "armarouge",
+     "item": "focussash"
+    },
+    {
+     "species": "maushold",
+     "item": "widelens"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-613",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 613,
+   "rating": 2079.414,
+   "members": [
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "metagross",
+     "item": "metagrossite"
+    },
+    {
+     "species": "dragapult",
+     "item": "habanberry"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "politoed",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "grimmsnarl",
+     "item": "lightclay"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-643",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 643,
+   "rating": 2074.588,
+   "members": [
+    {
+     "species": "salamence",
+     "item": "salamencite"
+    },
+    {
+     "species": "golisopod",
+     "item": "golisopite"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "politoed",
+     "item": "mysticwater"
+    },
+    {
+     "species": "glimmora",
+     "item": "lifeorb"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  },
+  {
+   "id": "pokedb-M-7-doubles-765",
+   "season": "M-7",
+   "format": "doubles",
+   "rank": 765,
+   "rating": 2057.59,
+   "members": [
+    {
+     "species": "armarouge",
+     "item": "lifeorb"
+    },
+    {
+     "species": "indeedeef",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "scrafty",
+     "item": "scraftinite"
+    },
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "swampert",
+     "item": "swampertite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-7 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s7_double_ranked_teams.json",
+    "accessed": "2026-11-18"
+   }
+  }
+ ]
+}

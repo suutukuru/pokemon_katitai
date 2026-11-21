@@ -1,0 +1,127 @@
+{
+  "note": "型の判定ルール。持ち物でメガシンカ後の特性が確定するものは computed、ポケモンだけで判断するものは estimated（そのポケモンが通常その役割で使われるという推測）",
+  "archetypes": [
+    {
+      "id": "sun",
+      "name": { "ja": "晴れ", "en": "Sun" },
+      "conditions": [
+        { "item": "charizarditey", "basis": "computed", "why": "メガリザードンYの特性ひでり" },
+        { "species": "torkoal", "basis": "estimated", "why": "コータスは通常ひでりで使われる" },
+        {
+          "species": "ninetales",
+          "basis": "estimated",
+          "why": "キュウコンはひでりで使われることがある"
+        }
+      ]
+    },
+    {
+      "id": "rain",
+      "name": { "ja": "雨", "en": "Rain" },
+      "conditions": [
+        {
+          "species": "pelipper",
+          "basis": "estimated",
+          "why": "ペリッパーは通常あめふらしで使われる"
+        },
+        {
+          "species": "politoed",
+          "basis": "estimated",
+          "why": "ニョロトノは通常あめふらしで使われる"
+        }
+      ]
+    },
+    {
+      "id": "sand",
+      "name": { "ja": "砂", "en": "Sand" },
+      "conditions": [
+        { "item": "tyranitarite", "basis": "computed", "why": "メガバンギラスの特性すなおこし" },
+        { "species": "tyranitar", "basis": "estimated", "why": "バンギラスは通常すなおこし" },
+        { "species": "hippowdon", "basis": "estimated", "why": "カバルドンは通常すなおこし" }
+      ]
+    },
+    {
+      "id": "snow",
+      "name": { "ja": "雪", "en": "Snow" },
+      "conditions": [
+        { "item": "abomasite", "basis": "computed", "why": "メガユキノオーの特性ゆきふらし" },
+        { "species": "abomasnow", "basis": "estimated", "why": "ユキノオーは通常ゆきふらし" },
+        {
+          "species": "ninetalesalola",
+          "basis": "estimated",
+          "why": "アローラキュウコンは通常ゆきふらし"
+        }
+      ]
+    },
+    {
+      "id": "trickroom",
+      "name": { "ja": "トリックルーム", "en": "Trick Room" },
+      "minMatches": 1,
+      "conditions": [
+        {
+          "species": "farigiraf",
+          "basis": "estimated",
+          "why": "リキキリンはトリックルーム役で使われることが多い"
+        },
+        {
+          "species": "hatterene",
+          "basis": "estimated",
+          "why": "ブリムオンはトリックルーム役で使われることが多い"
+        },
+        {
+          "species": "sinistcha",
+          "basis": "estimated",
+          "why": "ヤバソチャはトリックルーム役で使われることがある"
+        },
+        {
+          "species": "indeedeef",
+          "basis": "estimated",
+          "why": "イエッサン♀はトリックルームの補助で使われることが多い"
+        },
+        { "species": "dusclops", "basis": "estimated", "why": "ヨノワール系はトリックルーム役" }
+      ]
+    },
+    {
+      "id": "tailwind",
+      "name": { "ja": "おいかぜ", "en": "Tailwind" },
+      "minMatches": 1,
+      "conditions": [
+        {
+          "species": "whimsicott",
+          "basis": "estimated",
+          "why": "エルフーンはおいかぜ役で使われることが多い"
+        },
+        { "species": "talonflame", "basis": "estimated", "why": "ファイアローはおいかぜ役" },
+        {
+          "species": "corviknight",
+          "basis": "estimated",
+          "why": "アーマーガアはおいかぜ役で使われることがある"
+        },
+        {
+          "species": "aerodactyl",
+          "basis": "estimated",
+          "why": "プテラはおいかぜを持つことがある"
+        },
+        {
+          "species": "pelipper",
+          "basis": "estimated",
+          "why": "ペリッパーはおいかぜを持つことが多い"
+        }
+      ]
+    },
+    {
+      "id": "psychicterrain",
+      "name": { "ja": "サイコフィールド", "en": "Psychic Terrain" },
+      "conditions": [
+        { "species": "indeedeef", "basis": "estimated", "why": "イエッサンは通常サイコメイカー" },
+        { "species": "indeedee", "basis": "estimated", "why": "イエッサンは通常サイコメイカー" }
+      ]
+    },
+    {
+      "id": "grassyterrain",
+      "name": { "ja": "グラスフィールド", "en": "Grassy Terrain" },
+      "conditions": [
+        { "species": "rillaboom", "basis": "estimated", "why": "ゴリランダーは通常グラスメイカー" }
+      ]
+    }
+  ]
+}

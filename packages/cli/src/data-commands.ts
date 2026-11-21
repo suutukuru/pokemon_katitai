@@ -1,11 +1,13 @@
 // Node-only data maintenance commands (read local files fetched by the user; no scraping).
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   baseDex,
   dexWithNewSpecies,
   importOfficialSpecies,
+  importPokedb,
+  type OfficialPokemonEntry,
   loadAllPacks,
   parseOfficialPokemonPage,
 } from "@ca/data";
@@ -112,4 +114,66 @@ export function buildI18n(args: string[], io: Io): number {
   writeFileSync(out2, JSON.stringify(moveMeta, null, 1) + "\n");
   io.out(`wrote ${out2} (${Object.keys(moveMeta.moves).length} moves)`);
   return 0;
+}
+
+/**
+ * `data:import-pokedb <dir>` — dir holds s{n}_double.json / s{n}_single.json downloaded ONCE from
+ * https://champs.pokedb.tokyo/opendata/ (see the site's open-data guide). Writes
+ * packages/data/teams/pokedb/<season>-<format>.json. Never fetches anything itself.
+ */
+export function importPokedbCommand(args: string[], io: Io): number {
+  const dir = args[0];
+  if (!dir) {
+    io.err("usage: pnpm data:import-pokedb <dir with s{n}_double.json>");
+    return 2;
+  }
+  const snap = (lang: string) =>
+    JSON.parse(
+      readFileSync(
+        join(DATA_DIR, `sources/official/rs178713870219xeaaio.pokemon.${lang}.json`),
+        "utf8",
+      ),
+    ) as OfficialPokemonEntry[];
+  const official = importOfficialSpecies(snap("en"), snap("ja"), dexWithAllPacks());
+  const codeMap = new Map(official.species.map((s) => [s.code, s.id]));
+  codeMap.set("0681-000", "aegislash");
+  const outDir = join(DATA_DIR, "teams/pokedb");
+  mkdirSync(outDir, { recursive: true });
+  const dex = dexWithAllPacks();
+  const stonesFor = (species: string) =>
+    [...dex.megaStones()]
+      .filter(([, evos]) => evos.some((e) => e.baseId === species))
+      .map(([item]) => item);
+  const learned: Record<string, string> = {};
+  let failed = 0;
+  for (const f of readdirSync(dir)
+    .filter((x) => /^s\d+_(double|single)\.json$/.test(x))
+    .sort()) {
+    const [, n, rule] = /^s(\d+)_(double|single)\.json$/.exec(f)!;
+    const url = `https://champs.pokedb.tokyo/opendata/s${n}_${rule}_ranked_teams.json`;
+    let json: unknown;
+    try {
+      json = JSON.parse(readFileSync(join(dir, f), "utf8"));
+    } catch {
+      io.err(`skip ${f}: not JSON (not published yet?)`);
+      continue;
+    }
+    const r = importPokedb(json, codeMap, url, stonesFor);
+    Object.assign(learned, r.learnedItemNames);
+    failed += r.issues.length;
+    for (const i of r.issues) io.err(`  ${f}: ${i}`);
+    const out = join(outDir, `${r.file.season}-${r.file.format}.json`);
+    writeFileSync(out, JSON.stringify(r.file, null, 1) + "\n");
+    io.out(`wrote ${out} (${r.file.teams.length} teams)`);
+  }
+  const extraPath = join(DATA_DIR, "i18n/names.extra.json");
+  const extra = JSON.parse(readFileSync(extraPath, "utf8")) as {
+    items: Record<string, { ja: string; source: string }>;
+  };
+  for (const [id, ja] of Object.entries(learned).sort(([a], [b]) => a.localeCompare(b))) {
+    extra.items[id] ??= { ja, source: "pokedb-opendata（持ち主のポケモンから特定）" };
+  }
+  writeFileSync(extraPath, JSON.stringify(extra, null, 2) + "\n");
+  io.out(`learned ${Object.keys(learned).length} Japanese item names → ${extraPath}`);
+  return failed ? 1 : 0;
 }

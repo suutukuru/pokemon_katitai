@@ -1,0 +1,1498 @@
+{
+ "dataset": "pokedb-opendata",
+ "season": "M-2",
+ "format": "doubles",
+ "updatedAt": "2026-08-10 11:36:36",
+ "source": {
+  "title": "バトルデータベース チャンピオンズ 上位構築データ",
+  "url": "https://champs.pokedb.tokyo/guide/opendata"
+ },
+ "license": "公開データ（順位・レート・ポケモン・持ち物）。プログラムでの取得は過度な負荷をかけない範囲で可、アプリでは一度自前で保存して利用（同サイトの案内, 2026-11-21確認）。利用規約 第3条（競合サービス関係者のデータ取得の禁止）は商用化前に要確認: docs/OPEN_QUESTIONS.md L-07",
+ "teams": [
+  {
+   "id": "pokedb-M-2-doubles-2",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 2,
+   "rating": 2424.086,
+   "members": [
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "kommoo",
+     "item": "leftovers"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "basculegion",
+     "item": "mysticwater"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "scovillain",
+     "item": "scovillainite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-9",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 9,
+   "rating": 2401.847,
+   "members": [
+    {
+     "species": "floetteeternal",
+     "item": "floettite"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "garchomp",
+     "item": "roseliberry"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "basculegion",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-16",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 16,
+   "rating": 2352.447,
+   "members": [
+    {
+     "species": "whimsicott",
+     "item": "focussash"
+    },
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "pelipper",
+     "item": "chartiberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "choicescarf"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "garchomp",
+     "item": "roseliberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-18",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 18,
+   "rating": 2346.399,
+   "members": [
+    {
+     "species": "tyranitar",
+     "item": "tyranitarite"
+    },
+    {
+     "species": "excadrill",
+     "item": "focussash"
+    },
+    {
+     "species": "corviknight",
+     "item": "lumberry"
+    },
+    {
+     "species": "basculegionf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "tsareena",
+     "item": "choicescarf"
+    },
+    {
+     "species": "scovillain",
+     "item": "scovillainite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-22",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 22,
+   "rating": 2335.119,
+   "members": [
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    },
+    {
+     "species": "glimmora",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "corviknight",
+     "item": "leftovers"
+    },
+    {
+     "species": "garchomp",
+     "item": "choicescarf"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-28",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 28,
+   "rating": 2318.944,
+   "members": [
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "garchomp",
+     "item": "softsand"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "kingambit",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-51",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 51,
+   "rating": 2292.379,
+   "members": [
+    {
+     "species": "sinistcha",
+     "item": "leftovers"
+    },
+    {
+     "species": "maushold",
+     "item": "chopleberry"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "kingambit",
+     "item": "focussash"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-80",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 80,
+   "rating": 2268.183,
+   "members": [
+    {
+     "species": "dragapult",
+     "item": "dragonfang"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "excadrill",
+     "item": "focussash"
+    },
+    {
+     "species": "tyranitar",
+     "item": "tyranitarite"
+    },
+    {
+     "species": "sinistcha",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "corviknight",
+     "item": "leftovers"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-81",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 81,
+   "rating": 2267.985,
+   "members": [
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "sinistcha",
+     "item": "kasibberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "vivillon",
+     "item": "focussash"
+    },
+    {
+     "species": "pelipper",
+     "item": "choicescarf"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-132",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 132,
+   "rating": 2255.777,
+   "members": [
+    {
+     "species": "tyranitar",
+     "item": "choicescarf"
+    },
+    {
+     "species": "excadrill",
+     "item": "focussash"
+    },
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    },
+    {
+     "species": "kommoo",
+     "item": "dragonfang"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-149",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 149,
+   "rating": 2254.268,
+   "members": [
+    {
+     "species": "basculegion",
+     "item": "choicescarf"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "dragonite",
+     "item": "dragoninite"
+    },
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    },
+    {
+     "species": "lycanrocdusk",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-155",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 155,
+   "rating": 2253.89,
+   "members": [
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    },
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-164",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 164,
+   "rating": 2253.252,
+   "members": [
+    {
+     "species": "medicham",
+     "item": "medichamite"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    },
+    {
+     "species": "zoroarkhisui",
+     "item": "focussash"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "torkoal",
+     "item": "charcoal"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-183",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 183,
+   "rating": 2251.679,
+   "members": [
+    {
+     "species": "tsareena",
+     "item": "choicescarf"
+    },
+    {
+     "species": "incineroar",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "floetteeternal",
+     "item": "floettite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-230",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 230,
+   "rating": 2247.678,
+   "members": [
+    {
+     "species": "scovillain",
+     "item": "scovillainite"
+    },
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "basculegion",
+     "item": "mysticwater"
+    },
+    {
+     "species": "lycanrocdusk",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-240",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 240,
+   "rating": 2246.962,
+   "members": [
+    {
+     "species": "snorlax",
+     "item": "chopleberry"
+    },
+    {
+     "species": "pinsir",
+     "item": "pinsirite"
+    },
+    {
+     "species": "garganacl",
+     "item": "silkscarf"
+    },
+    {
+     "species": "gourgeistlarge",
+     "item": "focussash"
+    },
+    {
+     "species": "taurospaldeaaqua",
+     "item": "shellbell"
+    },
+    {
+     "species": "whimsicott",
+     "item": "mentalherb"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-274",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 274,
+   "rating": 2244.311,
+   "members": [
+    {
+     "species": "torkoal",
+     "item": "charcoal"
+    },
+    {
+     "species": "venusaur",
+     "item": "focussash"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-280",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 280,
+   "rating": 2243.308,
+   "members": [
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    },
+    {
+     "species": "dragonite",
+     "item": "dragoninite"
+    },
+    {
+     "species": "garchomp",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-290",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 290,
+   "rating": 2242.841,
+   "members": [
+    {
+     "species": "gengar",
+     "item": "gengarite"
+    },
+    {
+     "species": "incineroar",
+     "item": "passhoberry"
+    },
+    {
+     "species": "politoed",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sinistcha",
+     "item": "colburberry"
+    },
+    {
+     "species": "archaludon",
+     "item": "leftovers"
+    },
+    {
+     "species": "froslass",
+     "item": "froslassite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-305",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 305,
+   "rating": 2240.306,
+   "members": [
+    {
+     "species": "farigiraf",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "sinistcha",
+     "item": "colburberry"
+    },
+    {
+     "species": "incineroar",
+     "item": "charcoal"
+    },
+    {
+     "species": "crabominable",
+     "item": "crabominite"
+    },
+    {
+     "species": "camerupt",
+     "item": "cameruptite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-345",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 345,
+   "rating": 2210.132,
+   "members": [
+    {
+     "species": "sylveon",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "delphox",
+     "item": "delphoxite"
+    },
+    {
+     "species": "hydreigon",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "blackglasses"
+    },
+    {
+     "species": "garchomp",
+     "item": "choicescarf"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-381",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 381,
+   "rating": 2190.338,
+   "members": [
+    {
+     "species": "golurk",
+     "item": "golurkite"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "incineroar",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "farigiraf",
+     "item": "colburberry"
+    },
+    {
+     "species": "sneasler",
+     "item": "focussash"
+    },
+    {
+     "species": "torkoal",
+     "item": "charcoal"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-493",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 493,
+   "rating": 2150.689,
+   "members": [
+    {
+     "species": "floetteeternal",
+     "item": "floettite"
+    },
+    {
+     "species": "charizard",
+     "item": "charizarditey"
+    },
+    {
+     "species": "whimsicott",
+     "item": "assaultvest"
+    },
+    {
+     "species": "garchomp",
+     "item": "roseliberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "mysticwater"
+    },
+    {
+     "species": "kingambit",
+     "item": "occaberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-494",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 494,
+   "rating": 2150.662,
+   "members": [
+    {
+     "species": "tyranitar",
+     "item": "tyranitarite"
+    },
+    {
+     "species": "excadrill",
+     "item": "focussash"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "floetteeternal",
+     "item": "floettite"
+    },
+    {
+     "species": "taurospaldeaaqua",
+     "item": "choicescarf"
+    },
+    {
+     "species": "sinistcha",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-522",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 522,
+   "rating": 2143.616,
+   "members": [
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "armarouge",
+     "item": "focussash"
+    },
+    {
+     "species": "reuniclus",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "torkoal",
+     "item": "charcoal"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-583",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 583,
+   "rating": 2129.679,
+   "members": [
+    {
+     "species": "absol",
+     "item": "hardstone"
+    },
+    {
+     "species": "camerupt",
+     "item": "cameruptite"
+    },
+    {
+     "species": "kangaskhan",
+     "item": "kangaskhanite"
+    },
+    {
+     "species": "sneasler",
+     "item": "whiteherb"
+    },
+    {
+     "species": "farigiraf",
+     "item": "colburberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-736",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 736,
+   "rating": 2104.897,
+   "members": [
+    {
+     "species": "gengar",
+     "item": "gengarite"
+    },
+    {
+     "species": "blastoise",
+     "item": "leftovers"
+    },
+    {
+     "species": "incineroar",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "sinistcha",
+     "item": "colburberry"
+    },
+    {
+     "species": "machamp",
+     "item": "blackbelt"
+    },
+    {
+     "species": "altaria",
+     "item": "focussash"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-991",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 991,
+   "rating": 2072,
+   "members": [
+    {
+     "species": "gengar",
+     "item": "gengarite"
+    },
+    {
+     "species": "incineroar",
+     "item": "chopleberry"
+    },
+    {
+     "species": "sinistcha",
+     "item": "colburberry"
+    },
+    {
+     "species": "vivillon",
+     "item": "focussash"
+    },
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "azumarill",
+     "item": "sitrusberry"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-1195",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 1195,
+   "rating": 2041.178,
+   "members": [
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "sylveon",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "ceruledge",
+     "item": "colburberry"
+    },
+    {
+     "species": "basculegion",
+     "item": "focussash"
+    },
+    {
+     "species": "kingambit",
+     "item": "chopleberry"
+    },
+    {
+     "species": "aerodactyl",
+     "item": "aerodactylite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-1446",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 1446,
+   "rating": 2023.276,
+   "members": [
+    {
+     "species": "typhlosion",
+     "item": "charcoal"
+    },
+    {
+     "species": "whimsicott",
+     "item": "focussash"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "venusaur",
+     "item": "venusaurite"
+    },
+    {
+     "species": "tsareena",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "farigiraf",
+     "item": "twistedspoon"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-1484",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 1484,
+   "rating": 2019.884,
+   "members": [
+    {
+     "species": "ampharos",
+     "item": "ampharosite"
+    },
+    {
+     "species": "garchomp",
+     "item": "choicescarf"
+    },
+    {
+     "species": "gallade",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "milotic",
+     "item": "leftovers"
+    },
+    {
+     "species": "tinkaton",
+     "item": "focussash"
+    },
+    {
+     "species": "greninja",
+     "item": "greninjite"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-1531",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 1531,
+   "rating": 2017.004,
+   "members": [
+    {
+     "species": "charizard",
+     "item": "charizarditex"
+    },
+    {
+     "species": "floetteeternal",
+     "item": "floettite"
+    },
+    {
+     "species": "farigiraf",
+     "item": "colburberry"
+    },
+    {
+     "species": "sinistcha",
+     "item": "cobaberry"
+    },
+    {
+     "species": "incineroar",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "diggersby",
+     "item": "choicescarf"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  },
+  {
+   "id": "pokedb-M-2-doubles-1861",
+   "season": "M-2",
+   "format": "doubles",
+   "rank": 1861,
+   "rating": 2006.149,
+   "members": [
+    {
+     "species": "aromatisse",
+     "item": "fairyfeather"
+    },
+    {
+     "species": "farigiraf",
+     "item": "sitrusberry"
+    },
+    {
+     "species": "lopunny",
+     "item": "lopunnite"
+    },
+    {
+     "species": "slowkinggalar",
+     "item": "colburberry"
+    },
+    {
+     "species": "blastoise",
+     "item": "blastoisinite"
+    },
+    {
+     "species": "politoed",
+     "item": "mysticwater"
+    }
+   ],
+   "published": {
+    "items": true,
+    "moves": false,
+    "sp": false,
+    "abilities": false
+   },
+   "leads": [],
+   "source": {
+    "title": "バトルデータベース チャンピオンズ 上位構築データ M-2 ダブル",
+    "url": "https://champs.pokedb.tokyo/opendata/s2_double_ranked_teams.json",
+    "accessed": "2026-08-10"
+   }
+  }
+ ]
+}

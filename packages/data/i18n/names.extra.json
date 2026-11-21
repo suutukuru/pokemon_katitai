@@ -1,0 +1,85 @@
+{
+  "note": "PokeAPI に日本語名が無いものを他の出典から補う（上書きはしない）",
+  "items": {
+    "chimechite": {
+      "ja": "チリーンナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "clefablite": {
+      "ja": "ピクシナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "crabominite": {
+      "ja": "ケケンカニナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "delphoxite": {
+      "ja": "マフォクシナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "dragoninite": {
+      "ja": "カイリュナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "froslassite": {
+      "ja": "ユキメノコナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "glimmoranite": {
+      "ja": "キラフロルナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "golisopite": {
+      "ja": "グソクムシャナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "golurkite": {
+      "ja": "ゴルーグナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "greninjite": {
+      "ja": "ゲッコウガナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "malamarite": {
+      "ja": "カラマネナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "pyroarite": {
+      "ja": "カエンジシナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "raichunitex": {
+      "ja": "ライチュウナイトX",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "raichunitey": {
+      "ja": "ライチュウナイトY",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "scovillainite": {
+      "ja": "スコヴィラナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "scraftinite": {
+      "ja": "ズルズキナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "skarmorite": {
+      "ja": "エアームドナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "staraptite": {
+      "ja": "ムクホークナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "starminite": {
+      "ja": "スターミナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    },
+    "floettite": {
+      "ja": "フラエッテナイト",
+      "source": "pokedb-opendata（持ち主のポケモンから特定）"
+    }
+  }
+}
