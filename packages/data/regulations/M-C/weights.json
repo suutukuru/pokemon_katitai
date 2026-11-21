@@ -108,6 +108,7 @@
     "matrixBattles": 24,
     "turnOptions": 6,
     "turnRollouts": 16,
-    "fictitiousIterations": 4000
+    "fictitiousIterations": 4000,
+    "selfTemperature": 0.12
   }
 }

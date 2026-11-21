@@ -26,6 +26,7 @@
     "sim": "tsx packages/cli/src/bin.ts sim",
     "sim:meta": "tsx packages/cli/src/bin.ts sim:meta",
     "report:meta": "tsx packages/cli/src/bin.ts report:meta",
+    "report:battle": "tsx packages/cli/src/bin.ts report:battle",
     "web:dev": "pnpm --filter @ca/web dev",
     "web:build": "pnpm --filter @ca/web build",
     "web:artifact": "pnpm --filter @ca/web build && node apps/web/scripts/artifact-page.mjs",

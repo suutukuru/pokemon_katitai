@@ -2,7 +2,7 @@
 
 exports[`phase 3 acceptance: three teams → evidence-backed findings sorted by severity > golden: findings are stable (snapshot) 1`] = `
 {
-  "contentHash": "1cfcdb77cd60dd07",
+  "contentHash": "7c17338729f4a75e",
   "sample-rain": {
     "findings": [
       "minor support.intimidate.missing {"count":0}",

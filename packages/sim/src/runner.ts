@@ -1,6 +1,12 @@
 import type { GameSpec, PokemonSet, ResolvedPack } from "@ca/schema";
 import { engineTags } from "@ca/data";
-import { chooseFor, jointOptions, type JointOption, type PolicyParams } from "./policy.js";
+import {
+  chooseFor,
+  jointOptions,
+  type DecisionTrace,
+  type JointOption,
+  type PolicyParams,
+} from "./policy.js";
 import { mixSeed, Rng } from "./rng.js";
 import { Battle, toShowdownSet, type PsBattle } from "./showdown.js";
 
@@ -70,7 +76,12 @@ export function startBattle(
 }
 
 /** Play the battle to the end with the heuristic policy on both sides. */
-export function playOut(ctx: SimContext, battle: PsBattle, seed: number): BattleResult {
+export function playOut(
+  ctx: SimContext,
+  battle: PsBattle,
+  seed: number,
+  trace?: DecisionTrace[],
+): BattleResult {
   const tags = engineTags();
   const rng = new Rng(mixSeed(seed, 0xbeef));
   let guard = 0;
@@ -78,7 +89,7 @@ export function playOut(ctx: SimContext, battle: PsBattle, seed: number): Battle
     for (const side of battle.sides) {
       if (battle.ended || side.isChoiceDone() || !side.activeRequest || side.activeRequest.wait)
         continue;
-      const choice = chooseFor(battle, side, tags, ctx.params, rng);
+      const choice = chooseFor(battle, side, tags, ctx.params, rng, trace);
       if (!choice || !battle.choose(side.id, choice)) battle.choose(side.id, "default");
     }
   }

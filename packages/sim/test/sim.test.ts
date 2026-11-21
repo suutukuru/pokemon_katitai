@@ -206,3 +206,31 @@ describe("analyzeMatchup (tiny budget)", () => {
     expect(await run()).toEqual(a);
   }, 120_000);
 });
+
+describe("battle tracing", () => {
+  it("records decisions with probabilities, parses events, and matches the untraced result", async () => {
+    const { traceBattle } = await import("../src/index.js");
+    const log = traceBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 3);
+    expect(log.result).toEqual(simulate(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 3));
+    const t1 = log.turns.find((t) => t.turn === 1)!;
+    expect(t1.decisions).toHaveLength(4);
+    for (const d of t1.decisions) {
+      expect(d.options.reduce((a, o) => a + o.prob, 0)).toBeCloseTo(1);
+      expect(d.chosen).toBeGreaterThanOrEqual(0);
+    }
+    const kinds = new Set(log.turns.flatMap((t) => t.events.map((e) => e.t)));
+    expect(kinds).toEqual(expect.objectContaining(new Set(["switch", "move", "damage", "faint"])));
+    expect([...kinds]).toEqual(
+      expect.arrayContaining(["switch", "move", "damage", "faint", "mega", "weather"]),
+    );
+    const last = log.turns.at(-1)!;
+    expect(last.hp.filter((h) => h.side === 1).every((h) => h.hp === 0)).toBe(
+      log.result.winner === 0,
+    );
+    for (const t of log.turns)
+      for (const h of t.hp) {
+        expect(h.hp).toBeGreaterThanOrEqual(0);
+        expect(h.hp).toBeLessThanOrEqual(100);
+      }
+  }, 30_000);
+});

@@ -220,16 +220,32 @@ export function slotOptions(
   return out.sort((a, b2) => b2.score - a.score || a.choice.localeCompare(b2.choice));
 }
 
-function softmaxPick(opts: SlotOption[], temperature: number, rng: Rng): SlotOption {
+/** Selection probabilities: softmax of the scores at the given temperature. */
+export function softmaxProbs(opts: SlotOption[], temperature: number): number[] {
   const max = Math.max(...opts.map((o) => o.score));
   const w = opts.map((o) => Math.exp((o.score - max) / Math.max(1e-6, temperature)));
   const total = w.reduce((a, x) => a + x, 0);
-  let r = rng.next() * total;
+  return w.map((x) => x / total);
+}
+
+function softmaxPick(opts: SlotOption[], temperature: number, rng: Rng): number {
+  const probs = softmaxProbs(opts, temperature);
+  let r = rng.next();
   for (let i = 0; i < opts.length; i++) {
-    r -= w[i]!;
-    if (r <= 0) return opts[i]!;
+    r -= probs[i]!;
+    if (r <= 0) return i;
   }
-  return opts.at(-1)!;
+  return opts.length - 1;
+}
+
+/** One recorded decision (for battle reports). */
+export interface DecisionTrace {
+  turn: number;
+  side: 0 | 1;
+  species: string;
+  hpPct: number;
+  options: { option: SlotOption; prob: number }[];
+  chosen: number;
 }
 
 /** Choice for a forced switch request: send in the healthiest benched Pokémon. */
@@ -255,13 +271,33 @@ export function chooseFor(
   tags: EngineTags,
   params: PolicyParams,
   rng: Rng,
+  trace?: DecisionTrace[],
 ): string {
   const req = side.activeRequest;
   if (!req || req.wait) return "";
   if (req.forceSwitch) return switchChoice(side, req);
-  const picks = (req.active ?? []).map((_, slot) =>
-    softmaxPick(slotOptions(b, side, slot, req, tags, params), p(params, "temperature"), rng),
-  );
+  // My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`.
+  const T =
+    side.id === "p1" && params["selfTemperature"] !== undefined
+      ? params["selfTemperature"]
+      : p(params, "temperature");
+  const picks = (req.active ?? []).map((_, slot) => {
+    const opts = slotOptions(b, side, slot, req, tags, params);
+    const i = softmaxPick(opts, T, rng);
+    const mon = side.active[slot];
+    if (trace && mon && !mon.fainted) {
+      const probs = softmaxProbs(opts, T);
+      trace.push({
+        turn: b.turn,
+        side: side.id === "p1" ? 0 : 1,
+        species: mon.species.id,
+        hpPct: Math.round((mon.hp / mon.maxhp) * 100),
+        options: opts.map((option, k) => ({ option, prob: probs[k]! })),
+        chosen: i,
+      });
+    }
+    return opts[i]!;
+  });
   return dedupeMega(picks.map((x) => x.choice)).join(", ");
 }
 

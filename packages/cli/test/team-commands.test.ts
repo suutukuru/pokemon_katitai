@@ -222,3 +222,64 @@ describe("renderMetaReport", () => {
     expect(html).toContain("300戦");
   });
 });
+
+describe("battle report", () => {
+  it("renders events in Japanese and decisions with scores and probabilities", async () => {
+    const { eventLines, renderBattleReport } = await import("../src/index.js");
+    const lines = eventLines([
+      { t: "move", side: 0, who: "charizard", move: "heatwave", spread: true },
+      { t: "super", side: 1, who: "whimsicott" },
+      { t: "crit", side: 1, who: "whimsicott" },
+      { t: "damage", side: 1, who: "whimsicott", hp: 0 },
+      { t: "faint", side: 1, who: "whimsicott" },
+      { t: "damage", side: 0, who: "charizard", hp: 90, from: "lifeorb" },
+      { t: "weather", weather: "SunnyDay", upkeep: false },
+      { t: "weather", weather: "SunnyDay", upkeep: true },
+      { t: "sidestart", side: 0, cond: "tailwind" },
+      { t: "cant", side: 1, who: "milotic", reason: "par" },
+      { t: "boost", side: 1, who: "archaludon", stat: "def", n: 1 },
+      { t: "protected", side: 0, who: "whimsicott" },
+      { t: "miss", side: 1, who: "milotic" },
+    ]);
+    const text = lines.join("\n").replace(/<[^>]+>/g, "");
+    expect(text).toContain("リザードン の ねっぷう（全体）");
+    expect(text).toContain("エルフーン 残りHP 0% ばつぐん・急所");
+    expect(text).toContain("いのちのたま");
+    expect(text.match(/天気: はれ/g)).toHaveLength(1);
+    expect(text).toContain("自分のおいかぜが始まった");
+    expect(text).toContain("動けない（まひ）");
+    const opt = { choice: "move 1 mega", moveId: "heatwave", score: 1.234 };
+    const html = renderBattleReport({
+      title: "t",
+      summary: "30戦",
+      params: { koBonus: 0.6, temperature: 0.35 },
+      log: {
+        seed: 1,
+        result: { winner: 1, turns: 1, remaining: [0, 2] },
+        brought: [["charizard"], ["pelipper"]],
+        turns: [
+          {
+            turn: 1,
+            events: [],
+            hp: [],
+            decisions: [
+              {
+                turn: 1,
+                side: 0,
+                species: "charizard",
+                hpPct: 100,
+                chosen: 0,
+                options: [{ option: opt, prob: 0.9 }],
+              },
+            ],
+          },
+        ],
+      },
+    });
+    expect(html).toContain("負け（1ターン");
+    expect(html).toContain("✔ ねっぷう（メガ）");
+    expect(html).toContain("1.23");
+    expect(html).toContain("90%");
+    expect(html).toContain("相手 0.35");
+  });
+});

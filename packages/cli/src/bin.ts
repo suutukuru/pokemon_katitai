@@ -5,6 +5,18 @@ import { FsPackSource, readTeamDbFiles, readUsageSnapshots } from "@ca/data/node
 import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
 import { renderMetaReport } from "./report.js";
+import { renderBattleReport } from "./battle-report.js";
+import { screenshotPages } from "./screenshot.js";
+import {
+  analyzeMatchup,
+  budgetFrom,
+  inProcessExecutor,
+  mixSeed,
+  simContext,
+  simulate,
+  traceBattle,
+  type Config,
+} from "@ca/sim";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
@@ -151,17 +163,89 @@ try {
       mkdirSync(outDir, { recursive: true });
       const htmlPath = resolvePath(outDir, `${name}-meta.html`);
       writeFileSync(htmlPath, html);
-      const { chromium } = await import("playwright");
-      const browser = await chromium.launch();
-      const page = await browser.newPage({
-        viewport: { width: 430, height: 900 },
-        deviceScaleFactor: 2,
-      });
-      await page.goto(`file://${htmlPath}`);
-      const png = resolvePath(outDir, `${name}-meta.png`);
-      await page.screenshot({ path: png, fullPage: true });
-      await browser.close();
-      io.out(png);
+      for (const png of await screenshotPages(htmlPath, resolvePath(outDir, `${name}-meta`)))
+        io.out(png);
+      code = 0;
+      break;
+    }
+    case "report:battle": {
+      // `report:battle <自分.txt> <相手.txt|pokedb:M-7:4> [--games 30] [--scale 0.3] [--seed 1] [--out reports]`
+      const env = simEnv(args);
+      const pos = args.filter(
+        (x, i) =>
+          !x.startsWith("--") &&
+          !["--games", "--scale", "--seed", "--workers", "--out"].includes(args[i - 1] ?? ""),
+      );
+      const [mineFile, oppSpec] = pos;
+      if (!mineFile || !oppSpec) {
+        io.err(
+          "usage: pnpm report:battle <自分.txt> <相手.txt|pokedb:M-7:4> [--games 30] [--scale 0.3]",
+        );
+        code = 2;
+        break;
+      }
+      const opt = (k: string, d: string) =>
+        args.indexOf(`--${k}`) >= 0 ? args[args.indexOf(`--${k}`) + 1]! : d;
+      const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
+      const mine = parseShowdown(env.readText(mineFile), legal).members;
+      const resolved = env.resolveTeam?.(oppSpec);
+      const theirs = resolved
+        ? resolved.members
+        : parseShowdown(env.readText(oppSpec), legal).members;
+      const oppLabel = resolved?.label ?? basename(oppSpec).replace(/\.txt$/, "");
+      const ctx = simContext(env.pack, env.spec);
+      const seed = Number(opt("seed", "1"));
+      const exec = env.executor!(mine, theirs);
+      const a = await analyzeMatchup(
+        ctx,
+        mine,
+        theirs,
+        exec,
+        budgetFrom(env.pack.weights.simulation, Number(opt("scale", "0.3"))),
+        seed,
+        (st) => io.err(`… ${st}`),
+      );
+      await (exec as { close?: () => Promise<void> }).close?.();
+      const toConfig = (team: typeof mine, species: string[]) =>
+        species.map((x) => team.findIndex((m) => m.species === x)) as Config;
+      const ca = toConfig(
+        mine,
+        a.matrix.mine[a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine))]!,
+      );
+      const cb = toConfig(
+        theirs,
+        a.matrix.theirs[a.equilibrium.theirs.indexOf(Math.max(...a.equilibrium.theirs))]!,
+      );
+      const games = Number(opt("games", "30"));
+      const results = Array.from({ length: games }, (_, k) => ({
+        k,
+        r: simulate(ctx, mine, theirs, ca, cb, mixSeed(seed, 9, k)),
+      }));
+      const wins = results.filter((x) => x.r.winner === 0).length;
+      const summary = `この選出同士で${games}戦: ${wins}勝${games - wins}敗（勝率 ${Math.round((wins / games) * 100)}%）`;
+      const outDir = resolvePath(opt("out", "reports"));
+      mkdirSync(outDir, { recursive: true });
+      const name = basename(mineFile).replace(/\.txt$/, "");
+      for (const [kind, pick] of [
+        ["win", results.find((x) => x.r.winner === 0)],
+        ["lose", results.find((x) => x.r.winner === 1)],
+      ] as const) {
+        if (!pick) continue;
+        const log = traceBattle(ctx, mine, theirs, ca, cb, mixSeed(seed, 9, pick.k));
+        const html = renderBattleReport({
+          title: `${name} vs ${oppLabel}（${kind === "win" ? "勝ちの例" : "負けの例"}）`,
+          log,
+          summary,
+          params: env.pack.weights.simulation,
+        });
+        const base = resolvePath(
+          outDir,
+          `${name}-vs-${oppLabel.replace(/[^\w.-]+/g, "_")}-${kind}`,
+        );
+        writeFileSync(`${base}.html`, html);
+        for (const png of await screenshotPages(`${base}.html`, base)) io.out(png);
+      }
+      void inProcessExecutor;
       code = 0;
       break;
     }
