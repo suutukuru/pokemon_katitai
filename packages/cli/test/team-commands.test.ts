@@ -109,6 +109,9 @@ describe("meta", () => {
     );
     expect(out).toContain("ブリジュラス＋ペリッパー  9件（20%）");
     expect(out).toMatch(/M-7 +4位 2354\.916 +リザードン・/);
+    const d = io();
+    metaCommand([], readTeamDbFiles(), env.pack.legal.species, d, env.pack.seasons);
+    expect(d.o[0]).toContain("上位構築 22件（M-6, M-7・ダブル）");
   });
 });
 

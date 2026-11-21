@@ -294,6 +294,7 @@ export function loadPack(source: PackSource, id: string, options: LoadOptions = 
     contentHash: sha256Hex(canonicalJson(content)).slice(0, 16),
     verified: chain.every((p) => p.manifest.verified && p.legal.verified),
     periods: leaf.manifest.periods,
+    ...(leaf.manifest.seasons ? { seasons: leaf.manifest.seasons } : {}),
     mechanics,
     sources: leaf.manifest.sources,
     legal: {

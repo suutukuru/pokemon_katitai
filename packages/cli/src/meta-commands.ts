@@ -11,13 +11,15 @@ export function metaCommand(
   files: readonly TeamDatabaseFile[],
   legalSpecies: readonly string[],
   io: Io,
+  /** Default season range from the regulation pack (`manifest.seasons`). */
+  seasons?: { from: number; to?: number | undefined },
 ): number {
   const opt = (k: string, d: number) => {
     const i = args.indexOf(`--${k}`);
     return i >= 0 ? Number(args[i + 1]) : d;
   };
-  const from = opt("from", 1);
-  const to = opt("to", 99);
+  const from = opt("from", seasons?.from ?? 1);
+  const to = opt("to", seasons?.to ?? 99);
   const top = opt("top", 25);
   const teams = queryTeams(files, { format: "doubles", seasons: [from, to], legalSpecies });
   const m = metaStats(teams);

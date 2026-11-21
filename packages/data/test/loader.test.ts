@@ -30,6 +30,8 @@ describe("real regulation packs", () => {
     expect(p.legal.species).toContain("incineroar");
     expect(p.legal.megaSpecies).toContain("kangaskhan");
     expect(p.verified).toBe(false);
+    expect(p.seasons).toEqual({ from: 6 });
+    expect(p.periods.ranked?.start).toBe("2026-09-09");
   });
 
   it("loads the dummy next pack, inheriting and applying only its deltas", () => {

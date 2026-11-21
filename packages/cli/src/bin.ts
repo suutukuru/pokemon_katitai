@@ -61,7 +61,13 @@ try {
       break;
     }
     case "meta":
-      code = metaCommand(args, readTeamDbFiles(), teamEnv().pack.legal.species, io);
+      code = metaCommand(
+        args,
+        readTeamDbFiles(),
+        teamEnv().pack.legal.species,
+        io,
+        teamEnv().pack.seasons,
+      );
       break;
     case "calc":
       code = calcCommand(args, teamEnv(), io);

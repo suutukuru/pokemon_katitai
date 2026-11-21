@@ -46,7 +46,7 @@ pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weat
 pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
 pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
 pnpm sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--workers 4] [--json]  # 選出の読み合い・1ターン目の択
-pnpm meta [--from 5] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型
+pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
 pnpm web:dev / pnpm web:build                    # Web 画面
 pnpm e2e                                         # Playwright（Pixel 7 表示、ビルドして preview で実行）
@@ -62,7 +62,7 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 
 1. `pnpm reg:new <新ID> --extends <現行ID>` で `packages/data/regulations/<新ID>/` を作る（中身は空の差分）。
    公式の「参加できるポケモン」ページがあれば、ja/en の `pokemon.html` を保存して `pnpm data:import-official <dir>` で種族IDを得て、現行リストとの差分を `legal.json` に書く。
-2. `manifest.json`：表示名、`periods.ranked` / `periods.official`、`dataVersion`（`YYYY-MM-DD.N`）、`sources`（出典URL・確認日）。新しい仕組みを有効/無効にするなら `mechanics.add` / `mechanics.remove`。
+2. `manifest.json`：表示名、`seasons`（例 `{ "from": 6 }`。採用率などの集計範囲の既定になる）、`periods.ranked` / `periods.official`、`dataVersion`（`YYYY-MM-DD.N`）、`sources`（出典URL・確認日）。新しい仕組みを有効/無効にするなら `mechanics.add` / `mechanics.remove`。
 3. `legal.json`：親との差分だけを `{ "add": [...], "remove": [...] }` で書く（`species` / `megaSpecies` / `items` / `bannedMoves` / `bannedAbilities`）。メガ可能にする種族は `species` と `megaSpecies` の両方に入れ、メガストーンを `items` に入れる（入れないと検証エラー）。
 4. `overrides.json`：バランス調整を項目単位で。変更するフィールドだけ書く。各エントリに `verified` と `sources`。親の調整を取り消すときは値を `null`。図鑑にない新種族は `newSpecies`。
 5. `rules.json` / `weights.json`：変わる項目だけ書く（親と深いマージ。配列は置換）。

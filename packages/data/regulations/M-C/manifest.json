@@ -4,12 +4,16 @@
     "ja": "レギュレーション M-C",
     "en": "Regulation M-C"
   },
-  "periods": {},
+  "periods": {
+    "ranked": {
+      "start": "2026-09-09"
+    }
+  },
   "mechanics": {
     "add": ["mega"],
     "remove": []
   },
-  "dataVersion": "2026-11-21.1",
+  "dataVersion": "2026-11-21.2",
   "verified": false,
   "sources": [
     {
@@ -21,7 +25,14 @@
       "title": "公式イベントページ（シーズンM‐6・シングル：2026-09-09〜2026-10-07 JST、選出3匹、メガシンカ可能、総合20分/持ち時間7分/選択45秒/選出90秒）",
       "url": "https://web-view.app.pokemonchampions.jp/battle/pages/events/rs178713870219xeaaio/ja/event.html",
       "accessed": "2026-11-21"
+    },
+    {
+      "title": "ユーザー確認: M-C はシーズンM-6から",
+      "accessed": "2026-11-21"
     }
   ],
-  "notes": "現行レギュレーション（ユーザー申告 2026-11-21）。使用可能ポケモンはシングル・ダブル共通。期間は未設定。"
+  "notes": "現行レギュレーション（ユーザー申告 2026-11-21）。シーズンM-6から（M-6 の開始 2026-09-09 12:00 JST は公式イベントページの時刻）。使用可能ポケモンはシングル・ダブル共通。終了日は未定。",
+  "seasons": {
+    "from": 6
+  }
 }

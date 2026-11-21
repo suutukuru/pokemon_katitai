@@ -38,6 +38,11 @@ export const ManifestSchema = z.strictObject({
       remove: z.array(MechanicIdSchema).default([]),
     })
     .default({ add: [], remove: [] }),
+  /** Ranked seasons (number part of "M-6") played under this regulation; `to` omitted = ongoing. */
+  seasons: z
+    .strictObject({ from: z.number().int().positive(), to: z.number().int().positive().optional() })
+    .refine((x) => x.to === undefined || x.from <= x.to, { message: "seasons.to must be >= from" })
+    .optional(),
   dataVersion: z.string().min(1),
   verified: z.boolean(),
   sources: z.array(SourceSchema).default([]),
@@ -198,6 +203,7 @@ export const ResolvedPackSchema = z.object({
   contentHash: z.string(),
   verified: z.boolean(),
   periods: z.object({ ranked: PeriodSchema.optional(), official: PeriodSchema.optional() }),
+  seasons: z.object({ from: z.number().int(), to: z.number().int().optional() }).optional(),
   mechanics: z.array(MechanicIdSchema),
   sources: z.array(SourceSchema),
   legal: z.object({

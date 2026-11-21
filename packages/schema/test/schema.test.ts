@@ -66,6 +66,10 @@ describe("ManifestSchema", () => {
     expect(ManifestSchema.safeParse({ ...m, id: "m-b" }).success).toBe(false);
     expect(ManifestSchema.safeParse({ ...m, extra: 1 }).success).toBe(false);
   });
+  it("rejects seasons.to < from", () => {
+    expect(ManifestSchema.safeParse({ ...m, seasons: { from: 7, to: 6 } }).success).toBe(false);
+    expect(ManifestSchema.parse({ ...m, seasons: { from: 6 } }).seasons).toEqual({ from: 6 });
+  });
   it("rejects periods ending before they start", () => {
     expect(
       ManifestSchema.safeParse({
