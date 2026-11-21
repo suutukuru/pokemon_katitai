@@ -6,7 +6,10 @@ import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
+import { renderReplayPage } from "./replay-report.js";
 import { screenshotPages } from "./screenshot.js";
+import { candidatePairs } from "./fill.js";
+import { formatShowdown } from "@ca/ingest";
 import {
   analyzeMatchup,
   budgetFrom,
@@ -15,6 +18,7 @@ import {
   simContext,
   simulate,
   traceBattle,
+  analyzeReplay,
   type Config,
 } from "@ca/sim";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -246,6 +250,165 @@ try {
         for (const png of await screenshotPages(`${base}.html`, base)) io.out(png);
       }
       void inProcessExecutor;
+      code = 0;
+      break;
+    }
+    case "team:fill": {
+      // `team:fill <下書き.txt> --candidates a,b,c [--top 6] [--scale 0.15]` → each pair vs top teams, ranked
+      const env = simEnv(args);
+      const opt = (k: string, d: string) =>
+        args.indexOf(`--${k}`) >= 0 ? args[args.indexOf(`--${k}`) + 1]! : d;
+      const file = args[0]!;
+      const draft = parseShowdown(env.readText(file), {
+        legal: { species: env.pack.legal.species, items: env.pack.legal.items },
+      }).members;
+      const dex = dexWithNewSpecies(baseDex(), env.pack.overrides.newSpecies);
+      const pairs = candidatePairs(
+        draft,
+        opt("candidates", "").split(",").filter(Boolean),
+        env.usage!,
+        dex,
+      );
+      const outDir = resolvePath(
+        opt("out", "reports"),
+        basename(file).replace(/\.txt$/, "") + "-fill",
+      );
+      mkdirSync(outDir, { recursive: true });
+      const ranking: {
+        ids: string[];
+        avg: number;
+        worst: number;
+        worstLabel: string;
+        wins: number;
+        n: number;
+      }[] = [];
+      for (const p of pairs) {
+        const rows = await runSimMeta(
+          p.team,
+          env,
+          { top: Number(opt("top", "6")), scale: Number(opt("scale", "0.15")), seed: 1 },
+          io,
+        );
+        const avg = rows.reduce((a, r) => a + r.winRate, 0) / Math.max(1, rows.length);
+        const worstRow = [...rows].sort((a, b) => a.winRate - b.winRate)[0];
+        ranking.push({
+          ids: p.ids,
+          avg,
+          worst: worstRow?.winRate ?? 0,
+          worstLabel: worstRow?.label ?? "",
+          wins: rows.filter((r) => r.winRate >= 0.5).length,
+          n: rows.length,
+        });
+        writeFileSync(
+          resolvePath(outDir, `${p.ids.join("+")}.txt`),
+          formatShowdown(p.team, "ja") + "\n",
+        );
+        io.out(
+          `${p.ids.map((x) => displayName("species", x)).join("+")}\t平均 ${Math.round(avg * 100)}%\t勝ち越し ${ranking.at(-1)!.wins}/${rows.length}\t最低 ${Math.round((worstRow?.winRate ?? 0) * 100)}% (${worstRow?.label ?? ""})`,
+        );
+      }
+      writeFileSync(
+        resolvePath(outDir, "ranking.json"),
+        JSON.stringify(
+          ranking.sort((a, b) => b.avg - a.avg),
+          null,
+          2,
+        ),
+      );
+      code = 0;
+      break;
+    }
+    case "report:replay": {
+      // `report:replay <自分.txt> <相手|pokedb:M-7:4> [--pick lose|win] [--games 30] [--options 6] [--rollouts 16]`
+      const env = simEnv(args);
+      const pos = args.filter(
+        (x, i) =>
+          !x.startsWith("--") &&
+          ![
+            "--games",
+            "--scale",
+            "--seed",
+            "--workers",
+            "--out",
+            "--pick",
+            "--options",
+            "--rollouts",
+          ].includes(args[i - 1] ?? ""),
+      );
+      const [mineFile, oppSpec] = pos;
+      if (!mineFile || !oppSpec) {
+        io.err(
+          "usage: pnpm report:replay <自分.txt> <相手.txt|pokedb:M-7:4> [--pick lose|win] [--rollouts 16]",
+        );
+        code = 2;
+        break;
+      }
+      const opt = (k: string, d: string) =>
+        args.indexOf(`--${k}`) >= 0 ? args[args.indexOf(`--${k}`) + 1]! : d;
+      const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
+      const mine = parseShowdown(env.readText(mineFile), legal).members;
+      const resolved = env.resolveTeam?.(oppSpec);
+      const theirs = resolved
+        ? resolved.members
+        : parseShowdown(env.readText(oppSpec), legal).members;
+      const oppLabel = resolved?.label ?? basename(oppSpec).replace(/\.txt$/, "");
+      const ctx = simContext(env.pack, env.spec);
+      const seed = Number(opt("seed", "1"));
+      const exec = env.executor!(mine, theirs);
+      const a = await analyzeMatchup(
+        ctx,
+        mine,
+        theirs,
+        exec,
+        budgetFrom(env.pack.weights.simulation, Number(opt("scale", "0.3"))),
+        seed,
+        (st) => io.err(`… ${st}`),
+      );
+      await (exec as { close?: () => Promise<void> }).close?.();
+      const toConfig = (team: typeof mine, species: string[]) =>
+        species.map((x) => team.findIndex((m) => m.species === x)) as Config;
+      const ca = toConfig(
+        mine,
+        a.matrix.mine[a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine))]!,
+      );
+      const cb = toConfig(
+        theirs,
+        a.matrix.theirs[a.equilibrium.theirs.indexOf(Math.max(...a.equilibrium.theirs))]!,
+      );
+      const games = Number(opt("games", "30"));
+      const results = Array.from({ length: games }, (_, k) => ({
+        k,
+        r: simulate(ctx, mine, theirs, ca, cb, mixSeed(seed, 9, k)),
+      }));
+      const wins = results.filter((x) => x.r.winner === 0).length;
+      const want = opt("pick", "lose") === "win" ? 0 : 1;
+      const pick = results.find((x) => x.r.winner === want) ?? results[0]!;
+      io.err(`… 分析中（${opt("rollouts", "16")}戦 × 選択肢 × ターン）`);
+      const data = analyzeReplay(
+        ctx,
+        mine,
+        theirs,
+        ca,
+        cb,
+        mixSeed(seed, 9, pick.k),
+        { options: Number(opt("options", "6")), rollouts: Number(opt("rollouts", "16")) },
+        (t) => io.err(`… ${t}ターン目`),
+      );
+      const name = basename(mineFile).replace(/\.txt$/, "");
+      const html = renderReplayPage({
+        title: `${name} vs ${oppLabel}`,
+        subtitle: `この選出同士で${games}戦: ${wins}勝${games - wins}敗（勝率 ${Math.round((wins / games) * 100)}%）の中の1戦 ／ シード ${pick.k}`,
+        data,
+        params: env.pack.weights.simulation,
+      });
+      const outDir = resolvePath(opt("out", "reports"));
+      mkdirSync(outDir, { recursive: true });
+      const out = resolvePath(
+        outDir,
+        `${name}-vs-${oppLabel.replace(/[^\w.-]+/g, "_")}-replay.html`,
+      );
+      writeFileSync(out, html);
+      io.out(out);
       code = 0;
       break;
     }

@@ -86,6 +86,7 @@ export function playOut(
   const rng = new Rng(mixSeed(seed, 0xbeef));
   let guard = 0;
   while (!battle.ended && battle.turn <= ctx.maxTurns && guard++ < ctx.maxTurns * 4) {
+    markLogSent(battle);
     for (const side of battle.sides) {
       if (battle.ended || side.isChoiceDone() || !side.activeRequest || side.activeRequest.wait)
         continue;
@@ -166,4 +167,13 @@ export function allConfigs(n: number, bring = 4): Config[] {
     }
   }
   return out;
+}
+
+/**
+ * Showdown throws "Infinite loop" when more than 1000 log lines are unsent. We never stream the
+ * log (it stays in battle.log for parsing), so mark it as sent every turn.
+ */
+export function markLogSent(battle: PsBattle): void {
+  const b = battle as unknown as { sentLogPos: number; log: string[] };
+  b.sentLogPos = b.log.length;
 }

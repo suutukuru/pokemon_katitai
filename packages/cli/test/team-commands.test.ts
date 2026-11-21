@@ -283,3 +283,54 @@ describe("battle report", () => {
     expect(html).toContain("相手 0.35");
   });
 });
+
+describe("replay page", () => {
+  it("embeds the data, a name table and the controls in one file", async () => {
+    const { renderReplayPage } = await import("../src/index.js");
+    const html = renderReplayPage({
+      title: "t<x>",
+      subtitle: "s",
+      params: { koBonus: 0.6 },
+      data: {
+        seed: 1,
+        rollouts: 4,
+        result: { winner: 0, turns: 1, remaining: [1, 0] },
+        brought: [["charizard"], ["pelipper"]],
+        members: [
+          { side: 0, species: "charizard", maxhp: 175 },
+          { side: 1, species: "pelipper", maxhp: 137 },
+        ],
+        turns: [
+          {
+            turn: 0,
+            decisions: [],
+            events: [{ t: "switch", side: 0, who: "charizard", hp: 100, slot: 0 }],
+          },
+          {
+            turn: 1,
+            decisions: [],
+            events: [
+              { t: "move", side: 0, who: "charizard", move: "heatwave", spread: true },
+              { t: "faint", side: 1, who: "pelipper" },
+            ],
+            whatIf: [
+              {
+                choice: "move 1",
+                slots: [{ species: "charizard", moveId: "heatwave", mega: false }],
+                winRate: 0.75,
+                games: 4,
+                ci: [0.3, 0.95],
+                chosen: true,
+              },
+            ],
+          },
+        ],
+      },
+    });
+    expect(html).toContain("<title>t&lt;x&gt;</title>");
+    expect(html).toContain('"s:charizard":"リザードン"');
+    expect(html).toContain('"m:heatwave":"ねっぷう"');
+    expect(html).toContain('id="seek"');
+    expect(html).not.toMatch(/<script[^>]+src=/); // no external scripts
+  });
+});

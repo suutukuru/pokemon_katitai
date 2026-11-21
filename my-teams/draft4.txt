@@ -1,0 +1,38 @@
+Excadrill @ Excadrite
+Ability: Mold Breaker
+Level: 50
+EVs: 32 Atk / 2 SpD / 32 Spe
+Jolly Nature
+- Earthquake
+- Rock Blast
+- Swords Dance
+- Protect
+
+Altaria
+Ability: Cloud Nine
+EVs: 1 HP / 23 Atk / 30 SpA / 12 Spe
+Modest Nature
+- Acrobatics
+- Draco Meteor
+- Tailwind
+- Protect
+
+Meowscarada @ Choice Scarf
+Ability: Protean
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Flower Trick
+- Knock Off
+- Triple Axel
+- Brick Break
+
+Incineroar @ Chople Berry
+Ability: Intimidate
+Level: 50
+EVs: 5 HP / 32 Atk / 1 SpD / 28 Spe
+Adamant Nature
+- Flare Blitz
+- Throat Chop
+- Fake Out
+- Low Kick

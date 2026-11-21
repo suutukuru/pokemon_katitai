@@ -5,3 +5,4 @@ export * from "./policy.js";
 export * from "./runner.js";
 export * from "./analyze.js";
 export * from "./trace.js";
+export * from "./replay.js";

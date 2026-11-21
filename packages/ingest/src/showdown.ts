@@ -5,7 +5,7 @@ import {
   type StatId,
   type StatsTable,
 } from "@ca/schema";
-import { displayName, names, resolveName, type NameMatch } from "@ca/data";
+import { displayName, gameSpec, names, resolveName, type NameMatch } from "@ca/data";
 import { evToSp } from "@ca/calc";
 import type { ExtractContext, ExtractionResult, Extractor, IngestIssue } from "./extractor.js";
 
@@ -117,7 +117,24 @@ export function parseShowdown(text: string, ctx: ExtractContext = {}): Extractio
           });
       } else if (key === "evs") {
         const ev = parseStatLine(value);
-        if (ev) {
+        const spec = gameSpec().statPoints;
+        const vals = ev ? Object.values(ev) : [];
+        // Showdown's Champions teambuilder exports SP on the "EVs:" line: values within SP caps are SP.
+        if (
+          ev &&
+          vals.every((v) => v <= spec.perStat.value) &&
+          vals.reduce((a, v) => a + v, 0) <= spec.total.value
+        ) {
+          cur.sp = fill(ev);
+          issues.push({
+            severity: "info",
+            line: lineNo,
+            field: "sp",
+            member: drafts.length - 1,
+            message:
+              "EVs の行を SP として読みました（Showdown の Champions 形式。値が SP の上限内のため）",
+          });
+        } else if (ev) {
           cur.sp = fill(Object.fromEntries(Object.entries(ev).map(([k, v]) => [k, evToSp(v)])));
           cur.confidence["sp"] = 0.9;
           issues.push({

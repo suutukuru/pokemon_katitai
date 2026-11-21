@@ -234,3 +234,27 @@ describe("battle tracing", () => {
       }
   }, 30_000);
 });
+
+describe("what-if replay analysis", () => {
+  it("evaluates alternatives from saved states without changing the battle", async () => {
+    const { analyzeReplay } = await import("../src/index.js");
+    const r = analyzeReplay(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 3, {
+      options: 3,
+      rollouts: 2,
+    });
+    expect(r.result).toEqual(simulate(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 3));
+    const analysed = r.turns.filter((t) => t.whatIf);
+    expect(analysed.length).toBeGreaterThan(0);
+    for (const t of analysed) {
+      expect(t.whatIf!.filter((w) => w.chosen)).toHaveLength(1);
+      for (const w of t.whatIf!) {
+        expect(w.games).toBe(2);
+        expect(w.slots.every((s) => s.species !== "")).toBe(true);
+      }
+    }
+    expect(r.members.filter((m) => m.side === 0)).toHaveLength(4);
+    expect(
+      analyzeReplay(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 3, { options: 3, rollouts: 2 }),
+    ).toEqual(r);
+  }, 120_000);
+});
