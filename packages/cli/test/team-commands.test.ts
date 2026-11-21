@@ -111,3 +111,38 @@ describe("meta", () => {
     expect(out).toMatch(/M-7 +4位 2354\.916 +リザードン・/);
   });
 });
+
+describe("sim", () => {
+  it("runs a tiny-budget matchup and prints selection, matrix and turn-1 sections", async () => {
+    const { simCommand } = await import("../src/index.js");
+    const tiny = structuredClone(env.pack);
+    Object.assign(tiny.weights.simulation, {
+      screenBattles: 1,
+      topConfigs: 2,
+      matrixBattles: 1,
+      turnOptions: 2,
+      turnRollouts: 1,
+      fictitiousIterations: 200,
+    });
+    files["rain.txt"] = readFileSync(
+      new URL("../../data/teams/samples/sample-rain.txt", import.meta.url),
+      "utf8",
+    );
+    const x = io();
+    expect(
+      await simCommand(["team.txt", "rain.txt", "--seed", "3"], { ...env, pack: tiny }, x),
+    ).toBe(0);
+    const out = x.o.join("\n");
+    expect(out).toContain("■ 選出と初手");
+    expect(out).toContain("■ 選出の読み合い");
+    expect(out).toContain("■ 1ターン目の択");
+    expect(out).toContain("推測を含む");
+    expect(x.e.some((l) => l.includes("screening"))).toBe(true);
+    const j = io();
+    await simCommand(["team.txt", "rain.txt", "--json"], { ...env, pack: tiny }, j);
+    expect(JSON.parse(j.o.join("\n")).turnOne.myOptions).toHaveLength(2);
+    expect(await simCommand(["team.txt"], env, io())).toBe(2);
+    files["small.txt"] = "Milotic\nAbility: Competitive\n- Scald";
+    expect(await simCommand(["team.txt", "small.txt"], env, io())).toBe(1);
+  }, 120_000);
+});

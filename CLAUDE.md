@@ -18,6 +18,7 @@ packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
 packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
 packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
+packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、analyze.ts=選出/択の分析、pool.ts=並列実行(Node)
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
 apps/web          React + Vite。診断は Web Worker（src/worker.ts）。パックとサンプルはビルド時に同梱
 (予定) apps/api
@@ -44,6 +45,7 @@ pnpm team:check <team.txt>                       # パーティを読み、実�
 pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weather Sun] [--def-team 相手.txt]
 pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
 pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
+pnpm sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--workers 4] [--json]  # 選出の読み合い・1ターン目の択
 pnpm meta [--from 5] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
 pnpm web:dev / pnpm web:build                    # Web 画面
@@ -78,6 +80,11 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 - 実数値の式は `packages/calc/src/stats.ts` の `calcStat` だけに書く。アダプターは @smogon/calc が出した実数値をこれで上書きする。
 - ゴールデン: `packages/calc/test/golden/ingame-stats.json` は実機の値（変更禁止）。`damage-cases.json` は独立実装の式で検証する。
 - `legal.json` の `provenance` に、リストごとの出典と確度を書く。
+
+## 自分のパーティ・相手のパーティ
+
+- `my-teams/*.txt` に自分のパーティ（コピーして改造案を作る）、`opponents/*.txt` に対策したい構築（技構成込み）。
+- シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。
 
 ## 外部データの扱い
 

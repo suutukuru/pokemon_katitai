@@ -10,5 +10,11 @@
   "timers": {
     "verified": false
   },
-  "verified": false
+  "verified": false,
+  "simulator": {
+    "engine": "pokemon-showdown",
+    "format": "gen9championsvgc2026regmb",
+    "verified": false,
+    "note": "pokemon-showdown 0.11.11 に M-C の形式が無いため、Champions の仕様（champions mod: SP、まひ・ねむり・こおりの変更など）を使う VGC 2026 Reg M-B 形式で対戦させる。使用可能かどうかはこのパックで判定する"
+  }
 }

@@ -3,10 +3,14 @@ import { readFileSync } from "node:fs";
 import { gameSpec, loadPack, PackValidationError } from "@ca/data";
 import { FsPackSource, readTeamDbFiles } from "@ca/data/node";
 import { metaCommand } from "./meta-commands.js";
+import { simCommand } from "./sim-commands.js";
+import { workerPoolExecutor } from "@ca/sim/pool";
+import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
 import { regDiff, regNew, regValidate, type Io } from "./commands.js";
 import { buildI18n, importOfficial, importPokedbCommand } from "./data-commands.js";
 
+process.stdout.on("error", () => process.exit(0)); // e.g. piped into `head`
 const io: Io = { out: (l) => console.log(l), err: (l) => console.error(l) };
 const [cmd, ...args] = process.argv.slice(2);
 const source = new FsPackSource(process.env["CA_REGULATIONS_DIR"]);
@@ -41,6 +45,21 @@ try {
     case "team:check":
       code = teamCheck(args, teamEnv(), io);
       break;
+    case "sim": {
+      const env = teamEnv();
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      code = await simCommand(
+        args,
+        {
+          ...env,
+          executor: (mine, theirs) =>
+            workerPoolExecutor({ regulationId: env.pack.id, mine, theirs }, workers),
+        },
+        io,
+      );
+      break;
+    }
     case "meta":
       code = metaCommand(args, readTeamDbFiles(), teamEnv().pack.legal.species, io);
       break;

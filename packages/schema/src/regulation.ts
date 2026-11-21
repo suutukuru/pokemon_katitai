@@ -144,6 +144,15 @@ export const RulesSchema = z.strictObject({
       selectionSeconds: z.number().int().positive().optional(),
     })
     .optional(),
+  /** Battle simulator used for Monte Carlo analysis (packages/sim). */
+  simulator: z
+    .strictObject({
+      engine: z.literal("pokemon-showdown"),
+      format: z.string(),
+      verified: z.boolean(),
+      note: z.string().optional(),
+    })
+    .optional(),
   verified: z.boolean(),
 });
 export type Rules = z.infer<typeof RulesSchema>;
@@ -164,6 +173,8 @@ export const WeightsSchema = z.strictObject({
     .strictObject({ critical: z.number(), major: z.number(), minor: z.number() })
     .optional(),
   evaluation: z.record(z.string(), z.number()).default({}),
+  /** Heuristic battle policy and simulation budgets (packages/sim). */
+  simulation: z.record(z.string(), z.number()).default({}),
   search: z
     .strictObject({
       depth: z.number().int().min(1).max(5).optional(),

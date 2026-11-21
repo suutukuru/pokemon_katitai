@@ -85,5 +85,29 @@
     "critical": 0.25,
     "major": 0.5,
     "minor": 0.8
+  },
+  "simulation": {
+    "temperature": 0.35,
+    "protectBase": 0.18,
+    "protectThreatBonus": 0.35,
+    "protectRepeatPenalty": 0.6,
+    "koBonus": 0.6,
+    "allyHitPenalty": 1.2,
+    "tailwindValue": 0.55,
+    "trickRoomValue": 0.6,
+    "fakeOutValue": 0.55,
+    "sleepValue": 0.45,
+    "speedDropBonus": 0.12,
+    "statusMoveValue": 0.12,
+    "setupValue": 0.15,
+    "redirectionValue": 0.3,
+    "screenValue": 0.25,
+    "variablePowerFallback": 60,
+    "screenBattles": 8,
+    "topConfigs": 6,
+    "matrixBattles": 24,
+    "turnOptions": 6,
+    "turnRollouts": 16,
+    "fictitiousIterations": 4000
   }
 }

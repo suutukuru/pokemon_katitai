@@ -22,6 +22,7 @@
     "team:check": "tsx packages/cli/src/bin.ts team:check",
     "calc": "tsx packages/cli/src/bin.ts calc",
     "meta": "tsx packages/cli/src/bin.ts meta",
+    "sim": "tsx packages/cli/src/bin.ts sim",
     "web:dev": "pnpm --filter @ca/web dev",
     "web:build": "pnpm --filter @ca/web build",
     "e2e": "pnpm --filter @ca/web e2e",

@@ -13,6 +13,7 @@
     "@ca/data": "workspace:*",
     "@ca/engine": "workspace:*",
     "@ca/ingest": "workspace:*",
-    "@ca/schema": "workspace:*"
+    "@ca/schema": "workspace:*",
+    "@ca/sim": "workspace:*"
   }
 }
