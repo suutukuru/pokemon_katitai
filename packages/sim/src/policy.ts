@@ -1,6 +1,10 @@
 import type { EngineTags } from "@ca/schema";
 import type { PsBattle, PsMove, PsPokemon, PsRequest, PsRequestMove, PsSide } from "./showdown.js";
 import type { Rng } from "./rng.js";
+import { plannedChoice, plannedJoints, plannedSwitch } from "./planner.js";
+
+/** weights.json `simulation.policy`: 1 = per-slot heuristic (legacy), 2 = joint planner. */
+const usePlanner = (params: PolicyParams) => (params["policy"] ?? 1) >= 2;
 
 /** Policy parameters (weights.json `simulation`). */
 export type PolicyParams = Record<string, number>;
@@ -291,12 +295,14 @@ export function chooseFor(
 ): string {
   const req = side.activeRequest;
   if (!req || req.wait) return "";
-  if (req.forceSwitch) return switchChoice(side, req);
+  if (req.forceSwitch)
+    return usePlanner(params) ? plannedSwitch(b, side, req, tags, params) : switchChoice(side, req);
   // My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`.
   const T =
     side.id === "p1" && params["selfTemperature"] !== undefined
       ? params["selfTemperature"]
       : p(params, "temperature");
+  if (usePlanner(params)) return plannedChoice(b, side, tags, params, T, rng, trace);
   const picks = (req.active ?? []).map((_, slot) => {
     const opts = slotOptions(b, side, slot, req, tags, params);
     const i = softmaxPick(opts, T, rng);
@@ -347,6 +353,7 @@ export function jointOptions(
 ): JointOption[] {
   const req = side.activeRequest;
   if (!req?.active) return [];
+  if (usePlanner(params)) return plannedJoints(b, side, tags, params).slice(0, limit);
   const perSlot = req.active.map((_, slot) =>
     slotOptions(b, side, slot, req, tags, params).slice(0, limit),
   );
@@ -377,6 +384,22 @@ export function searchCandidates(
 ): JointOption[] {
   const req = side.activeRequest;
   if (!req?.active) return [];
+  if (usePlanner(params)) {
+    const all = plannedJoints(b, side, tags, params);
+    const picked = new Map<string, JointOption>();
+    for (const j of all.slice(0, width)) picked.set(j.choice, j);
+    // every single-slot option keeps its best completion
+    const slots = req.active.length;
+    for (let s = 0; s < slots; s++)
+      for (const j of all) {
+        const c = j.slots[s]?.choice;
+        if (c && ![...picked.values()].some((x) => x.slots[s]?.choice === c))
+          picked.set(j.choice, j);
+      }
+    return [...picked.values()].sort(
+      (a, c) => c.score - a.score || a.choice.localeCompare(c.choice),
+    );
+  }
   const perSlot = req.active.map((_, slot) => slotOptions(b, side, slot, req, tags, params));
   let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
   for (const opts of perSlot)

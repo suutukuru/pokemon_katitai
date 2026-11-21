@@ -1,5 +1,5 @@
 {
-  "version": "2026-11-21.manual.2",
+  "version": "2026-11-21.manual.3",
   "origin": "manual",
   "rules": {
     "legality.team": 5,
@@ -87,13 +87,13 @@
     "minor": 0.8
   },
   "simulation": {
-    "temperature": 0.35,
+    "temperature": 0.05,
     "protectBase": 0.18,
     "protectThreatBonus": 0.35,
     "protectRepeatPenalty": 0.6,
     "koBonus": 0.6,
     "allyHitPenalty": 1.2,
-    "tailwindValue": 0.55,
+    "tailwindValue": 1.0,
     "trickRoomValue": 0.6,
     "fakeOutValue": 0.55,
     "sleepValue": 0.45,
@@ -103,13 +103,13 @@
     "redirectionValue": 0.3,
     "screenValue": 0.25,
     "variablePowerFallback": 60,
-    "screenBattles": 24,
-    "topConfigs": 6,
+    "screenBattles": 16,
+    "topConfigs": 8,
     "matrixBattles": 48,
     "turnOptions": 6,
     "turnRollouts": 32,
     "fictitiousIterations": 4000,
-    "selfTemperature": 0.12,
+    "selfTemperature": 0.05,
     "searchWidth": 40,
     "searchStage1": 4,
     "searchKeep1": 8,
@@ -118,6 +118,21 @@
     "searchStage3": 40,
     "searchKeep3": 1,
     "switchBase": 0.05,
-    "switchThreatBonus": 0.3
+    "switchThreatBonus": 0.3,
+    "policy": 2,
+    "foeModelTemperature": 0.25,
+    "foeProtectBase": 0.08,
+    "foeProtectThreat": 0.3,
+    "foeProtectMax": 0.45,
+    "fakeOutWeight": 0.8,
+    "protectWeight": 0.9,
+    "protectCost": 0.3,
+    "denialWeight": 0.8,
+    "switchCost": 0.25,
+    "switchOffenseWeight": 0.3,
+    "recoilWeight": 0.5,
+    "chargeMoveFactor": 0.5,
+    "screenKeep": 20,
+    "screenBattles2": 40
   }
 }

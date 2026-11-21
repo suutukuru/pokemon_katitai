@@ -18,7 +18,7 @@ packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
 packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
 packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
-packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、analyze.ts=選出/択の分析、pool.ts=並列実行(Node)
+packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。planner.ts=行動方針（2体同時・相手予測、ADR-0011）、policy.ts=旧方針と入口、analyze.ts=選出/択の分析、bench.ts=方針の強さ比較、pool.ts=並列実行(Node)
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
 apps/web          React + Vite。診断は Web Worker（src/worker.ts）。パックとサンプルはビルド時に同梱
 (予定) apps/api
@@ -48,6 +48,7 @@ pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves
 pnpm sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--workers 4] [--json]  # 選出の読み合い・1ターン目の択
 pnpm sim <自分.txt> pokedb:M-7:4                 # 上位構築（公開データ＋使用率で型を推定）が相手
 pnpm sim:meta <自分.txt> [--top 10] [--scale 0.3] # M-C 上位構築すべてと対戦して推奨選出の一覧
+pnpm sim:bench <A.txt> <B.txt> [--pairs 50] [--x '{..}'] [--y '{"policy":1}']  # 行動方針どうしの強さ比較（重みを変えたら確認）
 pnpm report:meta <自分.txt> [--top 10]           # 上位構築との結果を画像(reports/*.png)にする（チャットで見せる用）
 pnpm report:battle <自分.txt> <相手|pokedb:M-7:4> [--games 30]  # 1戦ごとの中身（評価値・選ぶ確率・出来事・HP）を画像に
 pnpm report:replay <自分.txt> <相手|pokedb:M-7:68> [--pick lose|win] [--rollouts 16]  # 1戦を操作できる再生ページ(HTML1枚)＋各ターンの「もしこう動いていたら」勝率
@@ -93,6 +94,7 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 
 - `my-teams/*.txt` に自分のパーティ（コピーして改造案を作る）、`opponents/*.txt` に対策したい構築（技構成込み）。
 - シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。
+- 行動方針の重みを変えたら `pnpm sim:bench` で変更前と比べる（`--y` に変更前の値）。誤差（95%区間）より大きく勝つ変更だけ採用する。
 
 ## 外部データの扱い
 

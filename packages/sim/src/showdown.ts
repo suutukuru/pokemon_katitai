@@ -34,10 +34,13 @@ export interface PsMove {
   secondary?: { chance?: number; boosts?: Record<string, number> } | null;
   heal?: number[] | null;
   willCrit?: boolean;
+  recoil?: [number, number];
+  drain?: [number, number];
 }
 export interface PsPokemon {
   name: string;
-  species: { id: string; name: string };
+  species: { id: string; name: string; weightkg?: number };
+  moveSlots?: { id: string; pp: number; disabled?: boolean | string }[];
   hp: number;
   maxhp: number;
   fainted: boolean;
@@ -50,6 +53,9 @@ export interface PsPokemon {
   position: number;
   side: PsSide;
   getStat(stat: string, unboosted?: boolean, unmodified?: boolean): number;
+  /** Speed used for turn order (tailwind, scarf, paralysis, Swift Swim…; Trick Room inverts). */
+  getActionSpeed(): number;
+  isGrounded(): boolean;
   getTypes(): string[];
   hasType(t: string): boolean;
 }

@@ -3,7 +3,13 @@ import { readFileSync } from "node:fs";
 import { gameSpec, loadPack, PackValidationError } from "@ca/data";
 import { FsPackSource, readTeamDbFiles, readUsageSnapshots } from "@ca/data/node";
 import { metaCommand } from "./meta-commands.js";
-import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
+import {
+  runSimMeta,
+  simBenchCommand,
+  simCommand,
+  simMetaCommand,
+  type SimEnv,
+} from "./sim-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
 import {
@@ -123,6 +129,9 @@ try {
       break;
     case "team:check":
       code = teamCheck(args, teamEnv(), io);
+      break;
+    case "sim:bench":
+      code = simBenchCommand(args, simEnv(args), io);
       break;
     case "sim":
     case "sim:meta": {

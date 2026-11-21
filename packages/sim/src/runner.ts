@@ -19,6 +19,8 @@ export interface SimContext {
   format: string;
   params: PolicyParams;
   maxTurns: number;
+  /** Per-side policy parameters (policy benchmarks); falls back to `params`. */
+  sideParams?: [PolicyParams, PolicyParams];
 }
 
 export function simContext(pack: ResolvedPack, spec: GameSpec): SimContext {
@@ -90,7 +92,8 @@ export function playOut(
     for (const side of battle.sides) {
       if (battle.ended || side.isChoiceDone() || !side.activeRequest || side.activeRequest.wait)
         continue;
-      const choice = chooseFor(battle, side, tags, ctx.params, rng, trace);
+      const params = ctx.sideParams?.[side.id === "p1" ? 0 : 1] ?? ctx.params;
+      const choice = chooseFor(battle, side, tags, params, rng, trace);
       if (!choice || !battle.choose(side.id, choice)) battle.choose(side.id, "default");
     }
   }

@@ -44,6 +44,13 @@ export function inProcessExecutor(
 
 export interface Budget {
   screenBattles: number;
+  /**
+   * Second screening stage (0 = off): the best `screenKeep` brings of each side play
+   * `screenBattles2` more games against the other side's best `screenKeep` (plausible selections
+   * instead of uniformly random ones). Ranking then uses these games only.
+   */
+  screenKeep?: number;
+  screenBattles2?: number;
   topConfigs: number;
   matrixBattles: number;
   turnOptions: number;
@@ -60,6 +67,8 @@ export function budgetFrom(params: Record<string, number>, scale = 1): Budget {
   const s = (k: string) => Math.max(1, Math.round(get(k) * scale));
   return {
     screenBattles: s("screenBattles"),
+    screenKeep: Math.round(params["screenKeep"] ?? 0),
+    screenBattles2: params["screenBattles2"] ? s("screenBattles2") : 0,
     topConfigs: Math.max(2, Math.round(get("topConfigs"))),
     matrixBattles: s("matrixBattles"),
     turnOptions: Math.max(2, Math.round(get("turnOptions"))),
@@ -186,13 +195,56 @@ export async function analyzeMatchup(
   ): ConfigStat => ({ config: c, species: speciesOf(team, c), ...rateOf(rs, side) });
   const sortStats = (xs: ConfigStat[]) =>
     xs.sort((a, b) => b.rate - a.rate || a.config.join().localeCompare(b.config.join()));
-  const myScreen = sortStats(
+  let myScreen = sortStats(
     myConfigs.map((c, i) => stat(mine, c, screenRes.slice(i * n, (i + 1) * n), 0)),
   );
   const off = myConfigs.length * n;
-  const theirScreen = sortStats(
+  let theirScreen = sortStats(
     theirConfigs.map((c, i) => stat(theirs, c, screenRes.slice(off + i * n, off + (i + 1) * n), 1)),
   );
+
+  // 1b) second stage: the strongest brings against the other side's strongest brings
+  const keep = budget.screenKeep ?? 0;
+  const n2 = budget.screenBattles2 ?? 0;
+  if (keep > 0 && n2 > 0) {
+    const myKeep = myScreen.slice(0, keep);
+    const theirKeep = theirScreen.slice(0, keep);
+    const jobs2: BattleJob[] = [];
+    myKeep.forEach((x, i) => {
+      for (let k = 0; k < n2; k++)
+        jobs2.push({
+          a: x.config,
+          b: theirKeep[(i + k) % theirKeep.length]!.config,
+          seed: mixSeed(seed, 5, i, k),
+        });
+    });
+    theirKeep.forEach((x, i) => {
+      for (let k = 0; k < n2; k++)
+        jobs2.push({
+          a: myKeep[(i + k) % myKeep.length]!.config,
+          b: x.config,
+          seed: mixSeed(seed, 6, i, k),
+        });
+    });
+    onProgress?.("screening2", 0, jobs2.length);
+    const res2 = await exec.run(jobs2);
+    battles += res2.length;
+    const off2 = myKeep.length * n2;
+    const restMine = myScreen.slice(keep);
+    const restTheirs = theirScreen.slice(keep);
+    myScreen = [
+      ...sortStats(myKeep.map((x, i) => stat(mine, x.config, res2.slice(i * n2, (i + 1) * n2), 0))),
+      ...restMine,
+    ];
+    theirScreen = [
+      ...sortStats(
+        theirKeep.map((x, i) =>
+          stat(theirs, x.config, res2.slice(off2 + i * n2, off2 + (i + 1) * n2), 1),
+        ),
+      ),
+      ...restTheirs,
+    ];
+  }
 
   // 2) top-K matrix
   const K = budget.topConfigs;

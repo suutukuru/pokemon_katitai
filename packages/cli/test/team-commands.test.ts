@@ -121,6 +121,7 @@ describe("sim", () => {
     const tiny = structuredClone(env.pack);
     Object.assign(tiny.weights.simulation, {
       screenBattles: 1,
+      screenKeep: 0,
       topConfigs: 2,
       matrixBattles: 1,
       turnOptions: 2,
@@ -156,6 +157,7 @@ describe("sim with resolved opponents and sim:meta", () => {
     const tiny = structuredClone(env.pack);
     Object.assign(tiny.weights.simulation, {
       screenBattles: 1,
+      screenKeep: 0,
       topConfigs: 2,
       matrixBattles: 1,
       turnOptions: 2,

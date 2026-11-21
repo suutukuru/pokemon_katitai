@@ -2,6 +2,7 @@ import type { PokemonSet } from "@ca/schema";
 import { displayName } from "@ca/data";
 import {
   analyzeMatchup,
+  benchPolicies,
   budgetFrom,
   inProcessExecutor,
   simContext,
@@ -40,7 +41,11 @@ export function formatAnalysis(a: MatchupAnalysis, regulation: string): string[]
   out.push(
     "※ 両者とも同じ確率的なAIで行動します。相手の実際の動きとは異なる可能性があります（推測を含む）。",
   );
-  out.push("\n■ 選出と初手（全組み合わせの予備戦、上位）");
+  out.push(
+    a.budget.screenKeep && a.budget.screenBattles2
+      ? `\n■ 選出と初手（全組み合わせの予備戦 → 上位${a.budget.screenKeep}どうしの再戦、上位）`
+      : "\n■ 選出と初手（全組み合わせの予備戦、上位）",
+  );
   for (const s of a.screening.mine.slice(0, 5))
     out.push(`  ${names(s.species)}  勝率 ${rateStr(s)}`);
   out.push("\n■ 相手の有力な選出（予備戦で相手の勝率が高い順）");
@@ -281,5 +286,52 @@ export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promi
     io.out(`  推奨選出: ${names(r.bring)}`);
     if (r.turnOne) io.out(`  1ターン目の基本: ${r.turnOne}${r.isGuess ? "（択あり）" : ""}`);
   }
+  return 0;
+}
+
+/**
+ * `sim:bench <A.txt> <B.txt|pokedb:..> [--pairs 50] [--seed 1] [--x '{json}'] [--y '{json}']` —
+ * policy strength check: policy X (weights.json `simulation` + --x) vs policy Y (+ --y, default
+ * the legacy per-slot heuristic `{"policy":1}`). Each game is replayed with the teams swapped.
+ */
+export function simBenchCommand(args: string[], env: SimEnv, io: Io): number {
+  const opt = (k: string) => {
+    const i = args.indexOf(`--${k}`);
+    return i >= 0 ? args[i + 1] : undefined;
+  };
+  const flags = ["--pairs", "--seed", "--x", "--y", "--workers"];
+  const [fa, fb] = args.filter((x, i) => !x.startsWith("--") && !flags.includes(args[i - 1] ?? ""));
+  if (!fa || !fb) {
+    io.err(
+      "usage: pnpm sim:bench <A.txt> <B.txt> [--pairs 50] [--seed 1] [--x '{\"temperature\":0.1}'] [--y '{\"policy\":1}']",
+    );
+    return 2;
+  }
+  const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
+  const load = (f: string) =>
+    env.resolveTeam?.(f)?.members ?? parseShowdown(env.readText(f), legal).members;
+  const ctx = simContext(env.pack, env.spec);
+  const base = env.pack.weights.simulation;
+  const parse = (s: string | undefined, d: string): Record<string, number> => {
+    const v: unknown = JSON.parse(s ?? d);
+    if (typeof v !== "object" || v === null || Object.values(v).some((n) => typeof n !== "number"))
+      throw new Error(`--x / --y は {"名前": 数値} の JSON: ${s ?? d}`);
+    return v as Record<string, number>;
+  };
+  const x = { ...base, ...parse(opt("x"), "{}") };
+  const y = { ...base, ...parse(opt("y"), '{"policy":1}') };
+  const r = benchPolicies(
+    ctx,
+    load(fa),
+    load(fb),
+    x,
+    y,
+    Number(opt("pairs") ?? 50),
+    Number(opt("seed") ?? 1),
+  );
+  io.out(
+    `方針X（${opt("x") ?? "現在の設定"}）vs 方針Y（${opt("y") ?? '{"policy":1}'}）: X の勝率 ${rateStr(r)}`,
+  );
+  io.out("※ 同じ選出・乱数で陣営を入れ替えて2回ずつ対戦（パーティの有利不利は打ち消し合う）");
   return 0;
 }
