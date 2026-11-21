@@ -93,6 +93,19 @@ export interface SimEnv extends TeamEnv {
     mine: PokemonSet[],
     theirs: PokemonSet[],
   ) => Executor & { close?: () => Promise<void> };
+  /** Resolve "pokedb:M-7:4"-style specs (team DB + usage estimate). */
+  resolveTeam?: (spec: string) => ResolvedOpponent | undefined;
+  /** Top recorded teams for this regulation, best rank first. */
+  topTeams?: (limit: number) => string[];
+}
+
+export interface ResolvedOpponent {
+  members: PokemonSet[];
+  label: string;
+  /** Where the estimated fields came from. */
+  note?: string;
+  /** Species left out because no set could be estimated. */
+  missing?: string[];
 }
 
 /** `sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--json]` */
@@ -114,6 +127,11 @@ export async function simCommand(args: string[], env: SimEnv, io: Io): Promise<n
   }
   const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
   const load = (f: string) => {
+    const resolved = env.resolveTeam?.(f);
+    if (resolved) {
+      if (resolved.note) io.err(`[${resolved.label}] ${resolved.note}`);
+      return { members: resolved.members };
+    }
     const r = parseShowdown(env.readText(f), legal);
     for (const i of r.issues.filter((x) => x.severity === "error"))
       io.err(`[${f}] ${i.line ?? ""}行目: ${i.message}`);
@@ -148,5 +166,76 @@ export async function simCommand(args: string[], env: SimEnv, io: Io): Promise<n
   } finally {
     await (exec as { close?: () => Promise<void> }).close?.();
   }
+  return 0;
+}
+
+/**
+ * `sim:meta <自分.txt> [--top 10] [--scale 0.3] [--seed 1]` — run the matchup analysis against the
+ * regulation's top recorded teams and summarise the recommended bring per opponent.
+ */
+export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promise<number> {
+  const opt = (k: string) => {
+    const i = args.indexOf(`--${k}`);
+    return i >= 0 ? args[i + 1] : undefined;
+  };
+  const mineFile = args.find(
+    (x, i) =>
+      !x.startsWith("--") &&
+      !["--top", "--scale", "--seed", "--workers"].includes(args[i - 1] ?? ""),
+  );
+  if (!mineFile || !env.topTeams || !env.resolveTeam) {
+    io.err("usage: pnpm sim:meta <自分のパーティ.txt> [--top 10] [--scale 0.3] [--seed 1]");
+    return 2;
+  }
+  const mine = parseShowdown(env.readText(mineFile), {
+    legal: { species: env.pack.legal.species, items: env.pack.legal.items },
+  }).members;
+  const ctx = simContext(env.pack, env.spec);
+  const budget = budgetFrom(env.pack.weights.simulation, Number(opt("scale") ?? 0.3));
+  const rows: string[] = [];
+  let total = 0;
+  for (const spec of env.topTeams(Number(opt("top") ?? 10))) {
+    const opp = env.resolveTeam(spec);
+    if (!opp || opp.members.length < env.pack.rules.bringCount) {
+      io.err(`skip ${spec}: 型を推定できないポケモンがいます`);
+      continue;
+    }
+    const exec = env.executor
+      ? env.executor(mine, opp.members)
+      : inProcessExecutor(ctx, mine, opp.members);
+    try {
+      const a = await analyzeMatchup(
+        ctx,
+        mine,
+        opp.members,
+        exec,
+        budget,
+        Number(opt("seed") ?? 1),
+      );
+      total += a.battles;
+      const best = a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine));
+      const t1 =
+        a.turnOne.myOptions[
+          a.turnOne.equilibrium.mine.indexOf(Math.max(...a.turnOne.equilibrium.mine))
+        ];
+      rows.push(`■ ${opp.label}\n  相手: ${opp.members.map((m) => name(m.species)).join("・")}`);
+      if (opp.missing?.length)
+        rows.push(`  ※ 型を推定できず除外: ${opp.missing.map(name).join("・")}`);
+      rows.push(
+        `  期待勝率 ${pct(a.equilibrium.value)}（安全策の最低勝率 ${pct(a.safest.worstRate)}）`,
+      );
+      rows.push(`  推奨選出: ${names(a.matrix.mine[best]!)}`);
+      if (t1)
+        rows.push(`  1ターン目の基本: ${optionStr(t1)}${a.turnOne.isGuess ? "（択あり）" : ""}`);
+      io.err(`… ${opp.label} 完了`);
+    } finally {
+      await (exec as { close?: () => Promise<void> }).close?.();
+    }
+  }
+  io.out(`上位構築との対戦シミュレーション（合計 ${total}戦、レギュレーション ${env.pack.id}）`);
+  io.out(
+    "※ 相手の技・特性・性格・SP は使用率データの最多の型による推定です。行動は確率的なAIです（推測を含む）。",
+  );
+  for (const r of rows) io.out(r);
   return 0;
 }

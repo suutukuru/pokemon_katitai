@@ -1,5 +1,6 @@
 // Diagnosis runs here so the UI stays responsive (PLAN §7 performance).
-import { gameSpec, displayName, loadPack } from "@ca/data";
+import { gameSpec, displayName, loadPack, parseUsageSnapshot } from "@ca/data";
+import type { UsageSnapshot } from "@ca/schema";
 import { diagnose, MECHANIC_IDS } from "@ca/engine";
 import { explainFinding } from "@ca/explain";
 import { parseShowdown } from "@ca/ingest";
@@ -14,7 +15,25 @@ const regulations = packSource
   .filter((id) => !id.includes("DUMMY"))
   .map((id) => ({ id, name: loadPack(packSource, id).name.ja }));
 
-self.onmessage = (ev: MessageEvent<DiagnoseRequest>) => {
+// Usage snapshots are loaded lazily: only the newest, highest-cutoff file for the regulation.
+const usageFiles = import.meta.glob("../../../packages/data/usage/*/*.json", { import: "default" });
+const usageCache = new Map<string, Promise<UsageSnapshot | undefined>>();
+function usageFor(regulationId: string): Promise<UsageSnapshot | undefined> {
+  let p = usageCache.get(regulationId);
+  if (!p) {
+    const key = Object.keys(usageFiles)
+      .filter((k) => k.includes(`/usage/${regulationId}/`))
+      .sort((a, b) => {
+        const m = (k: string) => /(\d{4}-\d{2})-\w+-(\d+)\.json$/.exec(k) ?? ["", "", "0"];
+        return m(b)[1]!.localeCompare(m(a)[1]!) || Number(m(b)[2]) - Number(m(a)[2]);
+      })[0];
+    p = key ? usageFiles[key]!().then((j) => parseUsageSnapshot(j)) : Promise.resolve(undefined);
+    usageCache.set(regulationId, p);
+  }
+  return p;
+}
+
+self.onmessage = async (ev: MessageEvent<DiagnoseRequest>) => {
   const req = ev.data;
   const t0 = performance.now();
   try {
@@ -23,7 +42,10 @@ self.onmessage = (ev: MessageEvent<DiagnoseRequest>) => {
     const parsed = parseShowdown(req.text, {
       legal: { species: pack.legal.species, items: pack.legal.items },
     });
-    const report = parsed.members.length ? diagnose(parsed.members, pack, spec) : null;
+    const usage = await usageFor(req.regulationId);
+    const report = parsed.members.length
+      ? diagnose(parsed.members, pack, spec, usage ? { usage } : {})
+      : null;
     const members: MemberView[] = parsed.members.map((m, i) => {
       const view = report?.members[i];
       return {

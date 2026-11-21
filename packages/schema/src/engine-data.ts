@@ -42,6 +42,8 @@ export const EngineTagsSchema = z.object({
 export type EngineTags = z.infer<typeof EngineTagsSchema>;
 
 /** Dated usage snapshot for a regulation (manually imported; see docs/OPEN_QUESTIONS D-01). */
+const Share = z.object({ id: z.string(), share: z.number().min(0).max(1) });
+
 export const UsageSnapshotSchema = z.object({
   regulationId: z.string(),
   date: z.iso.date(),
@@ -49,6 +51,9 @@ export const UsageSnapshotSchema = z.object({
   source: SourceSchema,
   /** true for hand-made fixtures that are not real usage data */
   sample: z.boolean().default(false),
+  /** e.g. number of battles and rating cutoff of the underlying stats */
+  battles: z.number().nonnegative().optional(),
+  cutoff: z.number().optional(),
   entries: z
     .array(
       z.object({
@@ -68,6 +73,22 @@ export const UsageSnapshotSchema = z.object({
             }),
           )
           .default([]),
+        /** Marginal distributions (share of this species' teams). */
+        distributions: z
+          .object({
+            moves: z.array(Share),
+            items: z.array(Share),
+            abilities: z.array(Share),
+            spreads: z.array(
+              z.object({
+                nature: NatureSchema,
+                sp: StatsTableSchema,
+                share: z.number().min(0).max(1),
+              }),
+            ),
+            teammates: z.array(Share),
+          })
+          .optional(),
       }),
     )
     .min(1),

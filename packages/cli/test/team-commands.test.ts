@@ -149,3 +149,43 @@ describe("sim", () => {
     expect(await simCommand(["team.txt", "small.txt"], env, io())).toBe(1);
   }, 120_000);
 });
+
+describe("sim with resolved opponents and sim:meta", () => {
+  it("uses resolveTeam for pokedb specs and summarises sim:meta", async () => {
+    const { simCommand, simMetaCommand } = await import("../src/index.js");
+    const tiny = structuredClone(env.pack);
+    Object.assign(tiny.weights.simulation, {
+      screenBattles: 1,
+      topConfigs: 2,
+      matrixBattles: 1,
+      turnOptions: 2,
+      turnRollouts: 1,
+      fictitiousIterations: 200,
+    });
+    const { parseShowdown } = await import("@ca/ingest");
+    const rain = parseShowdown(
+      files["rain.txt"] ??
+        readFileSync(new URL("../../data/teams/samples/sample-rain.txt", import.meta.url), "utf8"),
+    ).members;
+    const simEnv = {
+      ...env,
+      pack: tiny,
+      resolveTeam: (spec: string) =>
+        spec === "pokedb:M-7:4"
+          ? { members: rain, label: "M-7 4位", note: "推定", missing: ["audino"] }
+          : undefined,
+      topTeams: () => ["pokedb:M-7:4", "pokedb:M-0:0"],
+    };
+    const x = io();
+    expect(await simCommand(["team.txt", "pokedb:M-7:4"], simEnv, x)).toBe(0);
+    expect(x.e[0]).toBe("[M-7 4位] 推定");
+    const y = io();
+    expect(await simMetaCommand(["team.txt", "--top", "2", "--scale", "0.01"], simEnv, y)).toBe(0);
+    const out = y.o.join("\n");
+    expect(out).toContain("■ M-7 4位");
+    expect(out).toContain("推奨選出:");
+    expect(out).toContain("型を推定できず除外: タブンネ");
+    expect(y.e.some((l) => l.startsWith("skip pokedb:M-0:0"))).toBe(true);
+    expect(await simMetaCommand([], env, io())).toBe(2);
+  }, 180_000);
+});

@@ -46,6 +46,9 @@ pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weat
 pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
 pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
 pnpm sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--workers 4] [--json]  # 選出の読み合い・1ターン目の択
+pnpm sim <自分.txt> pokedb:M-7:4                 # 上位構築（公開データ＋使用率で型を推定）が相手
+pnpm sim:meta <自分.txt> [--top 10] [--scale 0.3] # M-C 上位構築すべてと対戦して推奨選出の一覧
+pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
 pnpm web:dev / pnpm web:build                    # Web 画面
@@ -89,6 +92,7 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 ## 外部データの扱い
 
 - pokedb（champs.pokedb.tokyo）は**公開データ（/opendata/）だけ**を使う。使用率ページ・記事ページを取得するコードは書かない（ADR-0008）。
+- 相手の技構成は Smogon 使用率（Showdown の Reg M-C）から推定（ADR-0010）。推定した項目は `assumed` と出力で明示する。
 - 外部サイトには実行時にアクセスしない。取得したファイルは `data:*` コマンドで正規化してコミットする。
 
 ## ルールを追加・調整する手順

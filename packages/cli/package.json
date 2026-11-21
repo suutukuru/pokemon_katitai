@@ -12,6 +12,7 @@
     "@ca/calc": "workspace:*",
     "@ca/data": "workspace:*",
     "@ca/engine": "workspace:*",
+    "@ca/explain": "workspace:*",
     "@ca/ingest": "workspace:*",
     "@ca/schema": "workspace:*",
     "@ca/sim": "workspace:*"

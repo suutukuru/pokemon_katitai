@@ -10,3 +10,4 @@ apps/web/test-results
 apps/web/playwright-report
 **/__snapshots__
 packages/data/teams/pokedb
+packages/data/usage

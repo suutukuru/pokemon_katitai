@@ -1,10 +1,11 @@
 // Node-only entry point (`@ca/data/node`). Do not import from browser/Workers code.
-import type { TeamDatabaseFile } from "@ca/schema";
+import type { TeamDatabaseFile, UsageSnapshot } from "@ca/schema";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { PackFile, PackSource } from "./source.js";
 import { parseTeamDbFile } from "./teamdb.js";
+import { parseUsageSnapshot } from "./engine-data.js";
 
 export const DEFAULT_REGULATIONS_DIR = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -48,4 +49,19 @@ export function readTeamDbFiles(root: string = DEFAULT_TEAMS_DIR): TeamDatabaseF
         .sort()
         .map((f) => parseTeamDbFile(JSON.parse(readFileSync(join(root, d, f), "utf8")))),
     );
+}
+
+export const DEFAULT_USAGE_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../usage");
+
+/** Usage snapshots for a regulation, newest first; within a month, the highest rating cutoff first. */
+export function readUsageSnapshots(
+  regulationId: string,
+  root: string = DEFAULT_USAGE_DIR,
+): UsageSnapshot[] {
+  const dir = join(root, regulationId);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => parseUsageSnapshot(JSON.parse(readFileSync(join(dir, f), "utf8"))))
+    .sort((a, b) => b.date.localeCompare(a.date) || (b.cutoff ?? 0) - (a.cutoff ?? 0));
 }

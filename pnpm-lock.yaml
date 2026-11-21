@@ -108,6 +108,9 @@ importers:
       '@ca/engine':
         specifier: workspace:*
         version: link:../engine
+      '@ca/explain':
+        specifier: workspace:*
+        version: link:../explain
       '@ca/ingest':
         specifier: workspace:*
         version: link:../ingest

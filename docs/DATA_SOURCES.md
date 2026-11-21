@@ -29,6 +29,7 @@
 | 技の命中率・追加効果の確率・対象           | PokeAPI `moves.csv`                                                                                                                                               | 本編の値。Champions の調整は `overrides.json`        | `packages/data/base/moves.json`                                                              |
 
 | 上位構築（ダブル M-1〜M-7、226件）：順位・レート・ポケモン・持ち物 | バトルデータベース チャンピオンズ 上位構築データ（公開データ）https://champs.pokedb.tokyo/guide/opendata（2026-11-21取得、各シーズン1回のみ） | 公開データのみ使用。使用率ページ・記事は取得しない（ADR-0008、規約第3条: OPEN_QUESTIONS L-07） | `packages/data/teams/pokedb/` |
+| 使用率・技/持ち物/特性/SP配分の分布（Reg M-C, 2026-10, レート1760/1500） | Smogon usage stats https://www.smogon.com/stats/2026-10/chaos/gen9championsvgc2026regmc-{1760,1500}.json（Pokémon Showdown ラダー、2026-11-21 に各1回取得） | 上位分布だけに縮めて保存。相手の型の推定（推測）と診断の上位N体ルールに使用（ADR-0010） | `packages/data/usage/M-C/` |
 | 新メガストーンの日本語名（20個） | 上記の公開データ（持ち主から一意に特定） | 補完のみ（上書きしない） | `packages/data/i18n/names.extra.json` |
 
 再生成手順: PokeAPI の CSV と公式ページ（`pokemon_ja.html` / `pokemon_en.html`）をローカルに保存し、

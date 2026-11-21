@@ -11,3 +11,5 @@ export * from "./names.js";
 export * from "./engine-data.js";
 export * from "./pokedb.js";
 export * from "./teamdb.js";
+export * from "./smogon.js";
+export * from "./estimate.js";

@@ -1,7 +1,15 @@
-import { STAT_IDS, type GameSpec, type PokemonSet, type ResolvedPack } from "@ca/schema";
+import {
+  STAT_IDS,
+  type GameSpec,
+  type PokemonSet,
+  type ResolvedPack,
+  type UsageSnapshot,
+} from "@ca/schema";
 import { displayName, normalizeName } from "@ca/data";
 import { ChampionsCalc, validateSp, type Weather } from "@ca/calc";
 import { parseShowdown } from "@ca/ingest";
+import { diagnose } from "@ca/engine";
+import { explainFinding } from "@ca/explain";
 import type { Io } from "./commands.js";
 
 const STAT_JA = {
@@ -22,6 +30,8 @@ const SEVERITY_JA = { error: "エラー", warning: "確認", info: "情報" } as
 
 export interface TeamEnv {
   pack: ResolvedPack;
+  /** Latest usage snapshot for the regulation (enables the top-threat rules). */
+  usage?: UsageSnapshot | undefined;
   spec: GameSpec;
   readText(path: string): string;
 }
@@ -68,6 +78,19 @@ export function teamCheck(args: string[], env: TeamEnv, io: Io): number {
     io.out("  技: " + m.moves.map((x) => displayName("moves", x)).join(" / "));
     for (const i of validateSp(env.spec, m.sp)) io.err(`  [エラー] ${i.message}`);
     if (m.assumed.length) io.out(`  ※仮の値: ${m.assumed.join(", ")}`);
+  }
+  if (r.members.length > 0) {
+    const report = diagnose(r.members, env.pack, env.spec, env.usage ? { usage: env.usage } : {});
+    io.out(
+      `\n■ 診断（スコア ${report.score}）${env.usage ? ` ／ 使用率: ${env.usage.source.title}` : " ／ 使用率データなし"}`,
+    );
+    for (const f of report.findings) {
+      const e = explainFinding(f);
+      io.out(
+        `  [${e.severityLabel}] ${e.title}：${e.body}${f.basis === "estimated" ? "（推測を含む）" : ""}`,
+      );
+      for (const sgg of e.suggestions) io.out(`     → ${sgg.body}`);
+    }
   }
   return r.issues.some((i) => i.severity === "error") ? 1 : 0;
 }

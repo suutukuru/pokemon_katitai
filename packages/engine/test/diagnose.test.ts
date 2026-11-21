@@ -334,6 +334,16 @@ describe("threat rules (usage snapshot)", () => {
     });
     expect(f?.evidence.some((e) => e.kind === "data" && e.snapshot === "2026-11-20")).toBe(true);
   });
+  it("every threat finding renders with the explain templates", () => {
+    for (const f of r.findings) expect(() => explainFinding(f)).not.toThrow();
+  });
+  it("works with the real Smogon M-C snapshot", async () => {
+    const { readUsageSnapshots } = await import("@ca/data/node");
+    const real = readUsageSnapshots("M-C")[0]!;
+    const rr = diagnose(sampleTeam("user-team-1"), pack, spec, { now: NOW, usage: real });
+    expect(rr.ruleScores.find((x) => x.ruleId === "defense.threats")?.applied).toBe(true);
+    for (const f of rr.findings) expect(explainFinding(f).body).not.toMatch(/\{|undefined/);
+  }, 60_000);
   it("offense: evidence includes the 2HKO probability", () => {
     for (const f of r.findings.filter((x) => x.ruleId === "offense.threats")) {
       expect(f.evidence[0]!.values).toHaveProperty("p2");

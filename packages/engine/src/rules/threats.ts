@@ -39,6 +39,7 @@ export const threatOffenseRule: Rule = {
           explainKey: "offense.threat.no2hko",
           score: best?.p2 ?? 0,
           params: {
+            hits: 2,
             threat: t.species,
             usage: Math.round(t.usage * 1000) / 10,
             member: best?.member ?? "",
