@@ -26,9 +26,9 @@ describe("FsPackSource", () => {
 describe("MemoryPackSource", () => {
   it("serves bundled JSON (browser path)", () => {
     const s = new MemoryPackSource(realPacks());
-    expect(s.listPackIds()).toContain("M-B");
-    expect(s.read("M-B", "manifest")).toMatchObject({ id: "M-B" });
+    expect(s.listPackIds()).toContain("M-C");
+    expect(s.read("M-C", "manifest")).toMatchObject({ id: "M-C" });
     expect(s.read("NOPE", "manifest")).toBeUndefined();
-    expect(loadPack(s, "X-NEXT-DUMMY").chain).toEqual(["M-B", "X-NEXT-DUMMY"]);
+    expect(loadPack(s, "X-NEXT-DUMMY").chain).toEqual(["M-C", "X-NEXT-DUMMY"]);
   });
 });

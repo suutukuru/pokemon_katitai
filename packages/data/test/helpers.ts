@@ -44,7 +44,7 @@ export function realPacks(): Record<string, Files> {
   );
 }
 
-/** A small child pack of M-B. */
+/** A small child pack of M-C. */
 export function childOf(parent: string, id: string, files: Files = {}): Files {
   return {
     manifest: { id, name: { ja: id, en: id }, extends: parent, dataVersion: "t", verified: false },

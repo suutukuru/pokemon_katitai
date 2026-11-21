@@ -24,5 +24,11 @@ export const GameSpecSchema = z.object({
     statPerPoint: Verified(z.number().int().positive()),
   }),
   natureMultiplier: Verified(z.object({ up: z.number(), down: z.number() })),
+  /** Base critical-hit chance at stage 0, as a fraction. */
+  critChance: Verified(
+    z.object({ numerator: z.number().int().positive(), denominator: z.number().int().positive() }),
+  ),
+  /** Critical-hit damage multiplier. */
+  critMultiplier: Verified(z.number().positive()),
 });
 export type GameSpec = z.infer<typeof GameSpecSchema>;

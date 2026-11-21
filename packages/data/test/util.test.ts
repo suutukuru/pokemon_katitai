@@ -89,7 +89,7 @@ describe("canonicalJson / sha256", () => {
 
 describe("diffPacks", () => {
   const s = new TestSource();
-  const a = loadPack(s, "M-B");
+  const a = loadPack(s, "M-C");
   const b = loadPack(s, "X-NEXT-DUMMY");
 
   it("lists added/removed species, items and overrides", () => {
@@ -132,10 +132,10 @@ describe("diffPacks", () => {
 describe("scaffoldPack", () => {
   it("creates a loadable child pack whose content equals the parent", () => {
     const s = new TestSource();
-    s.packs["M-C"] = scaffoldPack({ id: "M-C", extends: "M-B", today: "2026-11-21" });
-    const p = loadPack(s, "M-C");
-    expect(p.chain).toEqual(["M-B", "M-C"]);
-    expect(isEmptyDiff(diffPacks(loadPack(s, "M-B"), p))).toBe(true);
+    s.packs["M-D"] = scaffoldPack({ id: "M-D", extends: "M-C", today: "2026-11-21" });
+    const p = loadPack(s, "M-D");
+    expect(p.chain).toEqual(["M-C", "M-D"]);
+    expect(isEmptyDiff(diffPacks(loadPack(s, "M-C"), p))).toBe(true);
   });
   it("creates a loadable root pack", () => {
     const s = new TestSource({});
@@ -153,15 +153,21 @@ describe("dex / game spec", () => {
   it("knows Champions megas and their stones from @smogon/calc", () => {
     const dex = baseDex();
     expect(dex.species("dragonitemega")).toMatchObject({ baseId: "dragonite", isMega: true });
-    expect(dex.megaStones().get("dragoninite")).toEqual({
+    expect(
+      dex
+        .megaStones()
+        .get("meowsticite")
+        ?.map((e) => e.baseId),
+    ).toEqual(["meowstic", "meowsticf"]);
+    expect(dex.megaStones().get("dragoninite")?.[0]).toEqual({
       baseId: "dragonite",
       megaId: "dragonitemega",
     });
     expect(dex.hasMove("tailwind")).toBe(true);
   });
-  it("loads SP constants from data, marked unverified", () => {
+  it("loads SP constants from data, verified against in-game screenshots", () => {
     const g = gameSpec();
-    expect(g.statPoints.total).toMatchObject({ value: 66, verified: false });
+    expect(g.statPoints.total).toMatchObject({ value: 66, verified: true });
     expect(g.statPoints.perStat.value).toBe(32);
   });
 });

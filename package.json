@@ -16,6 +16,10 @@
     "reg:new": "tsx packages/cli/src/bin.ts reg:new",
     "reg:diff": "tsx packages/cli/src/bin.ts reg:diff",
     "reg:validate": "tsx packages/cli/src/bin.ts reg:validate",
+    "data:import-official": "tsx packages/cli/src/bin.ts data:import-official",
+    "data:build-i18n": "tsx packages/cli/src/bin.ts data:build-i18n",
+    "team:check": "tsx packages/cli/src/bin.ts team:check",
+    "calc": "tsx packages/cli/src/bin.ts calc",
     "ci": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {

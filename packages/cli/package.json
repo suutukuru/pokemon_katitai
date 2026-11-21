@@ -9,7 +9,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@ca/calc": "workspace:*",
     "@ca/data": "workspace:*",
+    "@ca/ingest": "workspace:*",
     "@ca/schema": "workspace:*"
   }
 }

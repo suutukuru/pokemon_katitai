@@ -296,12 +296,26 @@ export function loadPack(source: PackSource, id: string, options: LoadOptions = 
     periods: leaf.manifest.periods,
     mechanics,
     sources: leaf.manifest.sources,
-    legal: { verified: chain.every((p) => p.legal.verified), ...legal },
+    legal: {
+      verified: chain.every((p) => p.legal.verified),
+      provenance: collectProvenance(chain),
+      ...legal,
+    },
     overrides,
     rules: rulesR.data,
     weights: weightsR.data,
   };
   return ResolvedPackSchema.parse(resolved);
+}
+
+function collectProvenance(chain: ParsedPack[]): ResolvedPack["legal"]["provenance"] {
+  const out: ResolvedPack["legal"]["provenance"] = {};
+  for (const p of chain) {
+    for (const [k, v] of Object.entries(p.legal.provenance)) {
+      if (v) (out[k] ??= []).push({ packId: p.id, ...v });
+    }
+  }
+  return out;
 }
 
 function stripSchema(v: unknown): unknown {
@@ -366,7 +380,9 @@ function checkResolved(
   for (const id of legal.megaSpecies) {
     if (!species.has(id))
       push("legal", "megaSpecies", `"${id}" can Mega Evolve but is not in the legal species list`);
-    const usable = stones.filter(([item, s]) => s.baseId === id && items.has(item));
+    const usable = stones.filter(
+      ([item, evos]) => items.has(item) && evos.some((e) => e.baseId === id),
+    );
     if (usable.length === 0)
       push("legal", "megaSpecies", `"${id}" has no legal Mega Stone in the items list`);
   }

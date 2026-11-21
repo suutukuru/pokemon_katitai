@@ -1,6 +1,11 @@
 import { Generations } from "@smogon/calc";
 import { toID, type ResolvedPack } from "@ca/schema";
 
+export interface MegaEvolution {
+  baseId: string;
+  megaId: string;
+}
+
 export interface DexSpecies {
   id: string;
   name: string;
@@ -16,8 +21,10 @@ export interface Dex {
   hasMove(id: string): boolean;
   hasItem(id: string): boolean;
   hasAbility(id: string): boolean;
-  /** Mega stone item IDs mapped to the base species ID they evolve. */
-  megaStones(): ReadonlyMap<string, { baseId: string; megaId: string }>;
+  /** Mega stone item ID → the (base species, Mega forme) pairs it works for (Meowsticite has two). */
+  megaStones(): ReadonlyMap<string, readonly MegaEvolution[]>;
+  /** All IDs of a kind (sorted). */
+  ids(kind: "species" | "moves" | "items" | "abilities"): readonly string[];
 }
 
 const gen9 = Generations.get(9);
@@ -28,19 +35,30 @@ function buildBaseDex(): Dex {
     const baseId = toID(s.baseSpecies ?? s.name);
     species.set(s.id, { id: s.id, name: s.name, baseId, isMega: /-Mega(-|$)/.test(s.name) });
   }
-  const megaStones = new Map<string, { baseId: string; megaId: string }>();
+  const megaStones = new Map<string, MegaEvolution[]>();
   for (const it of gen9.items) {
     if (it.megaStone) {
-      for (const [base, mega] of Object.entries(it.megaStone)) {
-        megaStones.set(it.id, { baseId: toID(base), megaId: toID(mega) });
-      }
+      megaStones.set(
+        it.id,
+        Object.entries(it.megaStone).map(([base, mega]) => ({
+          baseId: toID(base),
+          megaId: toID(mega),
+        })),
+      );
     }
   }
   const moves = new Set<string>([...gen9.moves].map((m) => m.id));
   const items = new Set<string>([...gen9.items].map((i) => i.id));
   const abilities = new Set<string>([...gen9.abilities].map((a) => a.id));
+  const ids = {
+    species: [...species.keys()].sort(),
+    moves: [...moves].sort(),
+    items: [...items].sort(),
+    abilities: [...abilities].sort(),
+  };
   return {
     source: "@smogon/calc gen9",
+    ids: (kind) => ids[kind],
     species: (id) => species.get(id),
     hasMove: (id) => moves.has(id),
     hasItem: (id) => items.has(id),
@@ -70,5 +88,12 @@ export function dexWithNewSpecies(
     });
   }
   if (extra.size === 0) return base;
-  return { ...base, species: (id) => extra.get(id) ?? base.species(id) };
+  return {
+    ...base,
+    species: (id) => extra.get(id) ?? base.species(id),
+    ids: (kind) =>
+      kind === "species"
+        ? [...new Set([...base.ids("species"), ...extra.keys()])].sort()
+        : base.ids(kind),
+  };
 }

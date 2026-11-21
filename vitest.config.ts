@@ -6,7 +6,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["packages/*/src/**/*.ts"],
-      exclude: ["packages/cli/src/bin.ts"],
+      exclude: ["packages/cli/src/bin.ts", "packages/cli/src/data-commands.ts"],
     },
   },
 });

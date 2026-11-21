@@ -6,3 +6,5 @@ export * from "./loader.js";
 export * from "./diff.js";
 export * from "./scaffold.js";
 export * from "./game.js";
+export * from "./official.js";
+export * from "./names.js";

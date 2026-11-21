@@ -2,22 +2,39 @@
   "id": "champions",
   "level": {
     "value": 50,
-    "verified": false,
-    "note": "対戦は常にLv50として計算されるという前提（プロンプト要件）。公式一次情報は未確認",
-    "sources": []
+    "verified": true,
+    "note": "Lv50固定。実機の実数値36件が Lv50 の式と一致",
+    "sources": [
+      {
+        "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+        "accessed": "2026-11-21",
+        "note": "packages/calc/test/golden/ingame-stats.json"
+      }
+    ]
   },
   "iv": {
     "value": 31,
-    "verified": false,
-    "note": "個体値は固定とされる。31相当かは未確認（OPEN_QUESTIONS Q-11）",
-    "sources": []
+    "verified": true,
+    "note": "個体値31相当。実機の実数値36件が IV31 の式と一致",
+    "sources": [
+      {
+        "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+        "accessed": "2026-11-21",
+        "note": "packages/calc/test/golden/ingame-stats.json"
+      }
+    ]
   },
   "statPoints": {
     "total": {
       "value": 66,
-      "verified": false,
-      "note": "複数の攻略サイトの記述が一致（Web検索の要約。ページ本文は未取得）。OPEN_QUESTIONS Q-01",
+      "verified": true,
+      "note": "実機の6体すべてで合計66。攻略サイトの記述とも一致",
       "sources": [
+        {
+          "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+          "accessed": "2026-11-21",
+          "note": "packages/calc/test/golden/ingame-stats.json"
+        },
         {
           "title": "champdex.com stat-points guide",
           "url": "https://champdex.com/guides/stat-points",
@@ -34,9 +51,14 @@
     },
     "perStat": {
       "value": 32,
-      "verified": false,
-      "note": "同上。OPEN_QUESTIONS Q-01",
+      "verified": true,
+      "note": "実機の振り値の最大が32。攻略サイトの記述とも一致",
       "sources": [
+        {
+          "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+          "accessed": "2026-11-21",
+          "note": "packages/calc/test/golden/ingame-stats.json"
+        },
         {
           "title": "champdex.com stat-points guide",
           "url": "https://champdex.com/guides/stat-points",
@@ -47,9 +69,14 @@
     },
     "statPerPoint": {
       "value": 1,
-      "verified": false,
-      "note": "「1SP = Lv50実数値 +1」とする記述が多い。性格補正との順序は未確認。OPEN_QUESTIONS Q-02",
+      "verified": true,
+      "note": "実数値 = floor((floor((2*種族値+31)/2) + SP + 5) * 性格補正)、HP = floor((2*種族値+31)/2) + SP + 60。SPは性格補正の前に加算（おくびょうエルフーン すばやさ184 等で確認）",
       "sources": [
+        {
+          "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+          "accessed": "2026-11-21",
+          "note": "packages/calc/test/golden/ingame-stats.json"
+        },
         {
           "title": "theclick.gg: How SP Training Works",
           "url": "https://www.theclick.gg/?p=69057",
@@ -60,9 +87,33 @@
     }
   },
   "natureMultiplier": {
-    "value": { "up": 1.1, "down": 0.9 },
+    "value": {
+      "up": 1.1,
+      "down": 0.9
+    },
+    "verified": true,
+    "note": "上昇1.1・下降0.9で実機の値と一致（切り捨て）",
+    "sources": [
+      {
+        "title": "ユーザー提供の実機スクリーンショット（チーム1：能力/ステータス画面、6体×6ステータス=36値が式と一致）",
+        "accessed": "2026-11-21",
+        "note": "packages/calc/test/golden/ingame-stats.json"
+      }
+    ]
+  },
+  "critChance": {
+    "value": {
+      "numerator": 1,
+      "denominator": 24
+    },
     "verified": false,
-    "note": "本編と同じと仮定",
+    "note": "第7世代以降の本編と同じと仮定",
+    "sources": []
+  },
+  "critMultiplier": {
+    "value": 1.5,
+    "verified": false,
+    "note": "第6世代以降の本編と同じと仮定",
     "sources": []
   }
 }

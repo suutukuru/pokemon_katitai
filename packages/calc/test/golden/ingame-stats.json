@@ -1,0 +1,82 @@
+{
+  "source": {
+    "title": "ユーザー提供の実機スクリーンショット（チーム1『すー』：能力タブ + ステータスタブ）",
+    "accessed": "2026-11-21",
+    "regulation": "M-C",
+    "note": "性格はステータス画面の↑↓表示から判定。値はすべて画面からの転記（実機の実数値）"
+  },
+  "members": [
+    {
+      "set": {
+        "species": "Charizard",
+        "gender": "M",
+        "item": "Charizardite Y",
+        "ability": "Blaze",
+        "nature": "Modest",
+        "moves": ["Heat Wave", "Solar Beam", "Weather Ball", "Protect"],
+        "sp": { "hp": 22, "atk": 0, "def": 12, "spa": 0, "spd": 0, "spe": 32 }
+      },
+      "observed": { "hp": 175, "atk": 93, "def": 110, "spa": 141, "spd": 105, "spe": 152 }
+    },
+    {
+      "set": {
+        "species": "Whimsicott",
+        "gender": "M",
+        "item": "Focus Sash",
+        "ability": "Prankster",
+        "nature": "Timid",
+        "moves": ["Moonblast", "Encore", "Tailwind", "Protect"],
+        "sp": { "hp": 2, "atk": 0, "def": 0, "spa": 32, "spd": 0, "spe": 32 }
+      },
+      "observed": { "hp": 137, "atk": 78, "def": 105, "spa": 129, "spd": 95, "spe": 184 }
+    },
+    {
+      "set": {
+        "species": "Aerodactyl",
+        "gender": "M",
+        "item": "Aerodactylite",
+        "ability": "Pressure",
+        "nature": "Jolly",
+        "moves": ["Rock Slide", "Dual Wingbeat", "Tailwind", "Protect"],
+        "sp": { "hp": 24, "atk": 17, "def": 0, "spa": 0, "spd": 0, "spe": 25 }
+      },
+      "observed": { "hp": 179, "atk": 142, "def": 85, "spa": 72, "spd": 95, "spe": 192 }
+    },
+    {
+      "set": {
+        "species": "Hippowdon",
+        "gender": "M",
+        "item": "Sitrus Berry",
+        "ability": "Sand Stream",
+        "nature": "Impish",
+        "moves": ["High Horsepower", "Heavy Slam", "Ice Fang", "Slack Off"],
+        "sp": { "hp": 32, "atk": 2, "def": 0, "spa": 0, "spd": 32, "spe": 0 }
+      },
+      "observed": { "hp": 215, "atk": 134, "def": 151, "spa": 79, "spd": 124, "spe": 67 }
+    },
+    {
+      "set": {
+        "species": "Milotic",
+        "gender": "F",
+        "item": "Leftovers",
+        "ability": "Competitive",
+        "nature": "Timid",
+        "moves": ["Scald", "Icy Wind", "Hypnosis", "Coil"],
+        "sp": { "hp": 32, "atk": 0, "def": 2, "spa": 0, "spd": 0, "spe": 32 }
+      },
+      "observed": { "hp": 202, "atk": 72, "def": 101, "spa": 120, "spd": 145, "spe": 146 }
+    },
+    {
+      "set": {
+        "species": "Meowscarada",
+        "gender": "M",
+        "item": "Choice Scarf",
+        "ability": "Protean",
+        "nature": "Adamant",
+        "moves": ["Flower Trick", "Knock Off", "Triple Axel", "Seed Bomb"],
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 }
+      },
+      "observed": { "hp": 153, "atk": 178, "def": 90, "spa": 90, "spd": 90, "spe": 175 }
+    }
+  ]
+}

@@ -14,8 +14,10 @@ Pokémon Champions ダブルバトル（VGC形式）の分析アプリ。計画�
 ```
 packages/schema   zodスキーマと型（依存: zodのみ）
 packages/data     レギュレーションパック(JSON) + ローダー/検証/差分/雛形。`@ca/data/node` はNode専用(fs)
-packages/cli      reg:new / reg:diff / reg:validate（bin.ts が入口、commands.ts はテスト可能な純粋部分）
-(予定) calc engine explain ingest / apps/web apps/api
+packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @smogon/calc アダプター（damage.ts）
+packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
+packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
+(予定) engine explain / apps/web apps/api
 ```
 
 - パッケージはビルドせず TS ソースを直接 export（ADR-0001）。
@@ -35,7 +37,13 @@ pnpm ci                # format:check + lint + typecheck + test
 pnpm reg:validate [id] # パックの検証（引数なしで全パック）
 pnpm reg:diff <a> <b> [--json]
 pnpm reg:new <id> --extends <parent> [--name-ja ..] [--name-en ..]
+pnpm team:check <team.txt>                       # パーティを読み、実数値と問題点を表示
+pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weather Sun] [--def-team 相手.txt]
+pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
+pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
 ```
+
+`CA_REGULATION`（既定 M-C）で team:check / calc のレギュレーションを切り替えられる。
 
 `CA_REGULATIONS_DIR` でパックのディレクトリを差し替えられる。
 
@@ -44,6 +52,7 @@ pnpm reg:new <id> --extends <parent> [--name-ja ..] [--name-en ..]
 原則としてコード変更なし、データの追加だけで済ませる（ADR-0002）。
 
 1. `pnpm reg:new <新ID> --extends <現行ID>` で `packages/data/regulations/<新ID>/` を作る（中身は空の差分）。
+   公式の「参加できるポケモン」ページがあれば、ja/en の `pokemon.html` を保存して `pnpm data:import-official <dir>` で種族IDを得て、現行リストとの差分を `legal.json` に書く。
 2. `manifest.json`：表示名、`periods.ranked` / `periods.official`、`dataVersion`（`YYYY-MM-DD.N`）、`sources`（出典URL・確認日）。新しい仕組みを有効/無効にするなら `mechanics.add` / `mechanics.remove`。
 3. `legal.json`：親との差分だけを `{ "add": [...], "remove": [...] }` で書く（`species` / `megaSpecies` / `items` / `bannedMoves` / `bannedAbilities`）。メガ可能にする種族は `species` と `megaSpecies` の両方に入れ、メガストーンを `items` に入れる（入れないと検証エラー）。
 4. `overrides.json`：バランス調整を項目単位で。変更するフィールドだけ書く。各エントリに `verified` と `sources`。親の調整を取り消すときは値を `null`。図鑑にない新種族は `newSpecies`。
@@ -59,3 +68,6 @@ pnpm reg:new <id> --extends <parent> [--name-ja ..] [--name-en ..]
 - 新しい判断は `docs/adr/NNNN-*.md`。フェーズごとに受け入れ条件をテストで確認してからコミット。
 - テスト：単体は `packages/*/test/*.test.ts`。性質ベースは fast-check（プロパティ本体は `{ }` ブロックで書く。式の値を返すと失敗扱いになることがある）。
 - 決定性：出力前にキーでソートし、ハッシュ・スナップショットは `canonicalJson` を通す。
+- 実数値の式は `packages/calc/src/stats.ts` の `calcStat` だけに書く。アダプターは @smogon/calc が出した実数値をこれで上書きする。
+- ゴールデン: `packages/calc/test/golden/ingame-stats.json` は実機の値（変更禁止）。`damage-cases.json` は独立実装の式で検証する。
+- `legal.json` の `provenance` に、リストごとの出典と確度を書く。

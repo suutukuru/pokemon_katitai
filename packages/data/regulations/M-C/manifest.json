@@ -1,0 +1,27 @@
+{
+  "id": "M-C",
+  "name": {
+    "ja": "レギュレーション M-C",
+    "en": "Regulation M-C"
+  },
+  "periods": {},
+  "mechanics": {
+    "add": ["mega"],
+    "remove": []
+  },
+  "dataVersion": "2026-11-21.1",
+  "verified": false,
+  "sources": [
+    {
+      "title": "Pokémon Champions 公式「参加できるポケモン」（ランクバトル シーズンM‐6・シングル）",
+      "url": "https://web-view.app.pokemonchampions.jp/battle/pages/events/rs178713870219xeaaio/ja/pokemon.html",
+      "accessed": "2026-11-21"
+    },
+    {
+      "title": "公式イベントページ（シーズンM‐6・シングル：2026-09-09〜2026-10-07 JST、選出3匹、メガシンカ可能、総合20分/持ち時間7分/選択45秒/選出90秒）",
+      "url": "https://web-view.app.pokemonchampions.jp/battle/pages/events/rs178713870219xeaaio/ja/event.html",
+      "accessed": "2026-11-21"
+    }
+  ],
+  "notes": "ユーザー申告により現行レギュレーションを M-C とした（2026-11-21）。ダブル用の公式イベントページは未確認。期間は未設定。"
+}

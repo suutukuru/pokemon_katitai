@@ -47,9 +47,22 @@ export type Manifest = z.infer<typeof ManifestSchema>;
 
 // ---------- legal.json ----------
 
+/** Where each list in legal.json came from (e.g. species from the official site, items unknown). */
+export const ProvenanceSchema = z.strictObject({
+  verified: z.boolean(),
+  sources: z.array(SourceSchema).default([]),
+  note: z.string().optional(),
+});
+
 export const LegalDeltaSchema = z.strictObject({
   $schema: z.string().optional(),
   verified: z.boolean().default(false),
+  provenance: z
+    .partialRecord(
+      z.enum(["species", "megaSpecies", "items", "bannedMoves", "bannedAbilities"]),
+      ProvenanceSchema,
+    )
+    .default({}),
   species: SetDeltaSchema.default({ add: [], remove: [] }),
   /** Species (base form IDs) allowed to Mega Evolve. */
   megaSpecies: SetDeltaSchema.default({ add: [], remove: [] }),
@@ -171,6 +184,7 @@ export const ResolvedPackSchema = z.object({
   sources: z.array(SourceSchema),
   legal: z.object({
     verified: z.boolean(),
+    provenance: z.record(z.string(), z.array(ProvenanceSchema.extend({ packId: z.string() }))),
     species: z.array(z.string()),
     megaSpecies: z.array(z.string()),
     items: z.array(z.string()),

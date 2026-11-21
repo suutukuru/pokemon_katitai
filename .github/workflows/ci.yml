@@ -18,3 +18,4 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test:coverage
       - run: pnpm reg:validate
+      - run: pnpm team:check packages/ingest/test/fixtures/user-team-1.ja.txt

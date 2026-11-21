@@ -1,0 +1,6109 @@
+{
+ "version": "2026-11-21",
+ "sources": [
+  {
+   "title": "PokeAPI data/v2/csv (BSD-3-Clause)（技・特性・持ち物・性格・タイプ名、ja-Hrkt/en）",
+   "url": "https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv",
+   "accessed": "2026-11-21"
+  }
+ ],
+ "moves": {
+  "10000000voltthunderbolt": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "absorb": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "accelerock": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "acid": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "acidarmor": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "acidspray": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "acrobatics": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "acupressure": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user-or-ally",
+   "effectChance": null
+  },
+  "aerialace": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aeroblast": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "afteryou": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "agility": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "aircutter": {
+   "accuracy": 95,
+   "pp": 25,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "airslash": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "alluringvoice": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "allyswitch": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 2,
+   "target": "user",
+   "effectChance": null
+  },
+  "amnesia": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "anchorshot": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ancientpower": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "appleacid": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "aquacutter": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aquajet": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aquaring": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "aquastep": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aquatail": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "armorcannon": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "armthrust": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aromatherapy": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": null
+  },
+  "aromaticmist": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "ally",
+   "effectChance": null
+  },
+  "assist": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "assurance": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "astonish": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "astralbarrage": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "attackorder": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "attract": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aurasphere": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "aurawheel": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "aurorabeam": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "auroraveil": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "autotomize": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "avalanche": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": -4,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "axekick": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "babydolleyes": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "banefulbunker": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "barbbarrage": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "barrage": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "barrier": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "batonpass": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "beakblast": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": -3,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "beatup": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "behemothbash": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "behemothblade": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "belch": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bellydrum": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "bestow": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bide": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 1,
+   "target": "user",
+   "effectChance": null
+  },
+  "bind": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "bite": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "bitterblade": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bittermalice": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "blastburn": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "blazekick": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "blazingtorque": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bleakwindstorm": {
+   "accuracy": 80,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "blizzard": {
+   "accuracy": 70,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "block": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bloodmoon": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "blueflare": {
+   "accuracy": 85,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "bodypress": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bodyslam": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "boltbeak": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "boltstrike": {
+   "accuracy": 85,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "boneclub": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "bonemerang": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bonerush": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "boomburst": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "bounce": {
+   "accuracy": 85,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "branchpoke": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bravebird": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "breakingswipe": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "brickbreak": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "brine": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "brutalswing": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "bubble": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "bubblebeam": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "bugbite": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bugbuzz": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "bulkup": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "bulldoze": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 100
+  },
+  "bulletpunch": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "bulletseed": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "burningbulwark": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "burningjealousy": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "burnup": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "calmmind": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "camouflage": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "captivate": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "catastropika": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ceaselessedge": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "celebrate": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "charge": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "chargebeam": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 70
+  },
+  "charm": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "chatter": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "chillingwater": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "chillyreception": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "chipaway": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "chloroblast": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "circlethrow": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": -6,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "clamp": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "clangingscales": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "clangoroussoul": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": 100
+  },
+  "clangoroussoulblaze": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "clearsmog": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "closecombat": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "coaching": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": 100
+  },
+  "coil": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "collisioncourse": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "combattorque": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "cometpunch": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "comeuppance": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "specific-move",
+   "effectChance": null
+  },
+  "confide": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "confuseray": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "confusion": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "constrict": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "conversion": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "conversion2": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "copycat": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "coreenforcer": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "corrosivegas": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 100
+  },
+  "cosmicpower": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "cottonguard": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "cottonspore": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "counter": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": -5,
+   "target": "specific-move",
+   "effectChance": null
+  },
+  "courtchange": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": 100
+  },
+  "covet": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "crabhammer": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "craftyshield": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 3,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "crosschop": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "crosspoison": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "crunch": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "crushclaw": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "crushgrip": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "curse": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "specific-move",
+   "effectChance": null
+  },
+  "cut": {
+   "accuracy": 95,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "darkestlariat": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "darkpulse": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "darkvoid": {
+   "accuracy": 50,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "dazzlinggleam": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "decorate": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "defendorder": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "defensecurl": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "defog": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "destinybond": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "detect": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "diamondstorm": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 50
+  },
+  "dig": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "direclaw": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "disable": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "disarmingvoice": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "discharge": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 30
+  },
+  "dive": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dizzypunch": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "doodle": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doomdesire": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doubleedge": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doublehit": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doubleironbash": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "doublekick": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doubleshock": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doubleslap": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "doubleteam": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "dracometeor": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dragonascent": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dragonbreath": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "dragoncheer": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-allies",
+   "effectChance": null
+  },
+  "dragonclaw": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dragondance": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "dragondarts": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dragonenergy": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "dragonhammer": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dragonpulse": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dragonrage": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dragonrush": {
+   "accuracy": 75,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "dragontail": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": -6,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "drainingkiss": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "drainpunch": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dreameater": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "drillpeck": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "drillrun": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "drumbeating": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dualchop": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "dualwingbeat": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dynamaxcannon": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "dynamicpunch": {
+   "accuracy": 50,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "earthpower": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "earthquake": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "echoedvoice": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "eerieimpulse": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "eeriespell": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "eggbomb": {
+   "accuracy": 75,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "electricterrain": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "electrify": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "electroball": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "electrodrift": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "electroshot": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "electroweb": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "embargo": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ember": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "encore": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "endeavor": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "endure": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "energyball": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "entrainment": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "eruption": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "esperwing": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "eternabeam": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "expandingforce": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "explosion": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "extrasensory": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "extremeevoboost": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "user",
+   "effectChance": 100
+  },
+  "extremespeed": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 2,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "facade": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fairylock": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "fairywind": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fakeout": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 3,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "faketears": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "falsesurrender": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "falseswipe": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "featherdance": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "feint": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 2,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "feintattack": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fellstinger": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ficklebeam": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fierydance": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "fierywrath": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 20
+  },
+  "filletaway": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "finalgambit": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fireblast": {
+   "accuracy": 85,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "firefang": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "firelash": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "firepledge": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "firepunch": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "firespin": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "firstimpression": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 2,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fishiousrend": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "fissure": {
+   "accuracy": 30,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flail": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flameburst": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flamecharge": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "flamethrower": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "flamewheel": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "flareblitz": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "flash": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flashcannon": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "flatter": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fleurcannon": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "fling": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flipturn": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "floralhealing": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flowershield": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-pokemon",
+   "effectChance": 100
+  },
+  "flowertrick": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fly": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "flyingpress": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "focusblast": {
+   "accuracy": 70,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "focusenergy": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "focuspunch": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": -3,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "followme": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 2,
+   "target": "user",
+   "effectChance": null
+  },
+  "forcepalm": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "foresight": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "forestscurse": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "foulplay": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "freezedry": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "freezeshock": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "freezingglare": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "frenzyplant": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "frostbreath": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "frustration": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "furyattack": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "furycutter": {
+   "accuracy": 95,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "furyswipes": {
+   "accuracy": 80,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fusionbolt": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "fusionflare": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "futuresight": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gastroacid": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "geargrind": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gearup": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": null
+  },
+  "genesissupernova": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "geomancy": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "gigadrain": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gigaimpact": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gigatonhammer": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "glaciallance": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "glaciate": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "glaiverush": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "glare": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "grassknot": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "grasspledge": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "grasswhistle": {
+   "accuracy": 55,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "grassyglide": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "grassyterrain": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "gravapple": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "gravity": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "growl": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "growth": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "grudge": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "guardianofalola": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "guardsplit": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "guardswap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "guillotine": {
+   "accuracy": 30,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gunkshot": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "gust": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "gyroball": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hail": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "hammerarm": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "happyhour": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "harden": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "hardpress": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "haze": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "headbutt": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "headcharge": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "headlongrush": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "headsmash": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "healbell": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": null
+  },
+  "healblock": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "healingwish": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "healorder": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "healpulse": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "heartstamp": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "heartswap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "heatcrash": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "heatwave": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "heavyslam": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "helpinghand": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 5,
+   "target": "ally",
+   "effectChance": null
+  },
+  "hex": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hiddenpower": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "highhorsepower": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "highjumpkick": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "holdback": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "holdhands": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "ally",
+   "effectChance": null
+  },
+  "honeclaws": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "hornattack": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "horndrill": {
+   "accuracy": 30,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hornleech": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "howl": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": null
+  },
+  "hurricane": {
+   "accuracy": 70,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "hydrocannon": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hydropump": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hydrosteam": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hyperbeam": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hyperdrill": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hyperfang": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "hyperspacefury": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "hyperspacehole": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "hypervoice": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "hypnosis": {
+   "accuracy": 60,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "iceball": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "icebeam": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "iceburn": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "icefang": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "icehammer": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "icepunch": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "iceshard": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "icespinner": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "iciclecrash": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "iciclespear": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "icywind": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "imprison": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "incinerate": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "infernalparade": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "inferno": {
+   "accuracy": 50,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "infestation": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "ingrain": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "instruct": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "iondeluge": {
+   "accuracy": null,
+   "pp": 25,
+   "priority": 1,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "irondefense": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "ironhead": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "irontail": {
+   "accuracy": 75,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "ivycudgel": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "jawlock": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "jetpunch": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "judgment": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "jumpkick": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "junglehealing": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": 100
+  },
+  "karatechop": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "kinesis": {
+   "accuracy": 80,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "kingsshield": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "knockoff": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "kowtowcleave": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "landswrath": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "laserfocus": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "lashout": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "lastresort": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lastrespects": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lavaplume": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 30
+  },
+  "leafage": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "leafblade": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "leafstorm": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "leaftornado": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "leechlife": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "leechseed": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "leer": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "letssnuggleforever": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lick": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "lifedew": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": 100
+  },
+  "lightofruin": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lightscreen": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "lightthatburnsthesky": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "liquidation": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "lockon": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lovelykiss": {
+   "accuracy": 75,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lowkick": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lowsweep": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "luckychant": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "luminacrash": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "lunarblessing": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-allies",
+   "effectChance": null
+  },
+  "lunardance": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "lunge": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "lusterpurge": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "machpunch": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "magicalleaf": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "magicaltorque": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "magiccoat": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "magicpowder": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "magicroom": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "magmastorm": {
+   "accuracy": 75,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "magnetbomb": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "magneticflux": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user-and-allies",
+   "effectChance": null
+  },
+  "magnetrise": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "magnitude": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "makeitrain": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "maliciousmoonsault": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "malignantchain": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "matblock": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "matchagotcha": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "maxairstream": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxdarkness": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxflare": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxflutterby": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxgeyser": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxguard": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "maxhailstorm": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxknuckle": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxlightning": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxmindstorm": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxooze": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxovergrowth": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxphantasm": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxquake": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxrockfall": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxstarfall": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxsteelspike": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxstrike": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "maxwyrmwind": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": 100
+  },
+  "meanlook": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "meditate": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "mefirst": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon-me-first",
+   "effectChance": null
+  },
+  "megadrain": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "megahorn": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "megakick": {
+   "accuracy": 75,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "megapunch": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "memento": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "menacingmoonrazemaelstrom": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "metalburst": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "specific-move",
+   "effectChance": null
+  },
+  "metalclaw": {
+   "accuracy": 95,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "metalsound": {
+   "accuracy": 85,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "meteorassault": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "meteorbeam": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "meteormash": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "metronome": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "mightycleave": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "milkdrink": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "mimic": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "mindblown": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "mindreader": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "minimize": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "miracleeye": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "mirrorcoat": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": -5,
+   "target": "specific-move",
+   "effectChance": null
+  },
+  "mirrormove": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "mirrorshot": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "mist": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "mistball": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "mistyexplosion": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 100
+  },
+  "mistyterrain": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "moonblast": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "moongeistbeam": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "moonlight": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "morningsun": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "mortalspin": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "mountaingale": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "mudbomb": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "muddywater": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 30
+  },
+  "mudshot": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "mudslap": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "mudsport": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "multiattack": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "mysticalfire": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "mysticalpower": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "nastyplot": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "naturalgift": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "naturepower": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "naturesmadness": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "needlearm": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "nightdaze": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 40
+  },
+  "nightmare": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "nightshade": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "nightslash": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "nihillight": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "nobleroar": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "noretreat": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": 100
+  },
+  "noxioustorque": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "nuzzle": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "oblivionwing": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "obstruct": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": 100
+  },
+  "oceanicoperetta": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "octazooka": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "octolock": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "odorsleuth": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ominouswind": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "orderup": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "originpulse": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "outrage": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "overdrive": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "overheat": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "painsplit": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "paraboliccharge": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "partingshot": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "payback": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "payday": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "peck": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "perishsong": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-pokemon",
+   "effectChance": null
+  },
+  "petalblizzard": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "petaldance": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "phantomforce": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "photongeyser": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pinmissile": {
+   "accuracy": 95,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "plasmafists": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "playnice": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "playrough": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "pluck": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "poisonfang": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "poisongas": {
+   "accuracy": 90,
+   "pp": 40,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "poisonjab": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "poisonpowder": {
+   "accuracy": 75,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "poisonsting": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "poisontail": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "pollenpuff": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "poltergeist": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "populationbomb": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pounce": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pound": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "powder": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "powdersnow": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "powergem": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "powershift": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "powersplit": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "powerswap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "powertrick": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "powertrip": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "poweruppunch": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "powerwhip": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "precipiceblades": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "present": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "prismaticlaser": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "protect": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "psybeam": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "psyblade": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psychic": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "psychicfangs": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psychicnoise": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psychicterrain": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "psychoboost": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "psychocut": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psychoshift": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psychup": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psyshieldbash": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psyshock": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psystrike": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "psywave": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pulverizingpancake": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "punishment": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "purify": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pursuit": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "pyroball": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "quash": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "quickattack": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "quickguard": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 3,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "quiverdance": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "rage": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ragefist": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ragepowder": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 2,
+   "target": "user",
+   "effectChance": null
+  },
+  "ragingbull": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ragingfury": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "raindance": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "rapidspin": {
+   "accuracy": 100,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "razorleaf": {
+   "accuracy": 95,
+   "pp": 25,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "razorshell": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "razorwind": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "recover": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "recycle": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "reflect": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "reflecttype": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "refresh": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "relicsong": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 10
+  },
+  "rest": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "retaliate": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "return": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "revelationdance": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "revenge": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": -4,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "reversal": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "revivalblessing": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "fainting-pokemon",
+   "effectChance": null
+  },
+  "risingvoltage": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "roar": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": -6,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "roaroftime": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "rockblast": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "rockclimb": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "rockpolish": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "rockslide": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 30
+  },
+  "rocksmash": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "rockthrow": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "rocktomb": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "rockwrecker": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "roleplay": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "rollingkick": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "rollout": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "roost": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "rototiller": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-pokemon",
+   "effectChance": 100
+  },
+  "round": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "ruination": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sacredfire": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 50
+  },
+  "sacredsword": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "safeguard": {
+   "accuracy": null,
+   "pp": 25,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "saltcure": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sandattack": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sandsearstorm": {
+   "accuracy": 80,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "sandstorm": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "sandtomb": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "scald": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "scaleshot": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "scaryface": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "scorchingsands": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "scratch": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "screech": {
+   "accuracy": 85,
+   "pp": 40,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "searingshot": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 30
+  },
+  "searingsunrazesmash": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "secretpower": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "secretsword": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "seedbomb": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "seedflare": {
+   "accuracy": 85,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 40
+  },
+  "seismictoss": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "selfdestruct": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "shadowball": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "shadowbone": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "shadowclaw": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "shadowforce": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "shadowpunch": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "shadowsneak": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sharpen": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "shedtail": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "sheercold": {
+   "accuracy": 30,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "shellsidearm": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "shellsmash": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "shelltrap": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": -3,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "shelter": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "shiftgear": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "shockwave": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "shoreup": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "signalbeam": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "silktrap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "silverwind": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "simplebeam": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sing": {
+   "accuracy": 55,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sinisterarrowraid": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sketch": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "skillswap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "skittersmack": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "skullbash": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "skyattack": {
+   "accuracy": 90,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "skydrop": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "skyuppercut": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "slackoff": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "slam": {
+   "accuracy": 75,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "slash": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sleeppowder": {
+   "accuracy": 75,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sleeptalk": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "sludge": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "sludgebomb": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "sludgewave": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": 10
+  },
+  "smackdown": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "smartstrike": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "smellingsalts": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "smog": {
+   "accuracy": 70,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 40
+  },
+  "smokescreen": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "snaptrap": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "snarl": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "snatch": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "snipeshot": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "snore": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "snowscape": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "soak": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "softboiled": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "solarbeam": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "solarblade": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sonicboom": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "soulstealing7starstrike": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spacialrend": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spark": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "sparklingaria": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "spectralthief": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "speedswap": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spicyextract": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spiderweb": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spikecannon": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spikes": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "opponents-field",
+   "effectChance": null
+  },
+  "spikyshield": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 4,
+   "target": "user",
+   "effectChance": null
+  },
+  "spinout": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spiritbreak": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "spiritshackle": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spite": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spitup": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "splash": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "splinteredstormshards": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spore": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "spotlight": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 3,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "springtidestorm": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "stealthrock": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "opponents-field",
+   "effectChance": null
+  },
+  "steameruption": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "steamroller": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "steelbeam": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "steelroller": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "steelwing": {
+   "accuracy": 90,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "stickyweb": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "opponents-field",
+   "effectChance": null
+  },
+  "stockpile": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "stokedsparksurfer": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "stomp": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "stompingtantrum": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "stoneaxe": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "stoneedge": {
+   "accuracy": 80,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "storedpower": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "stormthrow": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "strangesteam": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "strength": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "strengthsap": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "stringshot": {
+   "accuracy": 95,
+   "pp": 40,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "struggle": {
+   "accuracy": null,
+   "pp": 1,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "strugglebug": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "stuffcheeks": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": 100
+  },
+  "stunspore": {
+   "accuracy": 75,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "submission": {
+   "accuracy": 80,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "substitute": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "suckerpunch": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sunnyday": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "sunsteelstrike": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "supercellslam": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "superfang": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "superpower": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "supersonic": {
+   "accuracy": 55,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "surf": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "surgingstrikes": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "swagger": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "swallow": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "sweetkiss": {
+   "accuracy": 75,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "sweetscent": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "swift": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "switcheroo": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "swordsdance": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "synchronoise": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "synthesis": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "syrupbomb": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tachyoncutter": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tackle": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tailglow": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "tailslap": {
+   "accuracy": 85,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tailwhip": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "tailwind": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "takedown": {
+   "accuracy": 85,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "takeheart": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-allies",
+   "effectChance": null
+  },
+  "tarshot": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "taunt": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tearfullook": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "teatime": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-pokemon",
+   "effectChance": 100
+  },
+  "technoblast": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "teeterdance": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-other-pokemon",
+   "effectChance": null
+  },
+  "telekinesis": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "teleport": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": -6,
+   "target": "user",
+   "effectChance": null
+  },
+  "temperflare": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "terablast": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "terastarstorm": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "terrainpulse": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "thief": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "thousandarrows": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "thousandwaves": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "thrash": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "throatchop": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "thunder": {
+   "accuracy": 70,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  },
+  "thunderbolt": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "thundercage": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "thunderclap": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "thunderfang": {
+   "accuracy": 95,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "thunderouskick": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "thunderpunch": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "thundershock": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "thunderwave": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tickle": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tidyup": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "topsyturvy": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "torchsong": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "torment": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "toxic": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "toxicspikes": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": 0,
+   "target": "opponents-field",
+   "effectChance": null
+  },
+  "toxicthread": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "trailblaze": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "transform": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "triattack": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "trick": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "trickortreat": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "trickroom": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": -7,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "triplearrows": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tripleaxel": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "tripledive": {
+   "accuracy": 95,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "triplekick": {
+   "accuracy": 90,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "tropkick": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "trumpcard": {
+   "accuracy": null,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "twinbeam": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "twineedle": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "twister": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 20
+  },
+  "upperhand": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 3,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "uproar": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "random-opponent",
+   "effectChance": null
+  },
+  "uturn": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "vacuumwave": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "vcreate": {
+   "accuracy": 95,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "venomdrench": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": 100
+  },
+  "venoshock": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "victorydance": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "vinewhip": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "visegrip": {
+   "accuracy": 100,
+   "pp": 30,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "vitalthrow": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": -1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "voltswitch": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "volttackle": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 10
+  },
+  "wakeupslap": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "waterfall": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "watergun": {
+   "accuracy": 100,
+   "pp": 25,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "waterpledge": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "waterpulse": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "watershuriken": {
+   "accuracy": 100,
+   "pp": 20,
+   "priority": 1,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "watersport": {
+   "accuracy": null,
+   "pp": 15,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "waterspout": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "wavecrash": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "weatherball": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "whirlpool": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "whirlwind": {
+   "accuracy": null,
+   "pp": 20,
+   "priority": -6,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "wickedblow": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "wickedtorque": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "wideguard": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 3,
+   "target": "users-field",
+   "effectChance": null
+  },
+  "wildboltstorm": {
+   "accuracy": 80,
+   "pp": 10,
+   "priority": 0,
+   "target": "all-opponents",
+   "effectChance": null
+  },
+  "wildcharge": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "willowisp": {
+   "accuracy": 85,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "wingattack": {
+   "accuracy": 100,
+   "pp": 35,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "wish": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "withdraw": {
+   "accuracy": null,
+   "pp": 40,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "wonderroom": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "entire-field",
+   "effectChance": null
+  },
+  "woodhammer": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "workup": {
+   "accuracy": null,
+   "pp": 30,
+   "priority": 0,
+   "target": "user",
+   "effectChance": null
+  },
+  "worryseed": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "wrap": {
+   "accuracy": 90,
+   "pp": 20,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "wringout": {
+   "accuracy": 100,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "xscissor": {
+   "accuracy": 100,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "yawn": {
+   "accuracy": null,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": null
+  },
+  "zapcannon": {
+   "accuracy": 50,
+   "pp": 5,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 100
+  },
+  "zenheadbutt": {
+   "accuracy": 90,
+   "pp": 15,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 20
+  },
+  "zingzap": {
+   "accuracy": 100,
+   "pp": 10,
+   "priority": 0,
+   "target": "selected-pokemon",
+   "effectChance": 30
+  }
+ }
+}

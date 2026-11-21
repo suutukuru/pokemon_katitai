@@ -18,13 +18,13 @@ describe("real regulation packs", () => {
 
   it("every pack in packages/data/regulations validates", () => {
     const reports = loadAllPacks(fs, { knownMechanics: ["mega"] });
-    expect(reports.map((r) => r.id)).toEqual(expect.arrayContaining(["M-B", "X-NEXT-DUMMY"]));
+    expect(reports.map((r) => r.id)).toEqual(expect.arrayContaining(["M-C", "X-NEXT-DUMMY"]));
     for (const r of reports) expect(r.error?.message).toBeUndefined();
   });
 
-  it("loads the current pack (M-B) as a root pack", () => {
-    const p = loadPack(fs, "M-B");
-    expect(p.chain).toEqual(["M-B"]);
+  it("loads the current pack (M-C) as a root pack", () => {
+    const p = loadPack(fs, "M-C");
+    expect(p.chain).toEqual(["M-C"]);
     expect(p.rules).toMatchObject({ format: "doubles", level: 50, teamSize: 6, bringCount: 4 });
     expect(p.mechanics).toEqual(["mega"]);
     expect(p.legal.species).toContain("incineroar");
@@ -33,9 +33,9 @@ describe("real regulation packs", () => {
   });
 
   it("loads the dummy next pack, inheriting and applying only its deltas", () => {
-    const parent = loadPack(fs, "M-B");
+    const parent = loadPack(fs, "M-C");
     const p = loadPack(fs, "X-NEXT-DUMMY");
-    expect(p.chain).toEqual(["M-B", "X-NEXT-DUMMY"]);
+    expect(p.chain).toEqual(["M-C", "X-NEXT-DUMMY"]);
     expect(p.legal.species).toContain("fluttermane");
     expect(p.legal.species).not.toContain("kangaskhan");
     expect(p.legal.species).toContain("incineroar"); // inherited
@@ -82,8 +82,8 @@ describe("inheritance errors", () => {
   });
 
   it("rejects manifest id / directory mismatch", () => {
-    const s = new TestSource().edit("M-B", "manifest", (m) => (m["id"] = "M-C"));
-    expect(issuesOf(s, "M-B")).toContainEqual(expect.objectContaining({ path: "id" }));
+    const s = new TestSource().edit("M-C", "manifest", (m) => (m["id"] = "M-Z"));
+    expect(issuesOf(s, "M-C")).toContainEqual(expect.objectContaining({ path: "id" }));
   });
 
   it("supports multi-level chains", () => {
@@ -92,7 +92,7 @@ describe("inheritance errors", () => {
       legal: { species: { add: [], remove: ["fluttermane"] } },
     });
     const p = loadPack(s, "Z-2");
-    expect(p.chain).toEqual(["M-B", "X-NEXT-DUMMY", "Z-2"]);
+    expect(p.chain).toEqual(["M-C", "X-NEXT-DUMMY", "Z-2"]);
     expect(p.legal.species).not.toContain("fluttermane");
     expect(p.overrides.moves["fakeout"]).toBeDefined();
   });
@@ -119,7 +119,7 @@ describe("inheritance errors", () => {
 describe("reference validation", () => {
   const child = (files: object) => {
     const s = new TestSource();
-    s.packs["Z-1"] = childOf("M-B", "Z-1", files);
+    s.packs["Z-1"] = childOf("M-C", "Z-1", files);
     return s;
   };
 
@@ -192,11 +192,11 @@ describe("reference validation", () => {
 
   it("rejects `remove` in a root pack", () => {
     const s = new TestSource().edit(
-      "M-B",
+      "M-C",
       "legal",
       (l) => ((l["items"] as { remove: string[] }).remove = ["lifeorb"]),
     );
-    expect(issuesOf(s, "M-B")[0]?.message).toContain("root pack cannot remove");
+    expect(issuesOf(s, "M-C")[0]?.message).toContain("root pack cannot remove");
   });
 
   it("requires a legal Mega Stone for every megaSpecies", () => {
@@ -269,15 +269,15 @@ describe("reference validation", () => {
 
 describe("schema validation", () => {
   it("reports zod errors with file and path", () => {
-    const s = new TestSource().edit("M-B", "rules", (r) => (r["bringCount"] = "four"));
-    expect(issuesOf(s, "M-B")).toContainEqual(
-      expect.objectContaining({ packId: "M-B", file: "rules", path: "bringCount" }),
+    const s = new TestSource().edit("M-C", "rules", (r) => (r["bringCount"] = "four"));
+    expect(issuesOf(s, "M-C")).toContainEqual(
+      expect.objectContaining({ packId: "M-C", file: "rules", path: "bringCount" }),
     );
   });
 
   it("rejects unknown keys (typos) in pack files", () => {
-    const s = new TestSource().edit("M-B", "legal", (l) => (l["specie"] = { add: [] }));
-    expect(issuesOf(s, "M-B")[0]).toMatchObject({
+    const s = new TestSource().edit("M-C", "legal", (l) => (l["specie"] = { add: [] }));
+    expect(issuesOf(s, "M-C")[0]).toMatchObject({
       file: "legal",
       message: expect.stringContaining("specie"),
     });
@@ -285,37 +285,37 @@ describe("schema validation", () => {
 
   it("requires full rules and weights in a root pack", () => {
     const s = new TestSource();
-    delete s.packs["M-B"]!.rules;
-    delete s.packs["M-B"]!.weights;
-    expect(new Set(issuesOf(s, "M-B").map((i) => i.file))).toEqual(new Set(["rules", "weights"]));
+    delete s.packs["M-C"]!.rules;
+    delete s.packs["M-C"]!.weights;
+    expect(new Set(issuesOf(s, "M-C").map((i) => i.file))).toEqual(new Set(["rules", "weights"]));
   });
 
   it("allows a child pack with only a manifest", () => {
     const s = new TestSource();
-    s.packs["Z-1"] = childOf("M-B", "Z-1");
+    s.packs["Z-1"] = childOf("M-C", "Z-1");
     const p = loadPack(s, "Z-1");
-    expect(p.legal).toEqual({ ...loadPack(s, "M-B").legal });
+    expect(p.legal).toEqual({ ...loadPack(s, "M-C").legal });
   });
 
   it("checks rule consistency after merging", () => {
     const s = new TestSource();
-    s.packs["Z-1"] = childOf("M-B", "Z-1", { rules: { bringCount: 7 } });
+    s.packs["Z-1"] = childOf("M-C", "Z-1", { rules: { bringCount: 7 } });
     expect(issuesOf(s, "Z-1")[0]?.path).toBe("bringCount");
-    s.packs["Z-1"] = childOf("M-B", "Z-1", { rules: { bringCount: 3, teamSize: 2 } });
+    s.packs["Z-1"] = childOf("M-C", "Z-1", { rules: { bringCount: 3, teamSize: 2 } });
     expect(issuesOf(s, "Z-1").map((i) => i.path)).toEqual(["bringCount"]);
   });
 
   it("collects issues across files and reports a readable message", () => {
     const s = new TestSource()
-      .edit("M-B", "rules", (r) => (r["level"] = 0))
-      .edit("M-B", "weights", (w) => (w["origin"] = "guessed"));
+      .edit("M-C", "rules", (r) => (r["level"] = 0))
+      .edit("M-C", "weights", (w) => (w["origin"] = "guessed"));
     try {
-      loadPack(s, "M-B");
+      loadPack(s, "M-C");
       expect.unreachable();
     } catch (e) {
       expect(e).toBeInstanceOf(PackValidationError);
       expect((e as PackValidationError).issues.length).toBe(2);
-      expect((e as Error).message).toMatch(/\[M-B\/rules\] level/);
+      expect((e as Error).message).toMatch(/\[M-C\/rules\] level/);
     }
   });
 
@@ -325,7 +325,7 @@ describe("schema validation", () => {
       if (f === "legal") throw new Error("boom");
       return TestSource.prototype.read.call(s, id, f);
     };
-    expect(issuesOf(s, "M-B")[0]).toMatchObject({ file: "legal", message: "cannot read: boom" });
+    expect(issuesOf(s, "M-C")[0]).toMatchObject({ file: "legal", message: "cannot read: boom" });
   });
 
   it("loadAllPacks collects errors instead of throwing", () => {
@@ -333,6 +333,6 @@ describe("schema validation", () => {
     s.packs["Z-1"] = childOf("NOPE", "Z-1");
     const r = loadAllPacks(s);
     expect(r.find((x) => x.id === "Z-1")?.error).toBeInstanceOf(PackValidationError);
-    expect(r.find((x) => x.id === "M-B")?.pack).toBeDefined();
+    expect(r.find((x) => x.id === "M-C")?.pack).toBeDefined();
   });
 });

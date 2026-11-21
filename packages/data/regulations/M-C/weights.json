@@ -3,5 +3,9 @@
   "origin": "manual",
   "rules": {},
   "evaluation": {},
-  "search": { "depth": 2, "beamWidth": 8, "opponentTopK": 4 }
+  "search": {
+    "depth": 2,
+    "beamWidth": 8,
+    "opponentTopK": 4
+  }
 }

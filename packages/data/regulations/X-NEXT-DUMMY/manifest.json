@@ -4,9 +4,16 @@
     "ja": "ダミーの次レギュレーション（テスト用）",
     "en": "Dummy next regulation (test only)"
   },
-  "extends": "M-B",
-  "periods": { "ranked": { "start": "2027-01-01" } },
-  "mechanics": { "add": [], "remove": [] },
+  "extends": "M-C",
+  "periods": {
+    "ranked": {
+      "start": "2027-01-01"
+    }
+  },
+  "mechanics": {
+    "add": [],
+    "remove": []
+  },
   "dataVersion": "2026-11-21.1",
   "verified": false,
   "sources": [],
