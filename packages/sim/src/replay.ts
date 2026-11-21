@@ -36,11 +36,19 @@ export const reseed = (b: PsBattle, seed: number) =>
 
 export interface WhatIfOption {
   choice: string;
-  slots: { species: string; moveId?: string; targetSpecies?: string; mega: boolean }[];
+  slots: {
+    species: string;
+    moveId?: string;
+    targetSpecies?: string;
+    switchTo?: string;
+    mega: boolean;
+  }[];
   winRate: number;
   games: number;
   ci: [number, number];
   chosen: boolean;
+  /** search stage reached (successive halving), best-play mode only */
+  stage?: number;
 }
 
 export interface ReplayTurn {

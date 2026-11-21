@@ -4,6 +4,7 @@ import type { PokemonSet } from "@ca/schema";
 import type { BattleJob, Executor } from "./analyze.js";
 import type { BattleResult } from "./runner.js";
 import type { ReplayData } from "./replay.js";
+import type { SearchOptions } from "./bestplay.js";
 
 export interface PoolInit {
   regulationId: string;
@@ -60,7 +61,7 @@ export interface BestPlayTask {
   ca: [number, number, number, number];
   cb: [number, number, number, number];
   seed: number;
-  opts: { options: number; rollouts: number };
+  opts: SearchOptions;
 }
 
 /** Run best-play battles in parallel (one battle per worker at a time); results keep task order. */

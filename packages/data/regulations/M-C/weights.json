@@ -103,14 +103,21 @@
     "redirectionValue": 0.3,
     "screenValue": 0.25,
     "variablePowerFallback": 60,
-    "screenBattles": 8,
+    "screenBattles": 24,
     "topConfigs": 6,
-    "matrixBattles": 24,
+    "matrixBattles": 48,
     "turnOptions": 6,
-    "turnRollouts": 16,
+    "turnRollouts": 32,
     "fictitiousIterations": 4000,
     "selfTemperature": 0.12,
-    "searchOptions": 6,
-    "searchRollouts": 12
+    "searchWidth": 40,
+    "searchStage1": 4,
+    "searchKeep1": 8,
+    "searchStage2": 16,
+    "searchKeep2": 3,
+    "searchStage3": 40,
+    "searchKeep3": 1,
+    "switchBase": 0.05,
+    "switchThreatBonus": 0.3
   }
 }

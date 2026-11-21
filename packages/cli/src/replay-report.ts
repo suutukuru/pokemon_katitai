@@ -55,6 +55,7 @@ function nameTable(ds: ReplayData[], extraSpecies: string[]): Record<string, str
           if (s.species) species.add(s.species);
           if (s.moveId) moves.add(s.moveId);
           if (s.targetSpecies) species.add(s.targetSpecies);
+          if (s.switchTo) species.add(s.switchTo);
         }
       }
     }
@@ -233,10 +234,12 @@ function eventText(e) {
   }
   return "";
 }
-const optLabel = (slots) => slots.filter((s) => s.species).map((s) => S(s.species) + (s.mega ? "(メガ)" : "") + ": " + (s.moveId ? M(s.moveId) + (s.targetSpecies ? "→" + S(s.targetSpecies) : "") : "交代")).join(" ＋ ");
+const optLabel = (slots) => slots.filter((s) => s.species).map((s) => S(s.species) + (s.mega ? "(メガ)" : "") + ": " + (s.moveId ? M(s.moveId) + (s.targetSpecies ? "→" + S(s.targetSpecies) : "") : s.switchTo ? "交代→" + S(s.switchTo) : "交代")).join(" ＋ ");
 function optTable(list, side, title) {
   const chosen = list.find((w) => w.chosen), best = Math.max(...list.map((w) => w.winRate));
-  const rows = [...list].sort((a, b) => b.winRate - a.winRate).map((w) => {
+  const ranked = [...list].sort((a, b) => (b.stage || 0) - (a.stage || 0) || b.winRate - a.winRate);
+  const top = ranked.slice(0, 10), rest = ranked.length - top.length;
+  const rows = top.map((w) => {
     const dlt = chosen ? Math.round((w.winRate - chosen.winRate) * 100) : 0;
     const mark = w.winRate === best ? '<span class="best">★</span> ' : "";
     return '<tr class="' + (w.chosen ? "chosen" : "") + '"><td>' + (w.chosen ? "✔ " : "") + mark + optLabel(w.slots) + '<span class="bar"><i style="width:' + Math.round(w.winRate * 100) + '%"></i></span></td><td class="n">' + pct(w.winRate) + '<br><small>' + w.games + '戦</small></td><td class="n ' + (dlt > 0 ? "plus" : dlt < 0 ? "minus" : "") + '">' + (w.chosen ? "選択" : (dlt > 0 ? "+" : "") + dlt) + '</td></tr>';
@@ -246,12 +249,13 @@ function optTable(list, side, title) {
     const loss = Math.round((best - chosen.winRate) * 100);
     verdict = loss >= 15 ? '<p class="blunder">実際の行動は最善より ' + loss + ' ポイント低い（悪手の可能性）</p>' : loss >= 6 ? '<p class="minus">実際の行動は最善より ' + loss + ' ポイント低い</p>' : '<p class="plus">実際の行動はほぼ最善</p>';
   }
-  return '<div class="' + (side ? "opp" : "") + '"><h4 class="s' + side + '">' + title + '</h4>' + verdict + '<table><thead><tr><th>行動</th><th>勝率</th><th>差</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  const note = d.mode === "best" ? '<p class="sub">試した候補 ' + list.length + '個（少ない試行で落ちた候補' + (rest > 0 ? "のうち" + rest + "個は省略" : "も表示") + '）。上ほど最後まで勝ち残った候補。</p>' : "";
+  return '<div class="' + (side ? "opp" : "") + '"><h4 class="s' + side + '">' + title + '</h4>' + verdict + note + '<table><thead><tr><th>行動</th><th>勝率</th><th>差</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 function whatIfHtml(t) {
   if (!t.whatIf && !t.whatIfOpp) return '<div class="sub">このターンは選択肢の分析がありません（交代のみ等）。</div>';
   const best = d.mode === "best";
-  let h = '<h2>' + t.turn + 'ターン目の判断</h2><p class="sub">' + (best ? "両者とも、各候補をこの局面から" + d.rollouts + "戦ずつ試して、勝率が一番高い行動（✔）を選んでいる。" : "自分の各候補をこの局面から" + d.rollouts + "戦ずつ試した勝率。") + '</p>';
+  let h = '<h2>' + t.turn + 'ターン目の判断</h2><p class="sub">' + (best ? "両者とも、この局面から全候補を少しずつ試し、勝率の高い候補ほど多く試して（最大" + d.rollouts + "戦）、最後に勝率が一番高い行動（✔）を選んでいる。" : "自分の各候補をこの局面から" + d.rollouts + "戦ずつ試した勝率。") + '</p>';
   if (t.whatIf) h += optTable(t.whatIf, 0, best ? "自分の候補（自分から見た勝率）" : "もしこう動いていたら（自分）");
   if (t.whatIfOpp) h += optTable(t.whatIfOpp, 1, "相手の候補（相手から見た勝率）");
   return h;
@@ -315,7 +319,7 @@ function load(i) {
   document.getElementById("gcap").innerHTML = d.mode === "best" ? "勝率の推移：青＝自分が選んだ行動の勝率（自分から見た見込み）、赤の点線＝相手が選んだ行動の見込みを自分側に換算したもの。点をタップでそのターンへ。" : "勝率の推移：青＝実際の行動の勝率、緑の点線＝最善手の勝率、赤い点＝最善より15ポイント以上低い行動。";
   document.getElementById("graph").innerHTML = graph();
   document.querySelectorAll("#graph g[data-turn]").forEach((g) => g.addEventListener("click", () => { const tt = +g.dataset.turn; go(steps.findIndex((s) => s.head && d.turns[s.ti].turn === tt)); }));
-  document.getElementById("foot").textContent = (d.mode === "best" ? "毎ターン、両者とも上位" + (p.searchOptions || "") + "個の候補をそれぞれ" + d.rollouts + "戦ずつ試し、勝率が一番高い行動を選んで進めた対戦（試すときの以降の行動はAIの方針で進める）。" : "勝率は、その時点の局面を保存し、その行動を選んだあと両者AIで最後まで対戦させた結果（各" + d.rollouts + "戦）。") + "ダメージ・行動順・急所・命中は対戦エンジン（Pokémon Showdown の Champions ルール）が決める。相手の技・特性・SPは使用率データからの推定を含む。";
+  document.getElementById("foot").textContent = (d.mode === "best" ? "毎ターン、両者とも『全候補を" + (p.searchStage1 || "") + "戦ずつ → 上位" + (p.searchKeep1 || "") + "個を+" + (p.searchStage2 || "") + "戦 → 上位" + (p.searchKeep2 || "") + "個を+" + (p.searchStage3 || "") + "戦』と絞り込んで、勝率が一番高い行動を選んで進めた対戦（まもる・交代も候補。試すときの以降の行動はAIの方針で両者同条件）。" : "勝率は、その時点の局面を保存し、その行動を選んだあと両者AIで最後まで対戦させた結果（各" + d.rollouts + "戦）。") + "ダメージ・行動順・急所・命中は対戦エンジン（Pokémon Showdown の Champions ルール）が決める。相手の技・特性・SPは使用率データからの推定を含む。";
   go(0);
 }
 const turnStart = (dir) => { let i = pos + dir; while (i > 0 && i < steps.length && !steps[i].head) i += dir; return i; };

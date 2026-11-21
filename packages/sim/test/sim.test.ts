@@ -262,7 +262,13 @@ describe("what-if replay analysis", () => {
 describe("best-play battles", () => {
   it("both sides pick the highest simulated win rate; deterministic", async () => {
     const { playBestBattle, searchOptionsFrom } = await import("../src/index.js");
-    const opts = { options: 2, rollouts: 2 };
+    const opts = {
+      options: 2,
+      stages: [
+        { rollouts: 1, keep: 2 },
+        { rollouts: 1, keep: 1 },
+      ],
+    };
     const r = playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts);
     expect(r.mode).toBe("best");
     const turns = r.turns.filter((t) => t.whatIf);
@@ -271,11 +277,24 @@ describe("best-play battles", () => {
       for (const list of [t.whatIf!, t.whatIfOpp!]) {
         const chosen = list.filter((w) => w.chosen);
         expect(chosen).toHaveLength(1);
-        expect(chosen[0]!.winRate).toBe(Math.max(...list.map((w) => w.winRate)));
+        const finalists = list.filter((w) => w.stage === 2);
+        expect(chosen[0]!.winRate).toBe(Math.max(...finalists.map((w) => w.winRate)));
       }
     }
     expect(playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts)).toEqual(r);
-    expect(searchOptionsFrom(pack.weights.simulation)).toEqual({ options: 6, rollouts: 12 });
-    expect(() => searchOptionsFrom({})).toThrow(/searchOptions/);
+    expect(searchOptionsFrom(pack.weights.simulation).stages.length).toBeGreaterThan(1);
+    expect(
+      searchOptionsFrom(
+        { searchWidth: 4, searchStage1: 10, searchKeep1: 2, searchStage2: 20 },
+        0.5,
+      ),
+    ).toEqual({
+      options: 4,
+      stages: [
+        { rollouts: 5, keep: 2 },
+        { rollouts: 10, keep: 1 },
+      ],
+    });
+    expect(() => searchOptionsFrom({})).toThrow(/search/);
   }, 180_000);
 });

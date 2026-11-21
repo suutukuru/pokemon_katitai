@@ -1,7 +1,7 @@
 import type { PokemonSet } from "@ca/schema";
 import { engineTags } from "@ca/data";
 import { wilson } from "./game.js";
-import { chooseFor, jointOptions, type JointOption } from "./policy.js";
+import { chooseFor, searchCandidates, type JointOption } from "./policy.js";
 import {
   restore,
   reseed,
@@ -24,18 +24,28 @@ import type { PsBattle } from "./showdown.js";
 import { parseLog } from "./trace.js";
 
 export interface SearchOptions {
-  /** candidate joint actions per side per turn (top by the heuristic) */
+  /** joint candidates kept from the heuristic ranking (plus every single-slot option's best completion) */
   options: number;
-  /** simulated games per candidate ("thinking count") */
-  rollouts: number;
+  /** successive halving: rollouts per candidate in each stage and how many survive to the next */
+  stages: { rollouts: number; keep: number }[];
 }
 
-export function searchOptionsFrom(params: Record<string, number>): SearchOptions {
-  const o = params["searchOptions"];
-  const r = params["searchRollouts"];
-  if (o === undefined || r === undefined)
-    throw new Error("weights.simulation.searchOptions / searchRollouts are missing");
-  return { options: o, rollouts: r };
+/** Read the search budget from weights.json `simulation` (searchWidth, searchStageN / searchKeepN). */
+export function searchOptionsFrom(params: Record<string, number>, scale = 1): SearchOptions {
+  const req = (k: string) => {
+    const v = params[k];
+    if (v === undefined) throw new Error(`weights.simulation.${k} is missing`);
+    return v;
+  };
+  const stages: { rollouts: number; keep: number }[] = [];
+  for (let i = 1; params[`searchStage${i}`] !== undefined; i++) {
+    stages.push({
+      rollouts: Math.max(1, Math.round(req(`searchStage${i}`) * scale)),
+      keep: params[`searchKeep${i}`] ?? 1,
+    });
+  }
+  if (stages.length === 0) throw new Error("weights.simulation.searchStage1 is missing");
+  return { options: req("searchWidth"), stages };
 }
 
 /**
@@ -51,6 +61,7 @@ export function evaluateCandidates(
   active: string[],
   rollouts: number,
   seed: number,
+  offset = 0,
 ): WhatIfOption[] {
   // Playouts are symmetric: both sides use the same (lower) temperature so neither side's
   // evaluation is biased by a stronger/weaker continuation policy.
@@ -63,7 +74,7 @@ export function evaluateCandidates(
     let wins = 0;
     for (let k = 0; k < rollouts; k++) {
       const clone = restore(state);
-      const rs = mixSeed(seed, side, i, k);
+      const rs = mixSeed(seed, side, i, k + offset);
       reseed(clone, rs);
       if (!clone.choose(side === 0 ? "p1" : "p2", c.choice))
         clone.choose(side === 0 ? "p1" : "p2", "default");
@@ -84,6 +95,56 @@ export function evaluateCandidates(
       chosen: false,
     };
   });
+}
+
+/**
+ * Successive halving: every candidate gets stage-1 rollouts, the best `keep` get more, and so on.
+ * Each result accumulates all its games; `stage` tells how far it survived.
+ */
+export function successiveHalving(
+  ctx: SimContext,
+  state: Snapshot,
+  side: 0 | 1,
+  cands: JointOption[],
+  active: string[],
+  opts: SearchOptions,
+  seed: number,
+): (WhatIfOption & { stage: number })[] {
+  const acc = new Map<string, { opt: WhatIfOption; wins: number; games: number; stage: number }>();
+  let alive = cands;
+  let offset = 0;
+  opts.stages.forEach((st, si) => {
+    const ev = evaluateCandidates(
+      ctx,
+      state,
+      side,
+      alive,
+      active,
+      st.rollouts,
+      mixSeed(seed, si),
+      offset,
+    );
+    offset += st.rollouts;
+    ev.forEach((e) => {
+      const a = acc.get(e.choice) ?? { opt: e, wins: 0, games: 0, stage: 0 };
+      a.wins += e.winRate * e.games;
+      a.games += e.games;
+      a.stage = si + 1;
+      acc.set(e.choice, a);
+    });
+    const ranked = alive
+      .map((c) => ({ c, a: acc.get(c.choice)! }))
+      .sort((x, y) => y.a.wins / y.a.games - x.a.wins / x.a.games);
+    alive = ranked.slice(0, st.keep).map((x) => x.c);
+  });
+  return [...acc.values()].map((a) => ({
+    ...a.opt,
+    winRate: a.wins / a.games,
+    games: a.games,
+    ci: wilson(a.wins, a.games),
+    chosen: false,
+    stage: a.stage,
+  }));
 }
 
 /** Highest win rate; ties go to the candidate the heuristic ranked higher (earlier). */
@@ -129,19 +190,12 @@ export function playBestBattle(
       const state = snap(battle);
       const evals = ([0, 1] as const).map((s) => {
         const side = battle.sides[s];
-        const cands = jointOptions(battle, side, tags, ctx.params, opts.options);
+        const cands = searchCandidates(battle, side, tags, ctx.params, opts.options);
         const active = side.active.map((m) => (m && !m.fainted ? m.species.id : ""));
-        const ev = evaluateCandidates(
-          ctx,
-          state,
-          s,
-          cands,
-          active,
-          opts.rollouts,
-          mixSeed(seed, 0x51, turn),
-        );
-        const best = pickBest(ev);
-        ev[best]!.chosen = true;
+        const ev = successiveHalving(ctx, state, s, cands, active, opts, mixSeed(seed, 0x51, turn));
+        const finalists = ev.filter((x) => x.stage === opts.stages.length);
+        const best = finalists[pickBest(finalists)]!;
+        best.chosen = true;
         return ev;
       });
       mine.set(turn, evals[0]!);
@@ -204,7 +258,7 @@ export function playBestBattle(
     brought: [ca.map((i) => a[i]!.species), cb.map((i) => b[i]!.species)],
     members,
     turns,
-    rollouts: opts.rollouts,
+    rollouts: opts.stages.reduce((x, st) => x + st.rollouts, 0),
     mode: "best",
   };
 }

@@ -216,8 +216,24 @@ export function slotOptions(
     }
     out.push({ choice: `move ${n}${target}${mega}`, moveId: mv.id, score });
   });
+  // Voluntary switches: low base value, more attractive when this Pokémon is likely to be KO'd.
+  if (!active.trapped && params["switchBase"] !== undefined) {
+    req.side.pokemon.forEach((pk, i) => {
+      if (pk.active || pk.condition.endsWith(" fnt")) return;
+      const mon = side.pokemon[i];
+      if (!mon) return;
+      const score = p(params, "switchBase") + (myThreat >= 1 ? p(params, "switchThreatBonus") : 0);
+      out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score });
+    });
+  }
   if (out.length === 0) out.push({ choice: "move 1", score: 0 });
   return out.sort((a, b2) => b2.score - a.score || a.choice.localeCompare(b2.choice));
+}
+
+/** Two slots cannot switch to the same Pokémon. */
+function conflicts(slots: SlotOption[]): boolean {
+  const sw = slots.filter((s) => s.choice.startsWith("switch")).map((s) => s.choice);
+  return new Set(sw).size !== sw.length;
 }
 
 /** Selection probabilities: softmax of the scores at the given temperature. */
@@ -298,6 +314,15 @@ export function chooseFor(
     }
     return opts[i]!;
   });
+  // resolve a double switch to the same Pokémon: the later slot takes its best other option
+  if (conflicts(picks)) {
+    const req2 = req;
+    const slot = picks.length - 1;
+    const alt = slotOptions(b, side, slot, req2, tags, params).find(
+      (o) => o.choice !== picks[0]!.choice,
+    );
+    if (alt) picks[slot] = alt;
+  }
   return dedupeMega(picks.map((x) => x.choice)).join(", ");
 }
 
@@ -332,7 +357,43 @@ export function jointOptions(
     );
   }
   return joint
+    .filter((j) => !conflicts(j.slots))
     .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
     .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice))
     .slice(0, limit);
+}
+
+/**
+ * Broad candidate set for search: the `width` best joint actions by heuristic score, plus, for
+ * every single-slot option (incl. Protect and switches), its best joint completion — so no option
+ * is excluded just because the heuristic ranks it low.
+ */
+export function searchCandidates(
+  b: PsBattle,
+  side: PsSide,
+  tags: EngineTags,
+  params: PolicyParams,
+  width: number,
+): JointOption[] {
+  const req = side.activeRequest;
+  if (!req?.active) return [];
+  const perSlot = req.active.map((_, slot) => slotOptions(b, side, slot, req, tags, params));
+  let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
+  for (const opts of perSlot)
+    joint = joint.flatMap((j) =>
+      opts.map((o) => ({ choice: "", slots: [...j.slots, o], score: j.score + o.score })),
+    );
+  const all = joint
+    .filter((j) => !conflicts(j.slots))
+    .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
+    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
+  const picked = new Map<string, JointOption>();
+  for (const j of all.slice(0, width)) picked.set(j.choice, j);
+  perSlot.forEach((opts, slot) => {
+    for (const o of opts) {
+      const best = all.find((j) => j.slots[slot]?.choice === o.choice);
+      if (best) picked.set(best.choice, best);
+    }
+  });
+  return [...picked.values()].sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
 }

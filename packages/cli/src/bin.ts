@@ -338,7 +338,7 @@ try {
       const mine = parseShowdown(env.readText(mineFile), legal).members;
       const ctx = simContext(env.pack, env.spec);
       const seed = Number(opt("seed", "1"));
-      const budget = budgetFrom(env.pack.weights.simulation, Number(opt("scale", "0.3")));
+      const budget = budgetFrom(env.pack.weights.simulation, Number(opt("scale", "1")));
       const prepared: {
         label: string;
         theirs: typeof mine;
@@ -369,7 +369,7 @@ try {
         });
         io.err(`… 選出決定: ${opp.label}`);
       }
-      const search = searchOptionsFrom(env.pack.weights.simulation);
+      const search = searchOptionsFrom(env.pack.weights.simulation, Number(opt("think", "1")));
       const wi = args.indexOf("--workers");
       const datas = await runBestPlayPool(
         env.pack.id,
@@ -387,7 +387,7 @@ try {
       const wins = datas.filter((x) => x.result.winner === 0).length;
       const html = renderReplayBook({
         title: `${name} × M-C上位構築（最善手同士の対戦）`,
-        subtitle: `${entries.length}構築と、両者が毎ターン勝率最大の行動を選ぶ対戦を1戦ずつ: ${wins}勝${entries.length - wins}敗 ／ 思考: 候補${search.options}個×各${search.rollouts}戦`,
+        subtitle: `${entries.length}構築と、両者が毎ターン勝率最大の行動を選ぶ対戦を1戦ずつ: ${wins}勝${entries.length - wins}敗 ／ 思考: 候補を最大${search.options}個以上から ${search.stages.map((st) => `${st.rollouts}戦`).join("→")} で絞り込み`,
         entries,
         params: env.pack.weights.simulation,
       });
