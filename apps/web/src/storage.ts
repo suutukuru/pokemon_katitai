@@ -23,14 +23,7 @@ export function saveAll(teams: SavedTeam[]): void {
     /* storage unavailable (private mode) — the app still works without saving */
   }
 }
-export function exportJson(teams: SavedTeam[]): void {
-  const blob = new Blob(
-    [JSON.stringify({ format: "champions-analyzer.teams", version: 1, teams }, null, 2)],
-    { type: "application/json" },
-  );
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `teams-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+/** Export as JSON text (copied to the clipboard by the UI; downloads are not available everywhere). */
+export function exportText(teams: SavedTeam[]): string {
+  return JSON.stringify({ format: "champions-analyzer.teams", version: 1, teams }, null, 2);
 }

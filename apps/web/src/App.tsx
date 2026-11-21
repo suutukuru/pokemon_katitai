@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SAMPLE_TEAMS } from "./samples";
 import type { DiagnoseRequest, DiagnoseResponse, ErrorResponse } from "./protocol";
-import { exportJson, loadSaved, saveAll, type SavedTeam } from "./storage";
+import { exportText, loadSaved, saveAll, type SavedTeam } from "./storage";
 
 const SEVERITY_ICON: Record<string, string> = { critical: "⛔", major: "▲", minor: "●", info: "ℹ" };
 const STAT_LABEL: Record<string, string> = {
@@ -29,6 +29,10 @@ export function App() {
   const [busy, setBusy] = useState(false);
   const [category, setCategory] = useState<string>("all");
   const [saved, setSaved] = useState<SavedTeam[]>(() => loadSaved());
+  const [teamName, setTeamName] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [exported, setExported] = useState<string | null>(null);
+  const [copyNote, setCopyNote] = useState("");
 
   useEffect(() => {
     worker.onmessage = (ev: MessageEvent<DiagnoseResponse | ErrorResponse>) => {
@@ -50,21 +54,22 @@ export function App() {
     worker.postMessage(req);
   };
 
+  // In-page controls only: prompt()/confirm() and file downloads are unavailable in some hosts.
   const saveCurrent = () => {
-    const name = window.prompt(
-      "チーム名",
+    const name =
+      teamName.trim() ||
       result?.members
         .map((m) => m.name)
         .slice(0, 2)
-        .join("・") ?? "チーム",
-    );
-    if (!name) return;
+        .join("・") ||
+      "チーム";
     const next = [
       ...saved,
-      { id: crypto.randomUUID(), name, text, regulationId, savedAt: new Date().toISOString() },
+      { id: `t${Date.now()}`, name, text, regulationId, savedAt: new Date().toISOString() },
     ];
     setSaved(next);
     saveAll(next);
+    setTeamName("");
   };
   const removeSaved = (id: string) => {
     const next = saved.filter((t) => t.id !== id);
@@ -72,9 +77,20 @@ export function App() {
     saveAll(next);
   };
   const deleteAll = () => {
-    if (!window.confirm("保存したチームをすべて削除します。よろしいですか？")) return;
     setSaved([]);
     saveAll([]);
+    setConfirmDelete(false);
+    setExported(null);
+  };
+  const copyExport = async () => {
+    const json = exportText(saved);
+    setExported(json);
+    try {
+      await navigator.clipboard.writeText(json);
+      setCopyNote("コピーしました");
+    } catch {
+      setCopyNote("下の欄を長押しして全選択・コピーしてください");
+    }
   };
 
   const categories = [...new Set(result?.explained.map((f) => f.category) ?? [])];
@@ -136,6 +152,13 @@ export function App() {
           <button className="primary" onClick={run} disabled={busy}>
             {busy ? "診断中…" : "診断する"}
           </button>
+          <input
+            id="team-name"
+            aria-label="保存するチーム名"
+            placeholder="チーム名（省略可）"
+            value={teamName}
+            onChange={(e) => setTeamName(e.target.value)}
+          />
           <button onClick={saveCurrent} disabled={!text.trim()}>
             この端末に保存
           </button>
@@ -170,11 +193,31 @@ export function App() {
               ))}
             </ul>
             <div className="row">
-              <button onClick={() => exportJson(saved)}>書き出し（JSON）</button>
-              <button className="danger" onClick={deleteAll}>
-                すべて削除
-              </button>
+              <button onClick={copyExport}>書き出し（JSONをコピー）</button>
+              {confirmDelete ? (
+                <>
+                  <button className="danger" onClick={deleteAll}>
+                    本当にすべて削除する
+                  </button>
+                  <button onClick={() => setConfirmDelete(false)}>やめる</button>
+                </>
+              ) : (
+                <button className="danger" onClick={() => setConfirmDelete(true)}>
+                  すべて削除
+                </button>
+              )}
             </div>
+            {copyNote && <p className="muted">{copyNote}</p>}
+            {exported && (
+              <textarea
+                id="export-json"
+                aria-label="書き出したJSON"
+                readOnly
+                rows={6}
+                value={exported}
+                onFocus={(e) => e.currentTarget.select()}
+              />
+            )}
           </details>
         )}
       </section>

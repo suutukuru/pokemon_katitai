@@ -64,3 +64,15 @@ test("no horizontal scroll at phone width", async ({ page }) => {
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test("save, export (copy) and delete use in-page controls only", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("保存するチーム名").fill("テスト");
+  await page.getByRole("button", { name: "この端末に保存" }).click();
+  await page.getByText("保存したチーム（1）").click();
+  await page.getByRole("button", { name: "書き出し（JSONをコピー）" }).click();
+  await expect(page.getByLabel("書き出したJSON")).toHaveValue(/"name": "テスト"/);
+  await page.getByRole("button", { name: "すべて削除" }).click();
+  await page.getByRole("button", { name: "本当にすべて削除する" }).click();
+  await expect(page.getByText("保存したチーム（")).toHaveCount(0);
+});

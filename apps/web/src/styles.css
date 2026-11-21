@@ -20,7 +20,7 @@
   background: var(--bg);
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #12151b;
     --card: #1b2029;
     --fg: #e6e9ef;
@@ -32,7 +32,22 @@
     --minor: #6ee7b7;
     --info: #a5b4c8;
     --est: #c4a5ff;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #12151b;
+  --card: #1b2029;
+  --fg: #e6e9ef;
+  --muted: #9aa3b2;
+  --line: #2e3441;
+  --accent: #7c9cff;
+  --critical: #ff8a80;
+  --major: #fbbf24;
+  --minor: #6ee7b7;
+  --info: #a5b4c8;
+  --est: #c4a5ff;
+  color-scheme: dark;
 }
 * {
   box-sizing: border-box;
@@ -40,11 +55,14 @@
 body {
   margin: 0;
   background: var(--bg);
+  color: var(--fg);
 }
 .app {
   max-width: 760px;
   margin: 0 auto;
-  padding: 12px 16px 48px;
+  padding-block: 12px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 h1 {
   font-size: 1.25rem;
@@ -318,4 +336,20 @@ details summary {
 footer {
   margin-top: 24px;
   text-align: center;
+}
+
+input {
+  font: inherit;
+  color: var(--fg);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 44px;
+  min-width: 0;
+  flex: 1 1 140px;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
