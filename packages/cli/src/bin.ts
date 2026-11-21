@@ -6,7 +6,7 @@ import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
-import { renderReplayPage } from "./replay-report.js";
+import { renderReplayBook, renderReplayPage, type ReplayBookEntry } from "./replay-report.js";
 import { screenshotPages } from "./screenshot.js";
 import { candidatePairs } from "./fill.js";
 import { formatShowdown } from "@ca/ingest";
@@ -19,13 +19,14 @@ import {
   simulate,
   traceBattle,
   analyzeReplay,
+  searchOptionsFrom,
   type Config,
 } from "@ca/sim";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
-import { workerPoolExecutor } from "@ca/sim/pool";
+import { runBestPlayPool, workerPoolExecutor } from "@ca/sim/pool";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
 import { regDiff, regNew, regValidate, type Io } from "./commands.js";
@@ -315,6 +316,86 @@ try {
           2,
         ),
       );
+      code = 0;
+      break;
+    }
+    case "report:book": {
+      // `report:book <自分.txt> [--top 10] [--scale 0.3]` → one HTML: best-play battle vs each top team
+      const env = simEnv(args);
+      const opt = (k: string, d: string) =>
+        args.indexOf(`--${k}`) >= 0 ? args[args.indexOf(`--${k}`) + 1]! : d;
+      const mineFile = args.find(
+        (x, i) =>
+          !x.startsWith("--") &&
+          !["--top", "--scale", "--seed", "--workers", "--out"].includes(args[i - 1] ?? ""),
+      );
+      if (!mineFile || !env.topTeams || !env.resolveTeam) {
+        io.err("usage: pnpm report:book <自分のパーティ.txt> [--top 10] [--scale 0.3]");
+        code = 2;
+        break;
+      }
+      const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
+      const mine = parseShowdown(env.readText(mineFile), legal).members;
+      const ctx = simContext(env.pack, env.spec);
+      const seed = Number(opt("seed", "1"));
+      const budget = budgetFrom(env.pack.weights.simulation, Number(opt("scale", "0.3")));
+      const prepared: {
+        label: string;
+        theirs: typeof mine;
+        ca: Config;
+        cb: Config;
+        value: number;
+      }[] = [];
+      for (const spec of env.topTeams(Number(opt("top", "10")))) {
+        const opp = env.resolveTeam(spec);
+        if (!opp || opp.members.length < env.pack.rules.bringCount) continue;
+        const exec = env.executor!(mine, opp.members);
+        const a = await analyzeMatchup(ctx, mine, opp.members, exec, budget, seed);
+        await (exec as { close?: () => Promise<void> }).close?.();
+        const toConfig = (team: typeof mine, species: string[]) =>
+          species.map((x) => team.findIndex((m) => m.species === x)) as Config;
+        prepared.push({
+          label: opp.label,
+          theirs: opp.members,
+          ca: toConfig(
+            mine,
+            a.matrix.mine[a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine))]!,
+          ),
+          cb: toConfig(
+            opp.members,
+            a.matrix.theirs[a.equilibrium.theirs.indexOf(Math.max(...a.equilibrium.theirs))]!,
+          ),
+          value: a.equilibrium.value,
+        });
+        io.err(`… 選出決定: ${opp.label}`);
+      }
+      const search = searchOptionsFrom(env.pack.weights.simulation);
+      const wi = args.indexOf("--workers");
+      const datas = await runBestPlayPool(
+        env.pack.id,
+        prepared.map((x) => ({ mine, theirs: x.theirs, ca: x.ca, cb: x.cb, seed, opts: search })),
+        wi >= 0 ? Number(args[wi + 1]) : 4,
+        (i) => io.err(`… 最善手の対戦 完了: ${prepared[i]!.label}`),
+      );
+      const entries: ReplayBookEntry[] = prepared.map((x, i) => ({
+        label: x.label,
+        subtitle: `選出の読み合い（多数の対戦）での期待勝率 ${Math.round(x.value * 100)}%`,
+        opponent: x.theirs.map((m) => m.species),
+        data: datas[i]!,
+      }));
+      const name = basename(mineFile).replace(/\.txt$/, "");
+      const wins = datas.filter((x) => x.result.winner === 0).length;
+      const html = renderReplayBook({
+        title: `${name} × M-C上位構築（最善手同士の対戦）`,
+        subtitle: `${entries.length}構築と、両者が毎ターン勝率最大の行動を選ぶ対戦を1戦ずつ: ${wins}勝${entries.length - wins}敗 ／ 思考: 候補${search.options}個×各${search.rollouts}戦`,
+        entries,
+        params: env.pack.weights.simulation,
+      });
+      const outDir = resolvePath(opt("out", "reports"));
+      mkdirSync(outDir, { recursive: true });
+      const out = resolvePath(outDir, `${name}-book.html`);
+      writeFileSync(out, html);
+      io.out(out);
       code = 0;
       break;
     }

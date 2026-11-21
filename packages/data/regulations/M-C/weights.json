@@ -109,6 +109,8 @@
     "turnOptions": 6,
     "turnRollouts": 16,
     "fictitiousIterations": 4000,
-    "selfTemperature": 0.12
+    "selfTemperature": 0.12,
+    "searchOptions": 6,
+    "searchRollouts": 12
   }
 }

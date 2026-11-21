@@ -14,14 +14,19 @@ import { Battle, type PsBattle } from "./showdown.js";
 import { parseLog, type BattleEvent } from "./trace.js";
 import { wilson } from "./game.js";
 
-type Snapshot = unknown;
-const snap = (b: PsBattle): Snapshot => (b as unknown as { toJSON(): Snapshot }).toJSON();
-const restore = (s: Snapshot): PsBattle => {
-  const b = (Battle as unknown as { fromJSON(x: Snapshot): PsBattle }).fromJSON(s);
+/**
+ * Saved battle state as a JSON string. Showdown's toJSON() shares arrays (e.g. the log) with the
+ * live battle, so the snapshot is serialized immediately and every restore parses a fresh copy.
+ */
+export type Snapshot = string;
+export const snap = (b: PsBattle): Snapshot =>
+  JSON.stringify((b as unknown as { toJSON(): unknown }).toJSON());
+export const restore = (s: Snapshot): PsBattle => {
+  const b = (Battle as unknown as { fromJSON(x: unknown): PsBattle }).fromJSON(JSON.parse(s));
   markLogSent(b);
   return b;
 };
-const reseed = (b: PsBattle, seed: number) =>
+export const reseed = (b: PsBattle, seed: number) =>
   (b as unknown as { resetRNG(s: [number, number, number, number]): void }).resetRNG([
     seed & 0xffff,
     (seed >>> 16) & 0xffff,
@@ -44,6 +49,8 @@ export interface ReplayTurn {
   decisions: DecisionTrace[];
   /** My side's alternatives at this turn, evaluated by rollouts from the exact state. */
   whatIf?: WhatIfOption[];
+  /** The opponent's alternatives (win rate from the opponent's point of view), in best-play mode. */
+  whatIfOpp?: WhatIfOption[];
 }
 
 export interface ReplayData {
@@ -54,6 +61,8 @@ export interface ReplayData {
   members: { side: 0 | 1; species: string; maxhp: number; item?: string }[];
   turns: ReplayTurn[];
   rollouts: number;
+  /** "sampled": AI policy game with what-if analysis; "best": both sides pick their highest win-rate action. */
+  mode?: "sampled" | "best";
 }
 
 /**

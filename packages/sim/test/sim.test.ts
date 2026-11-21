@@ -258,3 +258,24 @@ describe("what-if replay analysis", () => {
     ).toEqual(r);
   }, 120_000);
 });
+
+describe("best-play battles", () => {
+  it("both sides pick the highest simulated win rate; deterministic", async () => {
+    const { playBestBattle, searchOptionsFrom } = await import("../src/index.js");
+    const opts = { options: 2, rollouts: 2 };
+    const r = playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts);
+    expect(r.mode).toBe("best");
+    const turns = r.turns.filter((t) => t.whatIf);
+    expect(turns.length).toBeGreaterThan(0);
+    for (const t of turns) {
+      for (const list of [t.whatIf!, t.whatIfOpp!]) {
+        const chosen = list.filter((w) => w.chosen);
+        expect(chosen).toHaveLength(1);
+        expect(chosen[0]!.winRate).toBe(Math.max(...list.map((w) => w.winRate)));
+      }
+    }
+    expect(playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts)).toEqual(r);
+    expect(searchOptionsFrom(pack.weights.simulation)).toEqual({ options: 6, rollouts: 12 });
+    expect(() => searchOptionsFrom({})).toThrow(/searchOptions/);
+  }, 180_000);
+});

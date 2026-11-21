@@ -286,7 +286,7 @@ describe("battle report", () => {
 
 describe("replay page", () => {
   it("embeds the data, a name table and the controls in one file", async () => {
-    const { renderReplayPage } = await import("../src/index.js");
+    const { renderReplayPage, renderReplayBook } = await import("../src/index.js");
     const html = renderReplayPage({
       title: "t<x>",
       subtitle: "s",
@@ -332,5 +332,28 @@ describe("replay page", () => {
     expect(html).toContain('"m:heatwave":"ねっぷう"');
     expect(html).toContain('id="seek"');
     expect(html).not.toMatch(/<script[^>]+src=/); // no external scripts
+    const data = JSON.parse(
+      html.match(/<script id="payload" type="application\/json">(.*?)<\/script>/s)![1]!,
+    ).books[0].d;
+    const book = renderReplayBook({
+      title: "b",
+      subtitle: "s",
+      params: {},
+      entries: [
+        { label: "M-7 4位", subtitle: "x", opponent: ["pelipper", "archaludon"], data },
+        {
+          label: "M-7 27位",
+          subtitle: "y",
+          opponent: ["kingambit"],
+          data: { ...data, mode: "best" },
+        },
+      ],
+    });
+    const payload = JSON.parse(
+      book.match(/<script id="payload" type="application\/json">(.*?)<\/script>/s)![1]!,
+    );
+    expect(payload.books.map((b: { label: string }) => b.label)).toEqual(["M-7 4位", "M-7 27位"]);
+    expect(payload.n["s:archaludon"]).toBe("ブリジュラス");
+    expect(payload.n["s:kingambit"]).toBe("ドドゲザン");
   });
 });

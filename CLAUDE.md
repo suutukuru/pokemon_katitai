@@ -51,6 +51,7 @@ pnpm sim:meta <自分.txt> [--top 10] [--scale 0.3] # M-C 上位構築すべて�
 pnpm report:meta <自分.txt> [--top 10]           # 上位構築との結果を画像(reports/*.png)にする（チャットで見せる用）
 pnpm report:battle <自分.txt> <相手|pokedb:M-7:4> [--games 30]  # 1戦ごとの中身（評価値・選ぶ確率・出来事・HP）を画像に
 pnpm report:replay <自分.txt> <相手|pokedb:M-7:68> [--pick lose|win] [--rollouts 16]  # 1戦を操作できる再生ページ(HTML1枚)＋各ターンの「もしこう動いていたら」勝率
+pnpm report:book <自分.txt> [--top 10]           # 上位構築すべてと「両者が毎ターン勝率最大の行動を選ぶ」対戦をして、全部を1つのHTMLで再生
 pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候補ペアを上位構築との勝率で比較
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）

@@ -27,6 +27,7 @@
     "sim:meta": "tsx packages/cli/src/bin.ts sim:meta",
     "report:meta": "tsx packages/cli/src/bin.ts report:meta",
     "team:fill": "tsx packages/cli/src/bin.ts team:fill",
+    "report:book": "tsx packages/cli/src/bin.ts report:book",
     "report:replay": "tsx packages/cli/src/bin.ts report:replay",
     "report:battle": "tsx packages/cli/src/bin.ts report:battle",
     "web:dev": "pnpm --filter @ca/web dev",
