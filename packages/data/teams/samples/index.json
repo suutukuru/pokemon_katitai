@@ -1,0 +1,29 @@
+{
+  "note": "フェーズ3の受け入れテスト・Web画面用のサンプル。実在の大会構築ではない（user-team-1 はユーザー提供の実機チーム）",
+  "teams": [
+    {
+      "id": "user-team-1",
+      "file": "user-team-1.txt",
+      "name": { "ja": "チーム1（ユーザー提供）", "en": "Team 1 (user)" },
+      "regulationId": "M-C",
+      "sample": false,
+      "source": "ユーザー提供の実機スクリーンショット（2026-11-21）"
+    },
+    {
+      "id": "sample-trickroom",
+      "file": "sample-trickroom.txt",
+      "name": { "ja": "サンプル：トリックルーム", "en": "Sample: Trick Room" },
+      "regulationId": "M-C",
+      "sample": true,
+      "source": "動作確認用に作成（実在の構築ではない）"
+    },
+    {
+      "id": "sample-rain",
+      "file": "sample-rain.txt",
+      "name": { "ja": "サンプル：あめ", "en": "Sample: Rain" },
+      "regulationId": "M-C",
+      "sample": true,
+      "source": "動作確認用に作成（実在の構築ではない）"
+    }
+  ]
+}

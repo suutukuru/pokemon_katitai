@@ -62,10 +62,15 @@ describe("resolveName", () => {
     expect(r.confidence).toBeLessThan(1);
   });
   it("refuses to guess when nothing is close, but still offers candidates", () => {
-    const r = resolveName("species", "ニャオニクス（メス）");
+    const r = resolveName("species", "ニャオニャオニャオ");
     expect(r.kind).toBe("none");
-    expect(r.candidates[0]?.id).toBe("meowsticf");
+    expect(r.candidates.length).toBeGreaterThan(0);
     expect(resolveName("species", "   ").kind).toBe("none");
+  });
+  it("accepts form names with or without the form label", () => {
+    expect(resolveName("species", "ニャオニクス（メス）").id).toBe("meowsticf");
+    expect(resolveName("species", "ニャオニクス (メスのすがた)").id).toBe("meowsticf");
+    expect(resolveName("species", "イエッサン").id).toBe("indeedee");
   });
   it("restricts to an allowed set and accepts IDs outside the name table", () => {
     expect(resolveName("species", "Charizard", { within: ["milotic"] }).id).not.toBe("charizard");

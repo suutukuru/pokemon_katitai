@@ -96,6 +96,13 @@ function indexFor(kind: NameKind): IndexEntry[] {
     for (const [id, n] of Object.entries(names()[kind])) {
       const keys = new Set([id, normalizeName(n.en)]);
       if (n.ja) keys.add(normalizeName(n.ja));
+      // "イエッサン (オスのすがた)" is also reachable as "イエッサン"; base formes sort first by ID.
+      for (const label of [n.en, n.ja]) {
+        const bare = label?.replace(/\s*[(（].*[)）]\s*$/, "");
+        if (bare && bare !== label) keys.add(normalizeName(bare));
+        // "ニャオニクス (メスのすがた)" ⇔ "ニャオニクス（メス）"
+        if (label?.includes("のすがた")) keys.add(normalizeName(label.replace("のすがた", "")));
+      }
       for (const key of keys) idx.push({ id, key });
     }
     indexes.set(kind, idx);
@@ -112,7 +119,11 @@ export function resolveName(kind: NameKind, text: string, options: ResolveOption
   if (key === "") return { id: undefined, kind: "none", confidence: 0, candidates: [] };
 
   const idx = indexFor(kind);
-  const exact = idx.find((e) => allowed(e.id) && (e.key === key || e.id === toID(text)));
+  const exact =
+    idx.find((e) => allowed(e.id) && e.id === toID(text)) ??
+    idx
+      .filter((e) => allowed(e.id) && e.key === key)
+      .sort((a, b) => a.id.length - b.id.length || a.id.localeCompare(b.id))[0];
   if (exact) {
     return {
       id: exact.id,

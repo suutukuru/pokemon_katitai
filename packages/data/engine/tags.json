@@ -1,0 +1,137 @@
+{
+  "verified": false,
+  "sources": [
+    {
+      "title": "本編（第9世代）の技・特性の効果に基づく分類"
+    }
+  ],
+  "note": "Champions で効果が変わったものは未確認。変更が判明したらパックの overrides と合わせてここを更新する",
+  "moves": {
+    "speedControl": {
+      "tailwind": "tailwind",
+      "trickroom": "trickroom",
+      "icywind": "speedDrop",
+      "electroweb": "speedDrop",
+      "bulldoze": "speedDrop",
+      "rocktomb": "speedDrop",
+      "scaryface": "speedDrop",
+      "lowsweep": "speedDrop",
+      "mudshot": "speedDrop",
+      "cottonspore": "speedDrop",
+      "stringshot": "speedDrop",
+      "drumbeating": "speedDrop",
+      "bleakwindstorm": "speedDrop",
+      "thunderwave": "paralysis",
+      "glare": "paralysis",
+      "nuzzle": "paralysis",
+      "stunspore": "paralysis"
+    },
+    "fakeOut": ["fakeout"],
+    "redirection": ["followme", "ragepowder"],
+    "protect": [
+      "protect",
+      "detect",
+      "spikyshield",
+      "kingsshield",
+      "banefulbunker",
+      "silktrap",
+      "burningbulwark",
+      "obstruct"
+    ],
+    "teamProtect": ["wideguard", "quickguard"],
+    "disruption": ["taunt", "encore", "imprison", "disable", "snarl", "partingshot"],
+    "screens": ["reflect", "lightscreen", "auroraveil"],
+    "pivot": ["uturn", "voltswitch", "flipturn", "partingshot", "teleport", "chillyreception"],
+    "sleep": [
+      "spore",
+      "sleeppowder",
+      "hypnosis",
+      "yawn",
+      "darkvoid",
+      "lovelykiss",
+      "sing",
+      "grasswhistle"
+    ],
+    "turnOrder": ["afteryou", "quash", "instruct"],
+    "weather": {
+      "sunnyday": "Sun",
+      "raindance": "Rain",
+      "sandstorm": "Sand",
+      "snowscape": "Snow",
+      "chillyreception": "Snow"
+    },
+    "terrain": {
+      "electricterrain": "Electric",
+      "grassyterrain": "Grassy",
+      "psychicterrain": "Psychic",
+      "mistyterrain": "Misty"
+    }
+  },
+  "abilities": {
+    "intimidate": ["intimidate"],
+    "weather": {
+      "drought": "Sun",
+      "drizzle": "Rain",
+      "sandstream": "Sand",
+      "snowwarning": "Snow",
+      "orichalcumpulse": "Sun"
+    },
+    "terrain": {
+      "electricsurge": "Electric",
+      "grassysurge": "Grassy",
+      "psychicsurge": "Psychic",
+      "mistysurge": "Misty",
+      "hadronengine": "Electric",
+      "seedsower": "Grassy"
+    },
+    "typeImmunity": {
+      "levitate": "Ground",
+      "eartheater": "Ground",
+      "flashfire": "Fire",
+      "wellbakedbody": "Fire",
+      "waterabsorb": "Water",
+      "stormdrain": "Water",
+      "dryskin": "Water",
+      "voltabsorb": "Electric",
+      "lightningrod": "Electric",
+      "motordrive": "Electric",
+      "sapsipper": "Grass"
+    },
+    "redirection": {
+      "lightningrod": "Electric",
+      "stormdrain": "Water"
+    },
+    "priorityBlock": ["armortail", "queenlymajesty", "dazzling", "psychicsurge"],
+    "prankster": ["prankster"],
+    "speedDouble": {
+      "chlorophyll": "Sun",
+      "swiftswim": "Rain",
+      "sandrush": "Sand",
+      "slushrush": "Snow",
+      "surgesurfer": "Electric terrain",
+      "unburden": "item consumed"
+    },
+    "typeChange": {
+      "pixilate": {
+        "from": "Normal",
+        "to": "Fairy"
+      },
+      "aerilate": {
+        "from": "Normal",
+        "to": "Flying"
+      },
+      "refrigerate": {
+        "from": "Normal",
+        "to": "Ice"
+      },
+      "galvanize": {
+        "from": "Normal",
+        "to": "Electric"
+      },
+      "dragonize": {
+        "from": "Normal",
+        "to": "Dragon"
+      }
+    }
+  }
+}

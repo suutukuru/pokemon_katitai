@@ -5,7 +5,7 @@ import {
   type StatId,
   type StatsTable,
 } from "@ca/schema";
-import { displayName, resolveName, type NameMatch } from "@ca/data";
+import { displayName, names, resolveName, type NameMatch } from "@ca/data";
 import { evToSp } from "@ca/calc";
 import type { ExtractContext, ExtractionResult, Extractor, IngestIssue } from "./extractor.js";
 
@@ -234,10 +234,19 @@ function finalize(
   issues: IngestIssue[],
 ): PokemonSet | undefined {
   const line = d.startLine;
-  const species = d.species
+  let species = d.species
     ? resolveField("species", d.species, "species", idx, line, d, issues, ctx.legal?.species)
     : undefined;
   if (!species) return undefined;
+  // Gender-dependent formes (Indeedee-F, Basculegion-F, Meowstic-F): "(F)" selects the female forme.
+  const female = `${species}f`;
+  if (
+    d.gender === "F" &&
+    names().species[female] &&
+    (!ctx.legal?.species || ctx.legal.species.includes(female))
+  ) {
+    species = female;
+  }
   const item = d.item
     ? resolveField("items", d.item, "item", idx, line, d, issues, ctx.legal?.items)
     : undefined;

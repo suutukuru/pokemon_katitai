@@ -16,8 +16,11 @@ packages/schema   zodスキーマと型（依存: zodのみ）
 packages/data     レギュレーションパック(JSON) + ローダー/検証/差分/雛形。`@ca/data/node` はNode専用(fs)
 packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @smogon/calc アダプター（damage.ts）
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
+packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
+packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
-(予定) engine explain / apps/web apps/api
+apps/web          React + Vite。診断は Web Worker（src/worker.ts）。パックとサンプルはビルド時に同梱
+(予定) apps/api
 ```
 
 - パッケージはビルドせず TS ソースを直接 export（ADR-0001）。
@@ -41,6 +44,8 @@ pnpm team:check <team.txt>                       # パーティを読み、実�
 pnpm calc <team.txt> <攻撃側> <技> <防御側> [--mega] [--def-mega] [--weather Sun] [--def-team 相手.txt]
 pnpm data:import-official <dir>                  # 公式「参加できるポケモン」ページ(保存済みHTML)→ 種族IDリスト
 pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves.json を再生成
+pnpm web:dev / pnpm web:build                    # Web 画面
+pnpm e2e                                         # Playwright（Pixel 7 表示、ビルドして preview で実行）
 ```
 
 `CA_REGULATION`（既定 M-C）で team:check / calc のレギュレーションを切り替えられる。
@@ -71,3 +76,11 @@ pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves
 - 実数値の式は `packages/calc/src/stats.ts` の `calcStat` だけに書く。アダプターは @smogon/calc が出した実数値をこれで上書きする。
 - ゴールデン: `packages/calc/test/golden/ingame-stats.json` は実機の値（変更禁止）。`damage-cases.json` は独立実装の式で検証する。
 - `legal.json` の `provenance` に、リストごとの出典と確度を書く。
+
+## ルールを追加・調整する手順
+
+1. `packages/engine/src/rules/` に `Rule` を書き、`rules/index.ts` の `RULES` に追加。閾値は `params` に名前だけ宣言し、値は書かない。
+2. 各レギュレーションの `weights.json` に `rules[ルールID]`（重み）と `params[ルールID]`（閾値）を追加。無いと `diagnose()` が RuleParamError で止まる（テストでも検出）。
+3. `packages/explain/src/templates.ja.ts` に explainKey のテンプレート。本文に計算値を直書きしない（パラメータで渡す。性質ベーステストが検出）。
+4. 分類が必要なら `packages/data/engine/tags.json`（技・特性の分類）に追加。
+5. `pnpm test` → 診断のスナップショットが変わったら意図した変更か確認して `pnpm vitest run -u`。

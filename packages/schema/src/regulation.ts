@@ -155,7 +155,14 @@ export const RulesDeltaSchema = RulesSchema.partial().extend({ $schema: z.string
 export const WeightsSchema = z.strictObject({
   version: z.string().min(1),
   origin: z.enum(["manual", "learned"]),
-  rules: z.record(z.string(), z.number()).default({}),
+  /** Rule weights; final score = Σ(weight × rule score) / Σ weight. */
+  rules: z.record(z.string(), z.number().nonnegative()).default({}),
+  /** Per-rule thresholds/parameters (ruleId → name → value). */
+  params: z.record(z.string(), z.record(z.string(), z.number())).default({}),
+  /** A finding's severity from its score: score < critical → critical, < major → major, < minor → minor, else info. */
+  severity: z
+    .strictObject({ critical: z.number(), major: z.number(), minor: z.number() })
+    .optional(),
   evaluation: z.record(z.string(), z.number()).default({}),
   search: z
     .strictObject({

@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`phase 3 acceptance: three teams → evidence-backed findings sorted by severity > golden: findings are stable (snapshot) 1`] = `
+{
+  "contentHash": "3ddeca81b86aaded",
+  "sample-rain": {
+    "findings": [
+      "minor support.intimidate.missing {"count":0}",
+      "minor offense.coverage.legal {"count":27,"total":262,"examples":"ampharos,arbok,bellibolt,dedenne,eelektross,emolga,forretress,garbodor"}",
+      "info defense.quadWeakness {"list":"pelipper:Electric"}",
+    ],
+    "score": 92.2,
+  },
+  "sample-trickroom": {
+    "findings": [
+      "minor defense.sharedWeakness {"type":"Ground","weak":"torkoal,incineroar,kingambit","weakCount":3,"resistCount":0}",
+      "minor offense.coverage.legal {"count":58,"total":262,"examples":"aggron,ampharos,araquanid,arcanine,arcaninehisui,archaludon,audino,bastiodon"}",
+      "info defense.quadWeakness {"list":"kingambit:Fighting"}",
+    ],
+    "score": 88.6,
+  },
+  "user-team-1": {
+    "findings": [
+      "major defense.sharedWeakness {"type":"Ice","weak":"whimsicott,aerodactyl,hippowdon,meowscarada","weakCount":4,"resistCount":1}",
+      "major field.conflict.weather {"kinds":"Sand,Sun","setters":"hippowdon:sandstream,charizard:drought"}",
+      "minor support.fakeout.missing {"count":0}",
+      "minor support.intimidate.missing {"count":0}",
+      "info support.redirection.missing {"count":0}",
+      "info defense.quadWeakness {"list":"whimsicott:Poison,meowscarada:Bug,charizard:Rock"}",
+      "info offense.coverage.legal {"count":11,"total":262,"examples":"audino,castform,ditto,furfrou,kangaskhan,lopunny,maushold,persian"}",
+    ],
+    "score": 86.6,
+  },
+}
+`;

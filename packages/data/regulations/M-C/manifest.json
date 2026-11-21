@@ -13,7 +13,7 @@
   "verified": false,
   "sources": [
     {
-      "title": "Pokémon Champions 公式「参加できるポケモン」（ランクバトル シーズンM‐6・シングル）",
+      "title": "Pokémon Champions 公式「参加できるポケモン」（レギュレーション M-C、シングル・ダブル共通。取得元はシーズンM‐6のページ）",
       "url": "https://web-view.app.pokemonchampions.jp/battle/pages/events/rs178713870219xeaaio/ja/pokemon.html",
       "accessed": "2026-11-21"
     },
@@ -23,5 +23,5 @@
       "accessed": "2026-11-21"
     }
   ],
-  "notes": "ユーザー申告により現行レギュレーションを M-C とした（2026-11-21）。ダブル用の公式イベントページは未確認。期間は未設定。"
+  "notes": "現行レギュレーション（ユーザー申告 2026-11-21）。使用可能ポケモンはシングル・ダブル共通。期間は未設定。"
 }

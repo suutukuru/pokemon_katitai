@@ -19,3 +19,17 @@ jobs:
       - run: pnpm test:coverage
       - run: pnpm reg:validate
       - run: pnpm team:check packages/ingest/test/fixtures/user-team-1.ja.txt
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @ca/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @ca/web e2e
+        env:
+          CI: "true"

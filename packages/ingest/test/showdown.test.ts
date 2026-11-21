@@ -164,3 +164,15 @@ describe("ShowdownTextExtractor", () => {
     expect(r.members).toHaveLength(6);
   });
 });
+
+describe("gender formes", () => {
+  it("(F) selects the female forme when it exists", () => {
+    const r = parseShowdown(
+      "イエッサン (F)\n特性: サイコメイカー\n- まもる\n\nイダイトウ (M)\n特性: すいすい\n- まもる",
+    );
+    expect(r.members.map((m) => m.species)).toEqual(["indeedeef", "basculegion"]);
+    expect(parseShowdown("ミロカロス (F)\n特性: かちき\n- ねっとう").members[0]!.species).toBe(
+      "milotic",
+    );
+  });
+});

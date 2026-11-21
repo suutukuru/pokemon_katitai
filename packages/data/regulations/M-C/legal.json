@@ -8,9 +8,13 @@
           "title": "Pokémon Champions 公式「参加できるポケモン」（ランクバトル シーズンM‐6・シングル）",
           "url": "https://web-view.app.pokemonchampions.jp/battle/pages/events/rs178713870219xeaaio/ja/pokemon.html",
           "accessed": "2026-11-21"
+        },
+        {
+          "title": "ユーザー確認: 使用可能一覧はレギュレーション単位でシングル・ダブル共通",
+          "accessed": "2026-11-21"
         }
       ],
-      "note": "公式ページの262件。Aegislash（ギルガルド）は基礎図鑑（@smogon/calc 第9世代）に無いため overrides.newSpecies で補完。シングル（シーズンM‐6）のページ由来で、ダブルでも同じリストかは未確認（OPEN_QUESTIONS Q-04）"
+      "note": "公式「参加できるポケモン」262件。このリストはレギュレーション M-C 単位でシングル・ダブル共通（ユーザー確認 2026-11-21）。取得元URLはシングルのイベントページ。Aegislash（ギルガルド）は基礎図鑑（@smogon/calc 第9世代）に無いため overrides.newSpecies で補完"
     },
     "megaSpecies": {
       "verified": false,

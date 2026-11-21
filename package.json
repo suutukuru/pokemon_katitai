@@ -20,6 +20,9 @@
     "data:build-i18n": "tsx packages/cli/src/bin.ts data:build-i18n",
     "team:check": "tsx packages/cli/src/bin.ts team:check",
     "calc": "tsx packages/cli/src/bin.ts calc",
+    "web:dev": "pnpm --filter @ca/web dev",
+    "web:build": "pnpm --filter @ca/web build",
+    "e2e": "pnpm --filter @ca/web e2e",
     "ci": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
   },
   "devDependencies": {
@@ -32,6 +35,7 @@
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.73.0",
+    "vite": "^8.3.8",
     "vitest": "^5.1.1"
   }
 }

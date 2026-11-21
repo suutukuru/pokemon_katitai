@@ -1,11 +1,89 @@
 {
-  "version": "2026-11-21.manual",
+  "version": "2026-11-21.manual.2",
   "origin": "manual",
-  "rules": {},
+  "rules": {
+    "legality.team": 5,
+    "speedControl.presence": 3,
+    "speed.tiers": 1.5,
+    "support.fakeout": 1,
+    "support.intimidate": 1,
+    "support.redirection": 0.5,
+    "support.protect": 1.5,
+    "defense.sharedWeakness": 2,
+    "offense.coverage": 2,
+    "mega.slots": 1,
+    "field.conflict": 1.5,
+    "selection.flexibility": 2,
+    "matchup.trickRoomAnswer": 1.5,
+    "offense.threats": 3,
+    "defense.threats": 3
+  },
   "evaluation": {},
   "search": {
     "depth": 2,
     "beamWidth": 8,
     "opponentTopK": 4
+  },
+  "params": {
+    "support.fakeout": {
+      "missingScore": 0.6
+    },
+    "support.intimidate": {
+      "missingScore": 0.7
+    },
+    "support.redirection": {
+      "missingScore": 0.9
+    },
+    "support.protect": {
+      "min": 3,
+      "target": 4
+    },
+    "speedControl.presence": {
+      "scoreNone": 0.1,
+      "scoreWeakOnly": 0.55
+    },
+    "speed.tiers": {
+      "window": 4,
+      "minPassed": 3,
+      "slowSpeed": 80
+    },
+    "defense.sharedWeakness": {
+      "weakMin": 3,
+      "resistMax": 1,
+      "penaltyPerType": 0.15,
+      "quadPenalty": 0.03
+    },
+    "offense.coverage": {
+      "maxUnansweredRatio": 0.5,
+      "listLimit": 8
+    },
+    "mega.slots": {
+      "maxHolders": 2,
+      "overScore": 0.6
+    },
+    "field.conflict": {
+      "conflictScore": 0.45
+    },
+    "selection.flexibility": {
+      "minRatio": 0.5,
+      "minProtect": 2
+    },
+    "matchup.trickRoomAnswer": {
+      "slowSpeed": 80,
+      "missingScore": 0.4
+    },
+    "offense.threats": {
+      "topN": 12,
+      "twoHkoProb": 0.5
+    },
+    "defense.threats": {
+      "topN": 12,
+      "ohkoProb": 0.5
+    }
+  },
+  "severity": {
+    "critical": 0.25,
+    "major": 0.5,
+    "minor": 0.8
   }
 }

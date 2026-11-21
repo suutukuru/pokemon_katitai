@@ -5,3 +5,7 @@ dist
 packages/data/i18n/names.json
 packages/data/base/moves.json
 packages/data/sources
+apps/web/dist
+apps/web/test-results
+apps/web/playwright-report
+**/__snapshots__

@@ -14,13 +14,17 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"],
-    "noEmit": true
+    "types": ["node", "vite/client"],
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
   "include": [
     "packages/*/src/**/*.ts",
     "packages/*/test/**/*.ts",
     "apps/*/src/**/*.ts",
+    "apps/*/src/**/*.tsx",
+    "apps/*/e2e/**/*.ts",
+    "apps/*/*.config.ts",
     "vitest.config.ts",
     "eslint.config.js"
   ]

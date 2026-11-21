@@ -8,3 +8,4 @@ export * from "./scaffold.js";
 export * from "./game.js";
 export * from "./official.js";
 export * from "./names.js";
+export * from "./engine-data.js";
