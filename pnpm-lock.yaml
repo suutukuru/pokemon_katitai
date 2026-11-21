@@ -120,6 +120,10 @@ importers:
       '@ca/sim':
         specifier: workspace:*
         version: link:../sim
+    devDependencies:
+      playwright:
+        specifier: 1.63.0
+        version: 1.63.0
 
   packages/data:
     dependencies:

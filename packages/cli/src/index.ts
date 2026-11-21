@@ -2,3 +2,4 @@ export * from "./commands.js";
 export * from "./team-commands.js";
 export * from "./meta-commands.js";
 export * from "./sim-commands.js";
+export * from "./report.js";

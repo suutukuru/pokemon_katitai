@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import { gameSpec, loadPack, PackValidationError } from "@ca/data";
 import { FsPackSource, readTeamDbFiles, readUsageSnapshots } from "@ca/data/node";
 import { metaCommand } from "./meta-commands.js";
-import { simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
+import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
+import { renderMetaReport } from "./report.js";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { basename, resolve as resolvePath } from "node:path";
+import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
 import { workerPoolExecutor } from "@ca/sim/pool";
 import { cpus } from "node:os";
@@ -102,6 +106,63 @@ try {
     case "sim:meta": {
       const env = simEnv(args);
       code = cmd === "sim" ? await simCommand(args, env, io) : await simMetaCommand(args, env, io);
+      break;
+    }
+    case "report:meta": {
+      // `report:meta <自分.txt> [--top 10] [--scale 0.3] [--out reports]` → HTML + PNG (phone width)
+      const env = simEnv(args);
+      const file = args.find(
+        (x, i) =>
+          !x.startsWith("--") &&
+          !["--top", "--scale", "--seed", "--workers", "--out"].includes(args[i - 1] ?? ""),
+      );
+      if (!file) {
+        io.err(
+          "usage: pnpm report:meta <自分のパーティ.txt> [--top 10] [--scale 0.3] [--out reports]",
+        );
+        code = 2;
+        break;
+      }
+      const opt = (k: string, d: string) =>
+        args.indexOf(`--${k}`) >= 0 ? args[args.indexOf(`--${k}`) + 1]! : d;
+      const mine = parseShowdown(env.readText(file), {
+        legal: { species: env.pack.legal.species, items: env.pack.legal.items },
+      }).members;
+      const rows = await runSimMeta(
+        mine,
+        env,
+        {
+          top: Number(opt("top", "10")),
+          scale: Number(opt("scale", "0.3")),
+          seed: Number(opt("seed", "1")),
+        },
+        io,
+      );
+      const name = basename(file).replace(/\.txt$/, "");
+      const html = renderMetaReport({
+        teamName: name,
+        regulation: env.pack.id,
+        mine: mine.map((m) => m.species),
+        rows,
+        date: new Date().toISOString().slice(0, 10),
+        usageSource: env.usage?.source.title ?? "（使用率データなし）",
+      });
+      const outDir = resolvePath(opt("out", "reports"));
+      mkdirSync(outDir, { recursive: true });
+      const htmlPath = resolvePath(outDir, `${name}-meta.html`);
+      writeFileSync(htmlPath, html);
+      const { chromium } = await import("playwright");
+      const browser = await chromium.launch();
+      const page = await browser.newPage({
+        viewport: { width: 430, height: 900 },
+        deviceScaleFactor: 2,
+      });
+      await page.goto(`file://${htmlPath}`);
+      const png = resolvePath(outDir, `${name}-meta.png`);
+      await page.screenshot({ path: png, fullPage: true });
+      await browser.close();
+      io.out(png);
+      code = 0;
       break;
     }
     case "meta":

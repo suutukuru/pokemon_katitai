@@ -48,6 +48,7 @@ pnpm data:build-i18n --pokeapi <csv> --official <dir>  # names.json / base/moves
 pnpm sim <自分.txt> <相手.txt> [--seed 1] [--scale 1] [--workers 4] [--json]  # 選出の読み合い・1ターン目の択
 pnpm sim <自分.txt> pokedb:M-7:4                 # 上位構築（公開データ＋使用率で型を推定）が相手
 pnpm sim:meta <自分.txt> [--top 10] [--scale 0.3] # M-C 上位構築すべてと対戦して推奨選出の一覧
+pnpm report:meta <自分.txt> [--top 10]           # 上位構築との結果を画像(reports/*.png)にする（チャットで見せる用）
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/

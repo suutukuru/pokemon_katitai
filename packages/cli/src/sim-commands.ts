@@ -169,32 +169,32 @@ export async function simCommand(args: string[], env: SimEnv, io: Io): Promise<n
   return 0;
 }
 
-/**
- * `sim:meta <自分.txt> [--top 10] [--scale 0.3] [--seed 1]` — run the matchup analysis against the
- * regulation's top recorded teams and summarise the recommended bring per opponent.
- */
-export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promise<number> {
-  const opt = (k: string) => {
-    const i = args.indexOf(`--${k}`);
-    return i >= 0 ? args[i + 1] : undefined;
-  };
-  const mineFile = args.find(
-    (x, i) =>
-      !x.startsWith("--") &&
-      !["--top", "--scale", "--seed", "--workers"].includes(args[i - 1] ?? ""),
-  );
-  if (!mineFile || !env.topTeams || !env.resolveTeam) {
-    io.err("usage: pnpm sim:meta <自分のパーティ.txt> [--top 10] [--scale 0.3] [--seed 1]");
-    return 2;
-  }
-  const mine = parseShowdown(env.readText(mineFile), {
-    legal: { species: env.pack.legal.species, items: env.pack.legal.items },
-  }).members;
+export interface MetaRow {
+  spec: string;
+  label: string;
+  opponent: string[];
+  missing: string[];
+  winRate: number;
+  safestRate: number;
+  /** recommended bring: [lead1, lead2, back1, back2] species IDs */
+  bring: string[];
+  turnOne: string;
+  isGuess: boolean;
+  battles: number;
+}
+
+/** Run the matchup analysis against the regulation's top recorded teams. */
+export async function runSimMeta(
+  mine: PokemonSet[],
+  env: SimEnv,
+  opts: { top: number; scale: number; seed: number },
+  io: Io,
+): Promise<MetaRow[]> {
+  if (!env.topTeams || !env.resolveTeam) throw new Error("team database is not available");
   const ctx = simContext(env.pack, env.spec);
-  const budget = budgetFrom(env.pack.weights.simulation, Number(opt("scale") ?? 0.3));
-  const rows: string[] = [];
-  let total = 0;
-  for (const spec of env.topTeams(Number(opt("top") ?? 10))) {
+  const budget = budgetFrom(env.pack.weights.simulation, opts.scale);
+  const rows: MetaRow[] = [];
+  for (const spec of env.topTeams(opts.top)) {
     const opp = env.resolveTeam(spec);
     if (!opp || opp.members.length < env.pack.rules.bringCount) {
       io.err(`skip ${spec}: 型を推定できないポケモンがいます`);
@@ -204,38 +204,82 @@ export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promi
       ? env.executor(mine, opp.members)
       : inProcessExecutor(ctx, mine, opp.members);
     try {
-      const a = await analyzeMatchup(
-        ctx,
-        mine,
-        opp.members,
-        exec,
-        budget,
-        Number(opt("seed") ?? 1),
-      );
-      total += a.battles;
+      const a = await analyzeMatchup(ctx, mine, opp.members, exec, budget, opts.seed);
       const best = a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine));
       const t1 =
         a.turnOne.myOptions[
           a.turnOne.equilibrium.mine.indexOf(Math.max(...a.turnOne.equilibrium.mine))
         ];
-      rows.push(`■ ${opp.label}\n  相手: ${opp.members.map((m) => name(m.species)).join("・")}`);
-      if (opp.missing?.length)
-        rows.push(`  ※ 型を推定できず除外: ${opp.missing.map(name).join("・")}`);
-      rows.push(
-        `  期待勝率 ${pct(a.equilibrium.value)}（安全策の最低勝率 ${pct(a.safest.worstRate)}）`,
-      );
-      rows.push(`  推奨選出: ${names(a.matrix.mine[best]!)}`);
-      if (t1)
-        rows.push(`  1ターン目の基本: ${optionStr(t1)}${a.turnOne.isGuess ? "（択あり）" : ""}`);
+      rows.push({
+        spec,
+        label: opp.label,
+        opponent: opp.members.map((m) => m.species),
+        missing: opp.missing ?? [],
+        winRate: a.equilibrium.value,
+        safestRate: a.safest.worstRate,
+        bring: a.matrix.mine[best]!,
+        turnOne: t1 ? optionStr(t1) : "",
+        isGuess: a.turnOne.isGuess,
+        battles: a.battles,
+      });
       io.err(`… ${opp.label} 完了`);
     } finally {
       await (exec as { close?: () => Promise<void> }).close?.();
     }
   }
+  return rows;
+}
+
+/**
+ * `sim:meta <自分.txt> [--top 10] [--scale 0.3] [--seed 1] [--json]` — run the matchup analysis against
+ * the regulation's top recorded teams and summarise the recommended bring per opponent.
+ */
+export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promise<number> {
+  const opt = (k: string) => {
+    const i = args.indexOf(`--${k}`);
+    return i >= 0 ? args[i + 1] : undefined;
+  };
+  const mineFile = args.find(
+    (x, i) =>
+      !x.startsWith("--") &&
+      !["--top", "--scale", "--seed", "--workers", "--out"].includes(args[i - 1] ?? ""),
+  );
+  if (!mineFile || !env.topTeams || !env.resolveTeam) {
+    io.err(
+      "usage: pnpm sim:meta <自分のパーティ.txt> [--top 10] [--scale 0.3] [--seed 1] [--json]",
+    );
+    return 2;
+  }
+  const mine = parseShowdown(env.readText(mineFile), {
+    legal: { species: env.pack.legal.species, items: env.pack.legal.items },
+  }).members;
+  const rows = await runSimMeta(
+    mine,
+    env,
+    {
+      top: Number(opt("top") ?? 10),
+      scale: Number(opt("scale") ?? 0.3),
+      seed: Number(opt("seed") ?? 1),
+    },
+    io,
+  );
+  if (args.includes("--json")) {
+    io.out(
+      JSON.stringify({ regulation: env.pack.id, mine: mine.map((m) => m.species), rows }, null, 2),
+    );
+    return 0;
+  }
+  const total = rows.reduce((a, r) => a + r.battles, 0);
   io.out(`上位構築との対戦シミュレーション（合計 ${total}戦、レギュレーション ${env.pack.id}）`);
   io.out(
     "※ 相手の技・特性・性格・SP は使用率データの最多の型による推定です。行動は確率的なAIです（推測を含む）。",
   );
-  for (const r of rows) io.out(r);
+  for (const r of rows) {
+    io.out(`■ ${r.label}\n  相手: ${r.opponent.map(name).join("・")}`);
+    if (r.missing.length) io.out(`  ※ 型を推定できず除外: ${r.missing.map(name).join("・")}`);
+    io.out(`  期待勝率 ${pct(r.winRate)}（安全策の最低勝率 ${pct(r.safestRate)}）`);
+    io.out(`  推奨選出: ${names(r.bring)}`);
+    if (r.turnOne) io.out(`  1ターン目の基本: ${r.turnOne}${r.isGuess ? "（択あり）" : ""}`);
+  }
   return 0;
 }

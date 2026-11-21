@@ -189,3 +189,36 @@ describe("sim with resolved opponents and sim:meta", () => {
     expect(await simMetaCommand([], env, io())).toBe(2);
   }, 180_000);
 });
+
+describe("renderMetaReport", () => {
+  it("renders hardest matchups first with text verdicts (not color only) and escapes input", async () => {
+    const { renderMetaReport } = await import("../src/index.js");
+    const row = (label: string, winRate: number) => ({
+      spec: "s",
+      label,
+      opponent: ["pelipper"],
+      missing: [],
+      winRate,
+      safestRate: winRate - 0.1,
+      bring: ["charizard", "whimsicott", "aerodactyl", "milotic"],
+      turnOne: "リザードン:ねっぷう",
+      isGuess: true,
+      battles: 100,
+    });
+    const html = renderMetaReport({
+      teamName: "t<1>",
+      regulation: "M-C",
+      mine: ["charizard"],
+      rows: [row("A", 0.7), row("B", 0.2), row("C", 0.5)],
+      date: "2026-11-21",
+      usageSource: "x",
+    });
+    expect(html.indexOf("B</span>")).toBeLessThan(html.indexOf("A</span>"));
+    expect(html).toContain("▼ 不利");
+    expect(html).toContain("▲ 有利");
+    expect(html).toContain("● 五分");
+    expect(html).toContain("t&lt;1&gt;");
+    expect(html).toContain("先発 <b>リザードン・エルフーン</b>");
+    expect(html).toContain("300戦");
+  });
+});
