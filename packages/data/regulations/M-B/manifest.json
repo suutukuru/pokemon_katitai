@@ -1,0 +1,17 @@
+{
+  "id": "M-B",
+  "name": { "ja": "レギュレーション M-B（仮）", "en": "Regulation M-B (provisional)" },
+  "periods": {},
+  "mechanics": { "add": ["mega"], "remove": [] },
+  "dataVersion": "2026-11-21.1",
+  "verified": false,
+  "sources": [
+    {
+      "title": "外部計算機サイトの表記 \"Reg M-B\"（検索結果のみ）",
+      "url": "https://www.champdex.com/tools/calc/verified",
+      "accessed": "2026-11-21",
+      "note": "名称の根拠のみ。期間・使用可能リストは未確認（OPEN_QUESTIONS Q-04）"
+    }
+  ],
+  "notes": "仮の現行パック。使用可能リストは代表的な種族のサンプルで、網羅していない。"
+}

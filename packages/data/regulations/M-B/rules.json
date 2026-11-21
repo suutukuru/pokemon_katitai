@@ -1,0 +1,12 @@
+{
+  "format": "doubles",
+  "level": 50,
+  "teamSize": 6,
+  "bringCount": 4,
+  "activeCount": 2,
+  "speciesClause": true,
+  "itemClause": true,
+  "megaPerBattle": 1,
+  "timers": { "verified": false },
+  "verified": false
+}

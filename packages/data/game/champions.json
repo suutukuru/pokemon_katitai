@@ -1,0 +1,68 @@
+{
+  "id": "champions",
+  "level": {
+    "value": 50,
+    "verified": false,
+    "note": "対戦は常にLv50として計算されるという前提（プロンプト要件）。公式一次情報は未確認",
+    "sources": []
+  },
+  "iv": {
+    "value": 31,
+    "verified": false,
+    "note": "個体値は固定とされる。31相当かは未確認（OPEN_QUESTIONS Q-11）",
+    "sources": []
+  },
+  "statPoints": {
+    "total": {
+      "value": 66,
+      "verified": false,
+      "note": "複数の攻略サイトの記述が一致（Web検索の要約。ページ本文は未取得）。OPEN_QUESTIONS Q-01",
+      "sources": [
+        {
+          "title": "champdex.com stat-points guide",
+          "url": "https://champdex.com/guides/stat-points",
+          "accessed": "2026-11-21",
+          "note": "検索結果の要約のみ"
+        },
+        {
+          "title": "Switchblade Gaming: SP System Explained",
+          "url": "https://www.switchbladegaming.com/pokemon-champions/sp-system-explained/",
+          "accessed": "2026-11-21",
+          "note": "検索結果の要約のみ"
+        }
+      ]
+    },
+    "perStat": {
+      "value": 32,
+      "verified": false,
+      "note": "同上。OPEN_QUESTIONS Q-01",
+      "sources": [
+        {
+          "title": "champdex.com stat-points guide",
+          "url": "https://champdex.com/guides/stat-points",
+          "accessed": "2026-11-21",
+          "note": "検索結果の要約のみ"
+        }
+      ]
+    },
+    "statPerPoint": {
+      "value": 1,
+      "verified": false,
+      "note": "「1SP = Lv50実数値 +1」とする記述が多い。性格補正との順序は未確認。OPEN_QUESTIONS Q-02",
+      "sources": [
+        {
+          "title": "theclick.gg: How SP Training Works",
+          "url": "https://www.theclick.gg/?p=69057",
+          "accessed": "2026-11-21",
+          "note": "検索結果の要約のみ"
+        }
+      ]
+    }
+  },
+  "natureMultiplier": {
+    "value": { "up": 1.1, "down": 0.9 },
+    "verified": false,
+    "note": "本編と同じと仮定",
+    "sources": []
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "verified": false,
+  "species": {
+    "add": ["Flutter Mane", "Iron Hands", "Ogerpon-Wellspring"],
+    "remove": ["Kangaskhan"]
+  },
+  "megaSpecies": { "add": [], "remove": ["Kangaskhan"] },
+  "items": { "add": ["Booster Energy", "Wellspring Mask"], "remove": ["Kangaskhanite"] }
+}

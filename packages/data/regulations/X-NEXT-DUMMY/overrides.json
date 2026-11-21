@@ -1,0 +1,9 @@
+{
+  "moves": {
+    "fakeout": {
+      "basePower": 30,
+      "verified": false,
+      "note": "ダミー: 継承テスト用の架空の調整。実際の仕様ではない"
+    }
+  }
+}
