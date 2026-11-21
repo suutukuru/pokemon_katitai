@@ -1,0 +1,53 @@
+ドリュウズ @ Excadrite
+Ability: かたやぶり
+SPs: 32 Atk / 2 SpD / 32 Spe
+Jolly Nature
+- じしん
+- ロックブラスト
+- つるぎのまい
+- まもる
+
+チルタリス
+Ability: ノーてんき
+SPs: 1 HP / 23 Atk / 30 SpA / 12 Spe
+Modest Nature
+- アクロバット
+- りゅうせいぐん
+- おいかぜ
+- まもる
+
+マスカーニャ @ こだわりスカーフ
+Ability: へんげんじざい
+SPs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- トリックフラワー
+- はたきおとす
+- トリプルアクセル
+- かわらわり
+
+ガオガエン @ ヨプのみ
+Ability: いかく
+SPs: 5 HP / 32 Atk / 1 SpD / 28 Spe
+Adamant Nature
+- フレアドライブ
+- じごくづき
+- ねこだまし
+- けたぐり
+
+ガブリアス @ いのちのたま
+Ability: さめはだ
+SPs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- ドラゴンクロー
+- いわなだれ
+- じだんだ
+- じしん
+
+ニンフィア @ ようせいのハネ
+Ability: フェアリースキン
+SPs: 32 HP / 26 Def / 8 SpA
+Modest Nature
+- ハイパーボイス
+- みきり
+- はかいこうせん
+- でんこうせっか
