@@ -65,6 +65,25 @@ export function formatAnalysis(a: MatchupAnalysis, regulation: string): string[]
   out.push(
     `  → 相手が最善の選出をしても最低限取れる選出（安全策）: 自分${a.safest.index + 1}（最低勝率 ${pct(a.safest.worstRate)}）`,
   );
+  if (a.strong) {
+    const st = a.strong;
+    out.push(
+      `\n■ 最善手同士の対戦での評価（上位${st.mine.length}×${st.theirs.length}の選出を、毎ターン両者が読み合いの最適な行動を探索して選ぶ対戦 ${st.games}戦で評価し直し）`,
+    );
+    st.theirs.forEach((t, j) =>
+      out.push(
+        `  相手${j + 1}: ${names(t)}（相手がこれを選ぶ割合 ${pct(st.equilibrium.theirs[j]!)}）`,
+      ),
+    );
+    st.mine.forEach((m, i) => {
+      out.push(`  自分${i + 1}: ${names(m)}（推奨の割合 ${pct(st.equilibrium.mine[i]!)}）`);
+      out.push(`        ${st.cells[i]!.map((c, j) => `相手${j + 1} ${pct(c.rate)}`).join(" / ")}`);
+    });
+    const sb = st.equilibrium.mine.indexOf(Math.max(...st.equilibrium.mine));
+    out.push(
+      `  → 推奨選出: ${names(st.mine[sb]!)}（期待勝率 ${pct(st.equilibrium.value)}）／安全策: ${names(st.mine[st.safest.index]!)}（最低 ${pct(st.safest.worstRate)}）`,
+    );
+  }
   const t = a.turnOne;
   out.push(`\n■ 1ターン目の択（自分 ${names(t.mine)} vs 相手 ${names(t.theirs)}）`);
   t.theirOptions.forEach((o, j) =>

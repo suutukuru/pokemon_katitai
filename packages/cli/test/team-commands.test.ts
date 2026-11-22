@@ -126,6 +126,11 @@ describe("sim", () => {
       turnOptions: 2,
       turnRollouts: 1,
       fictitiousIterations: 200,
+      strongConfigs: 2,
+      strongGames: 1,
+      strongSearchScale: 0.1,
+      searchWidth: 2,
+      searchKeep: 2,
     });
     files["rain.txt"] = readFileSync(
       new URL("../../data/teams/samples/sample-rain.txt", import.meta.url),
@@ -139,6 +144,7 @@ describe("sim", () => {
     expect(out).toContain("■ 選出と初手");
     expect(out).toContain("■ 選出の読み合い");
     expect(out).toContain("■ 1ターン目の択");
+    expect(out).toContain("■ 最善手同士の対戦での評価");
     expect(out).toContain("推測を含む");
     expect(x.e.some((l) => l.includes("screening"))).toBe(true);
     const j = io();
