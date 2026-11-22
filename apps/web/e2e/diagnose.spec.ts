@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 // diagnosis lives in its own tab
 test.beforeEach(async ({ page }) => {
+  await page.goto("/");
   await page.getByRole("button", { name: "診断" }).click();
 });
 
