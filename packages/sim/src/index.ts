@@ -7,3 +7,5 @@ export * from "./analyze.js";
 export * from "./trace.js";
 export * from "./replay.js";
 export * from "./bestplay.js";
+export * from "./search.js";
+export * from "./view.js";

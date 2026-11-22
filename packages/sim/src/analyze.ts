@@ -1,5 +1,7 @@
 import type { PokemonSet } from "@ca/schema";
+import { playBestBattle } from "./bestplay.js";
 import { maximin, solveZeroSum, wilson } from "./game.js";
+import { searchBudgetFrom, type SearchBudget } from "./search.js";
 import type { JointOption } from "./policy.js";
 import { mixSeed } from "./rng.js";
 import {
@@ -20,9 +22,19 @@ export interface BattleJob {
   forced?: [string, string];
 }
 
+/** A battle where both sides play the search's equilibrium action every turn. */
+export interface BestPlayJob {
+  a: Config;
+  b: Config;
+  seed: number;
+  budget: SearchBudget;
+}
+
 /** Runs jobs (in-process or in worker threads); results are returned in job order. */
 export interface Executor {
   run(jobs: BattleJob[]): Promise<BattleResult[]>;
+  /** Search-vs-search battles (optional: without it the strong stage is skipped). */
+  bestPlay?(jobs: BestPlayJob[]): Promise<BattleResult[]>;
 }
 
 export function inProcessExecutor(
@@ -31,6 +43,12 @@ export function inProcessExecutor(
   theirs: readonly PokemonSet[],
 ): Executor {
   return {
+    bestPlay: async (jobs) => {
+      const out: BattleResult[] = [];
+      for (const j of jobs)
+        out.push((await playBestBattle(ctx, mine, theirs, j.a, j.b, j.seed, j.budget)).result);
+      return out;
+    },
     run: (jobs) =>
       Promise.resolve(
         jobs.map((j) =>
@@ -49,6 +67,10 @@ export interface Budget {
   turnOptions: number;
   turnRollouts: number;
   fictitiousIterations: number;
+  /** strong stage: configs per side re-evaluated with search-vs-search battles (0 = off) */
+  strongConfigs: number;
+  strongGames: number;
+  strongSearch: SearchBudget;
 }
 
 export function budgetFrom(params: Record<string, number>, scale = 1): Budget {
@@ -65,6 +87,9 @@ export function budgetFrom(params: Record<string, number>, scale = 1): Budget {
     turnOptions: Math.max(2, Math.round(get("turnOptions"))),
     turnRollouts: s("turnRollouts"),
     fictitiousIterations: get("fictitiousIterations"),
+    strongConfigs: Math.round(params["strongConfigs"] ?? 0),
+    strongGames: Math.max(1, Math.round((params["strongGames"] ?? 1) * scale)),
+    strongSearch: searchBudgetFrom(params, params["strongSearchScale"] ?? 0.25),
   };
 }
 
@@ -112,9 +137,21 @@ export interface TurnOneAnalysis {
   isGuess: boolean;
 }
 
+/** Selection matrix re-evaluated with search-vs-search battles (the "strong" stage). */
+export interface StrongStage {
+  mine: ConfigStat["species"][];
+  theirs: ConfigStat["species"][];
+  cells: Rate[][];
+  equilibrium: { mine: number[]; theirs: number[]; value: number };
+  safest: { index: number; worstRate: number };
+  games: number;
+}
+
 export interface MatchupAnalysis {
   budget: Budget;
   battles: number;
+  /** present when the executor supports search battles and budget.strongConfigs > 0 */
+  strong?: StrongStage;
   screening: { mine: ConfigStat[]; theirs: ConfigStat[] };
   matrix: { mine: ConfigStat["species"][]; theirs: ConfigStat["species"][]; cells: Rate[][] };
   equilibrium: { mine: number[]; theirs: number[]; value: number };
@@ -218,11 +255,74 @@ export async function analyzeMatchup(
   const eq = solveZeroSum(payoff, budget.fictitiousIterations);
   const safe = maximin(payoff);
 
+  // 2b) strong stage: the most relevant configs per side (by equilibrium weight, then by the
+  // screening order) play search-vs-search battles; this matrix decides the recommendation.
+  let strong: StrongStage | undefined;
+  const S = Math.min(budget.strongConfigs, myTop.length, theirTop.length);
+  if (S > 0 && exec.bestPlay) {
+    const pickTop = (w: number[]) =>
+      w
+        .map((x, i) => ({ x, i }))
+        .sort((p, q) => q.x - p.x || p.i - q.i)
+        .slice(0, S)
+        .map((p) => p.i)
+        .sort((p, q) => p - q);
+    const ri = pickTop(eq.row);
+    const ci = pickTop(eq.col);
+    const jobs: BestPlayJob[] = [];
+    ri.forEach((i, x) =>
+      ci.forEach((j, y) => {
+        for (let k = 0; k < budget.strongGames; k++)
+          jobs.push({
+            a: myTop[i]!.config,
+            b: theirTop[j]!.config,
+            seed: mixSeed(seed, 5, x, y, k),
+            budget: budget.strongSearch,
+          });
+      }),
+    );
+    onProgress?.("strong", 0, jobs.length);
+    const res = await exec.bestPlay(jobs);
+    battles += res.length;
+    const g = budget.strongGames;
+    const sc = ri.map((_, x) =>
+      ci.map((_, y) => {
+        // shrink the few search games toward the Monte Carlo cell (prior weight = 2 games)
+        const r = rateOf(res.slice((x * ci.length + y) * g, (x * ci.length + y + 1) * g), 0);
+        const mc = cells[ri[x]!]![ci[y]!]!.rate;
+        return { ...r, rate: (r.wins + 2 * mc) / (r.games + 2) };
+      }),
+    );
+    const sp = sc.map((r) => r.map((c) => c.rate));
+    const seq = solveZeroSum(sp, budget.fictitiousIterations);
+    const ss = maximin(sp);
+    strong = {
+      mine: ri.map((i) => myTop[i]!.species),
+      theirs: ci.map((j) => theirTop[j]!.species),
+      cells: sc,
+      equilibrium: { mine: seq.row, theirs: seq.col, value: seq.value },
+      safest: { index: ss.row, worstRate: ss.value },
+      games: res.length,
+    };
+  }
+
   // 3) turn-1 options for the most likely pairing
-  const mi = eq.row.indexOf(Math.max(...eq.row));
-  const ti = eq.col.indexOf(Math.max(...eq.col));
-  const ca = myTop[mi]!.config;
-  const cb = theirTop[ti]!.config;
+  const pickCfg = (
+    w: number[],
+    list: { config: Config; species: string[] }[] | string[][],
+    team: readonly PokemonSet[],
+  ): Config => {
+    const i = w.indexOf(Math.max(...w));
+    const x = list[i]!;
+    if (!Array.isArray(x)) return x.config;
+    return x.map((sp) => team.findIndex((m) => m.species === sp)) as Config;
+  };
+  const ca = strong
+    ? pickCfg(strong.equilibrium.mine, strong.mine, mine)
+    : pickCfg(eq.row, myTop, mine);
+  const cb = strong
+    ? pickCfg(strong.equilibrium.theirs, strong.theirs, theirs)
+    : pickCfg(eq.col, theirTop, theirs);
   const [myOpts, theirOpts] = turnOneOptions(ctx, mine, theirs, ca, cb, budget.turnOptions);
   const turnJobs: BattleJob[] = [];
   myOpts.forEach((a, i) =>
@@ -268,6 +368,7 @@ export async function analyzeMatchup(
     matrix: { mine: myTop.map((x) => x.species), theirs: theirTop.map((x) => x.species), cells },
     equilibrium: { mine: eq.row, theirs: eq.col, value: eq.value },
     safest: { index: safe.row, worstRate: safe.value },
+    ...(strong ? { strong } : {}),
     turnOne: {
       mine: speciesOf(mine, ca),
       theirs: speciesOf(theirs, cb),

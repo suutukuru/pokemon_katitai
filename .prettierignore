@@ -11,3 +11,5 @@ apps/web/playwright-report
 **/__snapshots__
 packages/data/teams/pokedb
 packages/data/usage
+apps/web/src/gen
+apps/web/src/data

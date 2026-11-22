@@ -13,6 +13,13 @@ export interface SlotOption {
   targetSpecies?: string;
   switchTo?: string;
   score: number;
+  /** expected damage (HP points) to each foe slot / to the ally; joint scoring combines them */
+  dmg?: [number, number];
+  allyDmg?: number;
+  /** the part of `score` that is not damage value (bonuses, status moves…) */
+  extra?: number;
+  /** move priority (for speed-order checks) */
+  priority?: number;
 }
 
 export interface JointOption {
@@ -107,6 +114,75 @@ function threatTo(
 const alive = (xs: (PsPokemon | null)[]) =>
   xs.filter((x): x is PsPokemon => !!x && !x.fainted && x.hp > 0);
 
+/** Speed in turn order (Trick Room aware: higher always moves first). */
+export function actionSpeed(mon: PsPokemon): number {
+  return (mon as unknown as { getActionSpeed(): number }).getActionSpeed();
+}
+
+/**
+ * Chance-free estimate of whether a faster foe can KO `me` before it moves: the largest
+ * fraction of current HP that any foe that outspeeds `me` deals with one move (≥1 means "yes").
+ */
+function fasterThreat(
+  b: PsBattle,
+  me: PsPokemon,
+  foes: PsPokemon[],
+  tags: EngineTags,
+  params: PolicyParams,
+): number {
+  const mine = actionSpeed(me);
+  let worst = 0;
+  for (const f of foes) {
+    const fs = actionSpeed(f);
+    for (const ms of (f as unknown as { moveSlots: { id: string }[] }).moveSlots ?? []) {
+      const mv = b.dex.moves.get(ms.id);
+      if (mv.category === "Status") continue;
+      if (!(mv.priority > 0 || fs > mine)) continue;
+      worst = Math.max(worst, estimateDamage(b, f, me, mv, tags, params, 1) / Math.max(1, me.hp));
+    }
+  }
+  return worst;
+}
+
+/**
+ * Value of dealing `d` expected damage to `t`: the fraction of max HP removed, a KO bonus, and an
+ * extra bonus when the KO lands before `t` can move.
+ */
+function damageValue(
+  t: PsPokemon,
+  d: number,
+  mySpeed: number,
+  priority: number,
+  params: PolicyParams,
+): number {
+  if (d <= 0) return 0;
+  let v = Math.min(d, t.hp) / t.maxhp;
+  if (d >= t.hp) {
+    v += p(params, "koBonus");
+    if (priority > 0 || mySpeed > actionSpeed(t)) v += params["koFirstBonus"] ?? 0;
+  }
+  return v;
+}
+
+/** How well `mon` fares against the foes: best damage fraction dealt minus worst taken. */
+export function matchup(
+  b: PsBattle,
+  mon: PsPokemon,
+  foes: PsPokemon[],
+  tags: EngineTags,
+  params: PolicyParams,
+): number {
+  if (foes.length === 0) return 0;
+  let off = 0;
+  for (const f of foes)
+    for (const ms of (mon as unknown as { moveSlots: { id: string }[] }).moveSlots ?? []) {
+      const mv = b.dex.moves.get(ms.id);
+      off = Math.max(off, estimateDamage(b, mon, f, mv, tags, params, 1) / Math.max(1, f.hp));
+    }
+  const def = threatTo(b, mon, foes, tags, params);
+  return Math.min(1, off) - Math.min(1, def);
+}
+
 /** Score every legal option for one active slot. */
 export function slotOptions(
   b: PsBattle,
@@ -125,6 +201,11 @@ export function slotOptions(
   const mega = active.canMegaEvo ? " mega" : "";
   const out: SlotOption[] = [];
   const myThreat = threatTo(b, me, liveFoes, tags, params);
+  // Attacks of a Pokémon that a faster foe KOs first are worth less (it may never move).
+  const firstHit =
+    params["koFirstDiscount"] !== undefined ? fasterThreat(b, me, liveFoes, tags, params) : 0;
+  const atkFactor = firstHit >= 1 ? 1 - (params["koFirstDiscount"] ?? 0) : 1;
+  const mySpeed = actionSpeed(me);
   active.moves.forEach((rm: PsRequestMove, i) => {
     if (rm.disabled) return;
     const dexMove = b.dex.moves.get(rm.id);
@@ -132,40 +213,75 @@ export function slotOptions(
     const mv: PsMove = { ...dexMove, target: rm.target ?? "self" };
     const n = i + 1;
     if (mv.category !== "Status") {
-      const dmgTo = (t: PsPokemon, k: number) => estimateDamage(b, me, t, mv, tags, params, k);
-      const value = (t: PsPokemon, d: number) =>
-        Math.min(d, t.hp) / t.maxhp + (d >= t.hp ? p(params, "koBonus") : 0);
+      const dmgTo = (t: PsPokemon, k: number) =>
+        estimateDamage(b, me, t, mv, tags, params, k) * atkFactor;
+      const value = (t: PsPokemon, d: number) => damageValue(t, d, mySpeed, mv.priority, params);
+      const dmg: [number, number] = [0, 0];
       if (SPREAD_TARGETS.has(mv.target)) {
         const targets =
           mv.target === "allAdjacent"
             ? [...liveFoes, ...(ally && !ally.fainted ? [ally] : [])]
             : liveFoes;
         let score = 0;
-        for (const t of liveFoes) score += value(t, dmgTo(t, targets.length));
-        if (mv.target === "allAdjacent" && ally && !ally.fainted)
-          score -= p(params, "allyHitPenalty") * value(ally, dmgTo(ally, targets.length));
-        if (tags.moves.speedControl[mv.id]) score += p(params, "speedDropBonus") * liveFoes.length;
+        foes.forEach((t, ti) => {
+          if (!t || t.fainted || t.hp <= 0) return;
+          const d = dmgTo(t, targets.length);
+          dmg[ti] = d;
+          score += value(t, d);
+        });
+        let allyDmg = 0;
+        if (mv.target === "allAdjacent" && ally && !ally.fainted) {
+          allyDmg = dmgTo(ally, targets.length) / atkFactor;
+          score -= p(params, "allyHitPenalty") * value(ally, allyDmg);
+        }
+        let extra = 0;
+        if (tags.moves.speedControl[mv.id]) extra += p(params, "speedDropBonus") * liveFoes.length;
         if (mv.id === "fakeout")
-          score += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
-        out.push({ choice: `move ${n}${mega}`, moveId: mv.id, score });
+          extra += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
+        out.push({
+          choice: `move ${n}${mega}`,
+          moveId: mv.id,
+          score: score + extra,
+          dmg,
+          allyDmg,
+          extra,
+          priority: mv.priority,
+        });
       } else if (NEEDS_TARGET.has(mv.target)) {
         foes.forEach((t, ti) => {
           if (!t || t.fainted) return;
-          let score = value(t, dmgTo(t, 1));
+          const d = dmgTo(t, 1);
+          let extra = 0;
           if (mv.id === "fakeout")
-            score += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
-          if (tags.moves.speedControl[mv.id]) score += p(params, "speedDropBonus");
+            extra += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
+          if (tags.moves.speedControl[mv.id]) extra += p(params, "speedDropBonus");
+          const dv: [number, number] = [0, 0];
+          dv[ti] = d;
           out.push({
             choice: `move ${n} ${ti + 1}${mega}`,
             moveId: mv.id,
             targetSpecies: t.species.id,
-            score,
+            score: value(t, d) + extra,
+            dmg: dv,
+            extra,
+            priority: mv.priority,
           });
         });
       } else {
         const t = liveFoes[0];
-        if (t)
-          out.push({ choice: `move ${n}${mega}`, moveId: mv.id, score: value(t, dmgTo(t, 1)) });
+        if (t) {
+          const d = dmgTo(t, 1);
+          const dv: [number, number] = [0, 0];
+          dv[foes.indexOf(t)] = d;
+          out.push({
+            choice: `move ${n}${mega}`,
+            moveId: mv.id,
+            score: value(t, d),
+            dmg: dv,
+            extra: 0,
+            priority: mv.priority,
+          });
+        }
       }
       return;
     }
@@ -175,6 +291,7 @@ export function slotOptions(
     if (PROTECT.has(mv.id)) {
       score =
         p(params, "protectBase") +
+        (firstHit >= 1 ? (params["protectFirstHitBonus"] ?? 0) : 0) +
         (myThreat >= 1
           ? p(params, "protectThreatBonus")
           : myThreat * p(params, "protectThreatBonus") * 0.5);
@@ -214,7 +331,7 @@ export function slotOptions(
       if (!ally || ally.fainted) return;
       target = ` -${2 - slot}`;
     }
-    out.push({ choice: `move ${n}${target}${mega}`, moveId: mv.id, score });
+    out.push({ choice: `move ${n}${target}${mega}`, moveId: mv.id, score, extra: score });
   });
   // Voluntary switches: low base value, more attractive when this Pokémon is likely to be KO'd.
   if (!active.trapped && params["switchBase"] !== undefined) {
@@ -222,8 +339,11 @@ export function slotOptions(
       if (pk.active || pk.condition.endsWith(" fnt")) return;
       const mon = side.pokemon[i];
       if (!mon) return;
-      const score = p(params, "switchBase") + (myThreat >= 1 ? p(params, "switchThreatBonus") : 0);
-      out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score });
+      const score =
+        p(params, "switchBase") +
+        (myThreat >= 1 ? p(params, "switchThreatBonus") : 0) +
+        (params["switchMatchupWeight"] ?? 0) * matchup(b, mon, liveFoes, tags, params);
+      out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score, extra: score });
     });
   }
   if (out.length === 0) out.push({ choice: "move 1", score: 0 });
@@ -237,21 +357,20 @@ function conflicts(slots: SlotOption[]): boolean {
 }
 
 /** Selection probabilities: softmax of the scores at the given temperature. */
-export function softmaxProbs(opts: SlotOption[], temperature: number): number[] {
+export function softmaxProbs(opts: { score: number }[], temperature: number): number[] {
   const max = Math.max(...opts.map((o) => o.score));
   const w = opts.map((o) => Math.exp((o.score - max) / Math.max(1e-6, temperature)));
   const total = w.reduce((a, x) => a + x, 0);
   return w.map((x) => x / total);
 }
 
-function softmaxPick(opts: SlotOption[], temperature: number, rng: Rng): number {
-  const probs = softmaxProbs(opts, temperature);
+function sample(probs: number[], rng: Rng): number {
   let r = rng.next();
-  for (let i = 0; i < opts.length; i++) {
+  for (let i = 0; i < probs.length; i++) {
     r -= probs[i]!;
     if (r <= 0) return i;
   }
-  return opts.length - 1;
+  return probs.length - 1;
 }
 
 /** One recorded decision (for battle reports). */
@@ -264,20 +383,111 @@ export interface DecisionTrace {
   chosen: number;
 }
 
-/** Choice for a forced switch request: send in the healthiest benched Pokémon. */
-function switchChoice(side: PsSide, req: PsRequest): string {
+/** Forced-switch options: every assignment of distinct healthy benched Pokémon to the open slots. */
+export function forcedSwitchOptions(side: PsSide, req: PsRequest): string[] {
+  const free = req.side.pokemon
+    .map((pk, i) => ({ pk, i }))
+    .filter(({ pk }) => !pk.active && !pk.condition.endsWith(" fnt"))
+    .map(({ i }) => i);
+  const slots = req.forceSwitch ?? [];
+  let out: string[][] = [[]];
+  slots.forEach((must) => {
+    out = out.flatMap((acc) => {
+      if (!must) return [[...acc, "pass"]];
+      const left = free.filter((i) => !acc.includes(`switch ${i + 1}`));
+      if (left.length === 0) return [[...acc, "pass"]];
+      return left.map((i) => [...acc, `switch ${i + 1}`]);
+    });
+  });
+  void side;
+  return [...new Set(out.map((x) => x.join(", ")))];
+}
+
+/** Forced switch: send in the benched Pokémon with the best matchup against the foes on the field. */
+function switchChoice(
+  b: PsBattle,
+  side: PsSide,
+  req: PsRequest,
+  tags: EngineTags,
+  params: PolicyParams,
+): string {
+  const foes = alive(side.foe.active);
+  const score = (i: number) => {
+    const mon = side.pokemon[i];
+    return mon ? matchup(b, mon, foes, tags, params) + mon.hp / mon.maxhp / 10 : -9;
+  };
   const used = new Set<number>();
   return (req.forceSwitch ?? [])
     .map((must) => {
       if (!must) return "pass";
-      const idx = req.side.pokemon.findIndex(
-        (pk, i) => !pk.active && !used.has(i) && !pk.condition.endsWith(" fnt"),
-      );
-      if (idx < 0) return "pass";
-      used.add(idx);
-      return `switch ${idx + 1}`;
+      let best = -1;
+      req.side.pokemon.forEach((pk, i) => {
+        if (pk.active || used.has(i) || pk.condition.endsWith(" fnt")) return;
+        if (best < 0 || score(i) > score(best)) best = i;
+      });
+      if (best < 0) return "pass";
+      used.add(best);
+      return `switch ${best + 1}`;
     })
     .join(", ");
+}
+
+/**
+ * Joint score of both slots' options: damage to the same foe is added before valuing it (so two
+ * attacks that together KO get the KO bonus, and overkill is not counted twice).
+ */
+function jointScore(b: PsBattle, side: PsSide, slots: SlotOption[], params: PolicyParams): number {
+  if (slots.length < 2 || slots.some((s) => !s.dmg)) return slots.reduce((a, s) => a + s.score, 0);
+  const foes = side.foe.active;
+  let score = 0;
+  for (const s of slots) score += s.extra ?? 0;
+  foes.forEach((t, ti) => {
+    if (!t || t.fainted || t.hp <= 0) return;
+    let d = 0;
+    let speed = 0;
+    let prio = 0;
+    slots.forEach((s, si) => {
+      const x = s.dmg?.[ti] ?? 0;
+      if (x > 0) {
+        d += x;
+        const me = side.active[si];
+        if (me) speed = Math.max(speed, actionSpeed(me));
+        prio = Math.max(prio, s.priority ?? 0);
+      }
+    });
+    score += damageValue(t, d, speed, prio, params);
+  });
+  // spread moves that hit the partner: the penalty does not depend on the other slot
+  slots.forEach((s, si) => {
+    const ally = side.active[1 - si];
+    if (s.allyDmg && ally && !ally.fainted)
+      score -= p(params, "allyHitPenalty") * (Math.min(s.allyDmg, ally.hp) / ally.maxhp);
+  });
+  void b;
+  return score;
+}
+
+/** All legal joint actions of a side with their joint scores, best first. */
+export function allJointOptions(
+  b: PsBattle,
+  side: PsSide,
+  tags: EngineTags,
+  params: PolicyParams,
+): { joint: JointOption[]; perSlot: SlotOption[][] } {
+  const req = side.activeRequest;
+  if (!req?.active) return { joint: [], perSlot: [] };
+  const perSlot = req.active.map((_, slot) => slotOptions(b, side, slot, req, tags, params));
+  let joint: SlotOption[][] = [[]];
+  for (const opts of perSlot) joint = joint.flatMap((j) => opts.map((o) => [...j, o]));
+  const out = joint
+    .filter((slots) => !conflicts(slots))
+    .map((slots) => ({
+      slots,
+      score: jointScore(b, side, slots, params),
+      choice: dedupeMega(slots.map((s) => s.choice)).join(", "),
+    }))
+    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
+  return { joint: out, perSlot };
 }
 
 /** Sample this turn's choice for a side. */
@@ -291,39 +501,39 @@ export function chooseFor(
 ): string {
   const req = side.activeRequest;
   if (!req || req.wait) return "";
-  if (req.forceSwitch) return switchChoice(side, req);
+  if (req.forceSwitch) return switchChoice(b, side, req, tags, params);
   // My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`.
   const T =
     side.id === "p1" && params["selfTemperature"] !== undefined
       ? params["selfTemperature"]
       : p(params, "temperature");
-  const picks = (req.active ?? []).map((_, slot) => {
-    const opts = slotOptions(b, side, slot, req, tags, params);
-    const i = softmaxPick(opts, T, rng);
-    const mon = side.active[slot];
-    if (trace && mon && !mon.fainted) {
-      const probs = softmaxProbs(opts, T);
+  const { joint, perSlot } = allJointOptions(b, side, tags, params);
+  if (joint.length === 0) return "default";
+  const probs = softmaxProbs(joint, T);
+  const k = sample(probs, rng);
+  const pick = joint[k]!;
+  if (trace) {
+    perSlot.forEach((opts, slot) => {
+      const mon = side.active[slot];
+      if (!mon || mon.fainted) return;
+      // marginal probability of each slot option under the joint distribution
+      const marg = opts.map((o) =>
+        joint.reduce((a, j, ji) => a + (j.slots[slot]?.choice === o.choice ? probs[ji]! : 0), 0),
+      );
       trace.push({
         turn: b.turn,
         side: side.id === "p1" ? 0 : 1,
         species: mon.species.id,
         hpPct: Math.round((mon.hp / mon.maxhp) * 100),
-        options: opts.map((option, k) => ({ option, prob: probs[k]! })),
-        chosen: i,
+        options: opts.map((option, i) => ({ option, prob: marg[i]! })),
+        chosen: Math.max(
+          0,
+          opts.findIndex((o) => o.choice === pick.slots[slot]?.choice),
+        ),
       });
-    }
-    return opts[i]!;
-  });
-  // resolve a double switch to the same Pokémon: the later slot takes its best other option
-  if (conflicts(picks)) {
-    const req2 = req;
-    const slot = picks.length - 1;
-    const alt = slotOptions(b, side, slot, req2, tags, params).find(
-      (o) => o.choice !== picks[0]!.choice,
-    );
-    if (alt) picks[slot] = alt;
+    });
   }
-  return dedupeMega(picks.map((x) => x.choice)).join(", ");
+  return pick.choice;
 }
 
 /** Only one Mega Evolution per turn/side. */
@@ -345,22 +555,7 @@ export function jointOptions(
   params: PolicyParams,
   limit: number,
 ): JointOption[] {
-  const req = side.activeRequest;
-  if (!req?.active) return [];
-  const perSlot = req.active.map((_, slot) =>
-    slotOptions(b, side, slot, req, tags, params).slice(0, limit),
-  );
-  let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
-  for (const opts of perSlot) {
-    joint = joint.flatMap((j) =>
-      opts.map((o) => ({ choice: "", slots: [...j.slots, o], score: j.score + o.score })),
-    );
-  }
-  return joint
-    .filter((j) => !conflicts(j.slots))
-    .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
-    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice))
-    .slice(0, limit);
+  return allJointOptions(b, side, tags, params).joint.slice(0, limit);
 }
 
 /**
@@ -375,18 +570,7 @@ export function searchCandidates(
   params: PolicyParams,
   width: number,
 ): JointOption[] {
-  const req = side.activeRequest;
-  if (!req?.active) return [];
-  const perSlot = req.active.map((_, slot) => slotOptions(b, side, slot, req, tags, params));
-  let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
-  for (const opts of perSlot)
-    joint = joint.flatMap((j) =>
-      opts.map((o) => ({ choice: "", slots: [...j.slots, o], score: j.score + o.score })),
-    );
-  const all = joint
-    .filter((j) => !conflicts(j.slots))
-    .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
-    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
+  const { joint: all, perSlot } = allJointOptions(b, side, tags, params);
   const picked = new Map<string, JointOption>();
   for (const j of all.slice(0, width)) picked.set(j.choice, j);
   perSlot.forEach((opts, slot) => {

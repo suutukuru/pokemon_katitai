@@ -24,14 +24,15 @@ import {
   simulate,
   traceBattle,
   analyzeReplay,
-  searchOptionsFrom,
+  searchBudgetFrom,
   type Config,
 } from "@ca/sim";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
-import { runBestPlayPool, workerPoolExecutor } from "@ca/sim/pool";
+import { runBestPlayPool, workerPoolExecutor, workerRollouts } from "@ca/sim/pool";
+import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
 import { regDiff, regNew, regValidate, type Io } from "./commands.js";
@@ -324,6 +325,29 @@ try {
       code = 0;
       break;
     }
+    case "web:data": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      const outDir = resolvePath(
+        args.includes("--out") ? args[args.indexOf("--out") + 1]! : "apps/web/src/data",
+      );
+      code = await webDataCommand(
+        args,
+        env,
+        {
+          rollouts: (n) => workerRollouts(env.pack.id, n),
+          write: (path, json) => {
+            mkdirSync(resolvePath(path, ".."), { recursive: true });
+            writeFileSync(path, JSON.stringify(json) + "\n");
+          },
+          outDir,
+          workers,
+        },
+        io,
+      );
+      break;
+    }
     case "report:book": {
       // `report:book <自分.txt> [--top 10] [--scale 0.3]` → one HTML: best-play battle vs each top team
       const env = simEnv(args);
@@ -374,11 +398,11 @@ try {
         });
         io.err(`… 選出決定: ${opp.label}`);
       }
-      const search = searchOptionsFrom(env.pack.weights.simulation, Number(opt("think", "1")));
+      const search = searchBudgetFrom(env.pack.weights.simulation, Number(opt("think", "1")));
       const wi = args.indexOf("--workers");
       const datas = await runBestPlayPool(
         env.pack.id,
-        prepared.map((x) => ({ mine, theirs: x.theirs, ca: x.ca, cb: x.cb, seed, opts: search })),
+        prepared.map((x) => ({ mine, theirs: x.theirs, ca: x.ca, cb: x.cb, seed, budget: search })),
         wi >= 0 ? Number(args[wi + 1]) : 4,
         (i) => io.err(`… 最善手の対戦 完了: ${prepared[i]!.label}`),
       );
@@ -392,7 +416,7 @@ try {
       const wins = datas.filter((x) => x.result.winner === 0).length;
       const html = renderReplayBook({
         title: `${name} × M-C上位構築（最善手同士の対戦）`,
-        subtitle: `${entries.length}構築と、両者が毎ターン勝率最大の行動を選ぶ対戦を1戦ずつ: ${wins}勝${entries.length - wins}敗 ／ 思考: 候補を最大${search.options}個以上から ${search.stages.map((st) => `${st.rollouts}戦`).join("→")} で絞り込み`,
+        subtitle: `${entries.length}構築と、両者が毎ターン勝率最大の行動を選ぶ対戦を1戦ずつ: ${wins}勝${entries.length - wins}敗 ／ 思考: 毎ターン両者の候補を絞り込み、上位${search.keep}×${search.keep}の組み合わせを各${search.matrixRollouts}〜${search.matrixRollouts + search.refineRollouts}戦して均衡（読み合いの最適な混ぜ方）を計算`,
         entries,
         params: env.pack.weights.simulation,
       });

@@ -18,9 +18,10 @@ packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
 packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
 packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
-packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、analyze.ts=選出/択の分析、pool.ts=並列実行(Node)
+packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、search.ts=毎ターンの読み合いの探索（ADR-0011）、bestplay.ts=最善手同士の対戦、analyze.ts=選出/択の分析、view.ts=画面用の局面と1手進める処理、pool.ts=並列実行(Node)
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
-apps/web          React + Vite。診断は Web Worker（src/worker.ts）。パックとサンプルはビルド時に同梱
+apps/web          React + Vite（iPhone向け）。タブ: パーティ／選出分析／対戦盤／診断。診断は src/worker.ts、対戦は src/engine/（simWorker.ts を並列で動かす SimPool）。
+                  Showdown は scripts/build-showdown.mjs でブラウザ用にバンドル（src/gen/、ビルド時に自動生成）。事前計算は src/data/（pnpm web:data）
 (予定) apps/api
 ```
 
@@ -56,6 +57,7 @@ pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候�
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
+pnpm web:data --teams my-teams/a.txt,my-teams/b.txt [--top 8] [--scale 0.5] [--think 1]  # 重い計算をCLIで済ませてWebに同梱（選出分析＋最善手の対戦＋各局面の評価）
 pnpm web:dev / pnpm web:build                    # Web 画面
 pnpm e2e                                         # Playwright（Pixel 7 表示、ビルドして preview で実行）
 ```
@@ -92,7 +94,8 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 ## 自分のパーティ・相手のパーティ
 
 - `my-teams/*.txt` に自分のパーティ（コピーして改造案を作る）、`opponents/*.txt` に対策したい構築（技構成込み）。
-- シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。
+- シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。探索は `search*`、選出の強い評価は `strong*`。
+- 新しいパーティは Web の「パーティ」タブで「コピーして改造」→保存すれば、その端末で選出分析・対戦盤にそのまま使える。リポジトリに残す案は `my-teams/` に置いて `pnpm web:data` で事前計算を更新。
 
 ## 外部データの扱い
 

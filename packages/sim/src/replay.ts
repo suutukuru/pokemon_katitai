@@ -47,8 +47,12 @@ export interface WhatIfOption {
   games: number;
   ci: [number, number];
   chosen: boolean;
-  /** search stage reached (successive halving), best-play mode only */
-  stage?: number;
+  /** equilibrium probability (search mode) */
+  prob?: number;
+  /** win rate against the other side's worst reply for this side (search mode) */
+  worst?: number;
+  /** false = dropped while pruning (value is against the policy, not the equilibrium) */
+  inMatrix?: boolean;
 }
 
 export interface ReplayTurn {
@@ -59,6 +63,10 @@ export interface ReplayTurn {
   whatIf?: WhatIfOption[];
   /** The opponent's alternatives (win rate from the opponent's point of view), in best-play mode. */
   whatIfOpp?: WhatIfOption[];
+  /** my win rate at this turn's equilibrium (search mode): the position's evaluation */
+  eval?: number;
+  /** forced switch-ins decided after this turn's moves (search mode), per side */
+  switchIf?: { side: 0 | 1; options: WhatIfOption[] }[];
 }
 
 export interface ReplayData {

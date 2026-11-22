@@ -10,6 +10,15 @@
   --minor: #2f6f4f;
   --info: #475569;
   --est: #7c3aed;
+  --good: #1f7a4d;
+  --bad: #b42318;
+  --mid: #8a6100;
+  --hp-hi: #2f9e5b;
+  --hp-md: #d29a12;
+  --hp-lo: #d23c2a;
+  --me: #2653c7;
+  --op: #b23d1b;
+  --chip: #eef1f6;
   font-family:
     system-ui,
     -apple-system,
@@ -32,6 +41,15 @@
     --minor: #6ee7b7;
     --info: #a5b4c8;
     --est: #c4a5ff;
+    --good: #5fd39a;
+    --bad: #ff7b72;
+    --mid: #f0b443;
+    --hp-hi: #41c27a;
+    --hp-md: #e8b23a;
+    --hp-lo: #ff6b5b;
+    --me: #8aa5ff;
+    --op: #ff9a7a;
+    --chip: #252b36;
     color-scheme: dark;
   }
 }
@@ -47,6 +65,15 @@
   --minor: #6ee7b7;
   --info: #a5b4c8;
   --est: #c4a5ff;
+  --good: #5fd39a;
+  --bad: #ff7b72;
+  --mid: #f0b443;
+  --hp-hi: #41c27a;
+  --hp-md: #e8b23a;
+  --hp-lo: #ff6b5b;
+  --me: #8aa5ff;
+  --op: #ff9a7a;
+  --chip: #252b36;
   color-scheme: dark;
 }
 * {
@@ -60,7 +87,8 @@ body {
 .app {
   max-width: 760px;
   margin: 0 auto;
-  padding-block: 12px 48px;
+  /* room for the bottom tab bar (and the iPhone home indicator) */
+  padding-block: 0 calc(76px + env(safe-area-inset-bottom, 0px));
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
@@ -352,4 +380,504 @@ input {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* ---------- shell ---------- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 0 8px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.topbar h1 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.tabbar button {
+  border: none;
+  border-radius: 0;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0 4px;
+  min-height: 54px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.tabbar button.on {
+  color: var(--accent);
+  font-weight: 700;
+}
+.tabbar svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tab-body {
+  padding-top: 4px;
+}
+.small {
+  font-size: 0.8rem;
+}
+.win {
+  color: var(--good);
+}
+.lose {
+  color: var(--bad);
+}
+textarea,
+input,
+select {
+  font-size: 16px; /* iOS zooms into smaller inputs */
+}
+.row.between {
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 6px;
+}
+.row.between h2 {
+  margin: 0;
+}
+
+/* ---------- pickers / segmented ---------- */
+.picker {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0;
+}
+.picker select,
+.picker input {
+  width: 100%;
+}
+.seg {
+  display: flex;
+  gap: 0;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.seg button {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  min-height: 40px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+}
+.seg button + button {
+  border-left: 1px solid var(--line);
+}
+.seg button.on {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+.seg.small {
+  margin: 0;
+  flex: 0 0 auto;
+}
+.seg.small button {
+  min-height: 32px;
+  padding: 2px 10px;
+  flex: 0 0 auto;
+}
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin: 6px 0;
+}
+.progress progress {
+  width: 100%;
+  height: 8px;
+}
+
+/* ---------- team members ---------- */
+.member.picked {
+  border-left: 3px solid var(--accent);
+  padding-left: 8px;
+}
+.tag.pick {
+  background: var(--accent);
+  color: #fff;
+}
+.moves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.move-chip {
+  background: var(--chip);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 0.8rem;
+}
+
+/* ---------- rates ---------- */
+.ratebar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  min-width: 64px;
+  height: 20px;
+  background: var(--chip);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ratebar .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  opacity: 0.35;
+}
+.ratebar.good .fill {
+  background: var(--good);
+}
+.ratebar.mid .fill {
+  background: var(--mid);
+}
+.ratebar.bad .fill {
+  background: var(--bad);
+}
+.ratebar .num {
+  position: relative;
+  padding: 0 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.bring .lead {
+  font-weight: 700;
+}
+.big-rec {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--chip);
+  margin: 6px 0 8px;
+}
+.rec-num strong {
+  font-size: 1.6rem;
+  margin: 0 4px;
+}
+.col-tag {
+  display: inline-block;
+  min-width: 1.4em;
+  text-align: center;
+  font-weight: 700;
+  color: var(--op);
+  margin-right: 4px;
+}
+.opp-cols {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+.mrow {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+}
+.mrow.best {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.mhead {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+.mcells {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px;
+}
+.mcell {
+  display: flex;
+  align-items: center;
+}
+.opts {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0;
+  display: grid;
+  gap: 6px;
+}
+.opts > li {
+  font-size: 0.88rem;
+}
+.opt {
+  width: 100%;
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+}
+.opt.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent) inset;
+}
+.opt.static {
+  cursor: default;
+}
+.opt-text {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.spark {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 4px 0;
+}
+.spark .mid {
+  stroke: var(--line);
+  stroke-dasharray: 4 4;
+}
+.spark .line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.spark .dot {
+  fill: var(--accent);
+}
+
+/* ---------- board ---------- */
+.evalcard {
+  position: sticky;
+  top: calc(41px + env(safe-area-inset-top, 0px));
+  z-index: 4;
+  padding: 10px 12px;
+}
+.eval-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.turn {
+  font-weight: 700;
+}
+.eval-num strong {
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+}
+.timeline {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+.timeline .chip {
+  flex: 0 0 auto;
+  min-height: 32px;
+  white-space: nowrap;
+}
+.fieldcard {
+  display: grid;
+  gap: 8px;
+}
+.side-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.actives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.mon {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+  min-width: 0;
+}
+.mon.me {
+  border-left: 4px solid var(--me);
+}
+.mon.op {
+  border-left: 4px solid var(--op);
+}
+.mon.empty {
+  color: var(--muted);
+  text-align: center;
+}
+.mon-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mon-name .st {
+  margin-left: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--chip);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.mon-sub {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.mon-sub .muted {
+  font-size: 0.72rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hp {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--chip);
+  overflow: hidden;
+  margin: 4px 0 2px;
+}
+.hp .fill {
+  display: block;
+  height: 100%;
+}
+.hp.hi .fill {
+  background: var(--hp-hi);
+}
+.hp.md .fill {
+  background: var(--hp-md);
+}
+.hp.lo .fill {
+  background: var(--hp-lo);
+}
+.boosts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  font-size: 0.7rem;
+  margin-top: 3px;
+}
+.boosts .up {
+  color: var(--good);
+}
+.boosts .down {
+  color: var(--bad);
+}
+.bench {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.bench-chip {
+  font-size: 0.75rem;
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.bench-chip.ko {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  padding: 4px 0;
+  border-block: 1px dashed var(--line);
+}
+.events {
+  margin: 6px 0 0;
+  padding-left: 0;
+  list-style: none;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.custom .picker span {
+  font-weight: 700;
+  color: var(--fg);
+}
+.actionbar {
+  position: sticky;
+  bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  margin: 8px 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+}
+.actionbar .primary {
+  flex: 1;
+}
+.reroll {
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.78rem;
+  gap: 4px;
+}
+.reroll input {
+  flex: 0 0 auto;
+  min-height: 0;
+  width: 18px;
+  height: 18px;
+}
+.bringpick {
+  margin: 8px 0;
+}
+.bringpick .chips {
+  margin-top: 4px;
+}
+.bringpick .chip {
+  min-height: 40px;
 }

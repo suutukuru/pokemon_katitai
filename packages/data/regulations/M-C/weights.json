@@ -110,14 +110,20 @@
     "turnRollouts": 32,
     "fictitiousIterations": 4000,
     "selfTemperature": 0.12,
-    "searchWidth": 40,
-    "searchStage1": 4,
-    "searchKeep1": 8,
-    "searchStage2": 16,
-    "searchKeep2": 3,
-    "searchStage3": 40,
-    "searchKeep3": 1,
+    "searchWidth": 16,
     "switchBase": 0.05,
-    "switchThreatBonus": 0.3
+    "switchThreatBonus": 0.3,
+    "koFirstDiscount": 0.5,
+    "koFirstBonus": 0.25,
+    "protectFirstHitBonus": 0.3,
+    "switchMatchupWeight": 0.25,
+    "searchPruneRollouts": 3,
+    "searchKeep": 6,
+    "searchMatrixRollouts": 6,
+    "searchRefineRollouts": 10,
+    "searchRefineSupport": 0.1,
+    "strongConfigs": 3,
+    "strongGames": 2,
+    "strongSearchScale": 0.25
   }
 }

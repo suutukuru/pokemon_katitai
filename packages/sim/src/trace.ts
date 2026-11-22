@@ -61,17 +61,25 @@ const hpOf = (cond: string) => {
   return a !== undefined && b ? Math.round((a / b) * 100) : 0;
 };
 
-/** Convert the battle's protocol log into per-turn events (public lines only). */
-export function parseLog(b: PsBattle): Map<number, BattleEvent[]> {
+/** Convert the battle's protocol log into per-turn events (public lines only), from line `from`. */
+export function parseLog(b: PsBattle, from = 0): Map<number, BattleEvent[]> {
   const out = new Map<number, BattleEvent[]>();
   let turn = 0;
+  if (from > 0)
+    for (let i = from - 1; i >= 0; i--) {
+      const m = /^\|turn\|(\d+)/.exec(b.log[i] ?? "");
+      if (m) {
+        turn = Number(m[1]);
+        break;
+      }
+    }
   const push = (e: BattleEvent) => {
     const xs = out.get(turn) ?? [];
     xs.push(e);
     out.set(turn, xs);
   };
   let skip = false;
-  for (const line of b.log) {
+  for (const line of b.log.slice(from)) {
     if (line.startsWith("|split|")) {
       skip = true; // next line is the private copy; the public one follows it
       continue;

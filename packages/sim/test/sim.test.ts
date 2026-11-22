@@ -191,6 +191,17 @@ describe("analyzeMatchup (tiny budget)", () => {
     turnOptions: 2,
     turnRollouts: 1,
     fictitiousIterations: 500,
+    strongConfigs: 0,
+    strongGames: 1,
+    strongSearch: {
+      width: 2,
+      pruneRollouts: 1,
+      keep: 2,
+      matrixRollouts: 1,
+      refineRollouts: 0,
+      refineSupport: 0.2,
+      iterations: 200,
+    },
   };
   it("produces screening, a solved matrix and the turn-1 decision table, deterministically", async () => {
     const run = () =>
@@ -204,7 +215,20 @@ describe("analyzeMatchup (tiny budget)", () => {
     expect(a.turnOne.bestReplies).toHaveLength(2);
     expect(a.turnOne.mine).toHaveLength(4);
     expect(await run()).toEqual(a);
+    expect(a.strong).toBeUndefined();
   }, 120_000);
+
+  it("strong stage: search-vs-search battles on the top configs decide the recommendation", async () => {
+    const b = { ...budget, strongConfigs: 2, strongGames: 1 };
+    const a = await analyzeMatchup(ctx, mine, rain, inProcessExecutor(ctx, mine, rain), b, 7);
+    expect(a.strong).toBeDefined();
+    expect(a.strong!.cells).toHaveLength(2);
+    expect(a.strong!.games).toBe(4);
+    expect(a.strong!.equilibrium.mine.reduce((x, y) => x + y, 0)).toBeCloseTo(1);
+    // the turn-1 table is built for the strong stage's most likely pairing
+    const mi = a.strong!.equilibrium.mine.indexOf(Math.max(...a.strong!.equilibrium.mine));
+    expect(a.turnOne.mine).toEqual(a.strong!.mine[mi]);
+  }, 300_000);
 });
 
 describe("battle tracing", () => {
@@ -259,42 +283,116 @@ describe("what-if replay analysis", () => {
   }, 120_000);
 });
 
-describe("best-play battles", () => {
-  it("both sides pick the highest simulated win rate; deterministic", async () => {
-    const { playBestBattle, searchOptionsFrom } = await import("../src/index.js");
-    const opts = {
-      options: 2,
-      stages: [
-        { rollouts: 1, keep: 2 },
-        { rollouts: 1, keep: 1 },
-      ],
-    };
-    const r = playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts);
+describe("simultaneous-move search", () => {
+  const tiny = {
+    width: 3,
+    pruneRollouts: 1,
+    keep: 3,
+    matrixRollouts: 2,
+    refineRollouts: 2,
+    refineSupport: 0.2,
+    iterations: 500,
+  };
+  it("analyses a position: matrix, equilibrium and per-option values are consistent", async () => {
+    const { analyzePosition, inProcessRollouts, snap, startBattle, bestChoice } =
+      await import("../src/index.js");
+    const state = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 7));
+    const exec = inProcessRollouts(ctx);
+    const a = await analyzePosition(ctx, state, exec, tiny, 11);
+    expect(a.needs).toEqual([true, true]);
+    expect(a.kind).toBe("move");
+    for (const s of [0, 1] as const) {
+      const inM = a.options[s].filter((o) => o.inMatrix);
+      expect(inM.length).toBeLessThanOrEqual(tiny.keep);
+      expect(inM.length).toBe(a.matrixChoices[s].length);
+      expect(inM.reduce((x, o) => x + o.prob, 0)).toBeCloseTo(1, 6);
+      for (const o of a.options[s]) {
+        expect(o.value).toBeGreaterThanOrEqual(0);
+        expect(o.value).toBeLessThanOrEqual(1);
+        expect(o.worst).toBeLessThanOrEqual(o.value + 1e-9);
+      }
+      expect(a.options[s].some((o) => o.choice === bestChoice(a, s))).toBe(true);
+    }
+    // the matrix is the payoff for p1; the equilibrium value lies within its range
+    const flat = a.matrix.flat();
+    expect(a.value).toBeGreaterThanOrEqual(Math.min(...flat) - 1e-9);
+    expect(a.value).toBeLessThanOrEqual(Math.max(...flat) + 1e-9);
+    // deterministic, and the starting state is not modified
+    expect(await analyzePosition(ctx, state, exec, tiny, 11)).toEqual(a);
+    expect(a.rollouts).toBeGreaterThan(0);
+  }, 120_000);
+
+  it("a batched executor (split into chunks) gives the same rollouts as in-process", async () => {
+    const { inProcessRollouts, rollout, rolloutContext, snap, startBattle } =
+      await import("../src/index.js");
+    const state = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 7));
+    const items = [1, 2, 3, 4, 5].map((k) => ({ a: "", b: "", seed: k }));
+    const whole = await inProcessRollouts(ctx).rollouts({ state, items });
+    const rc = rolloutContext(ctx);
+    const parts = [items.slice(0, 2), items.slice(2)].flatMap((xs) =>
+      xs.map((it) => rollout(rc, state, it)),
+    );
+    expect(parts).toEqual(whole);
+    for (const v of whole) expect([0, 0.5, 1]).toContain(v);
+  }, 60_000);
+
+  it("best-play battles use the search at every decision; deterministic", async () => {
+    const { playBestBattle, searchBudgetFrom } = await import("../src/index.js");
+    const r = await playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, tiny);
     expect(r.mode).toBe("best");
     const turns = r.turns.filter((t) => t.whatIf);
     expect(turns.length).toBeGreaterThan(0);
     for (const t of turns) {
+      expect(t.eval).toBeGreaterThanOrEqual(0);
+      expect(t.eval).toBeLessThanOrEqual(1);
       for (const list of [t.whatIf!, t.whatIfOpp!]) {
         const chosen = list.filter((w) => w.chosen);
         expect(chosen).toHaveLength(1);
-        const finalists = list.filter((w) => w.stage === 2);
-        expect(chosen[0]!.winRate).toBe(Math.max(...finalists.map((w) => w.winRate)));
+        const inM = list.filter((w) => w.inMatrix);
+        expect(chosen[0]!.prob).toBe(Math.max(...inM.map((w) => w.prob ?? 0)));
       }
     }
-    expect(playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, opts)).toEqual(r);
-    expect(searchOptionsFrom(pack.weights.simulation).stages.length).toBeGreaterThan(1);
-    expect(
-      searchOptionsFrom(
-        { searchWidth: 4, searchStage1: 10, searchKeep1: 2, searchStage2: 20 },
-        0.5,
-      ),
-    ).toEqual({
-      options: 4,
-      stages: [
-        { rollouts: 5, keep: 2 },
-        { rollouts: 10, keep: 1 },
-      ],
-    });
-    expect(() => searchOptionsFrom({})).toThrow(/search/);
-  }, 180_000);
+    expect(await playBestBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 5, tiny)).toEqual(r);
+    const b = searchBudgetFrom(pack.weights.simulation);
+    expect(b.keep).toBeGreaterThan(1);
+    expect(searchBudgetFrom(pack.weights.simulation, 2).matrixRollouts).toBe(2 * b.matrixRollouts);
+    expect(() => searchBudgetFrom({})).toThrow(/search/);
+  }, 300_000);
+});
+
+describe("battle view and stepping", () => {
+  it("step applies choices, returns the turn's events and is reproducible", async () => {
+    const { snap, startBattle, step, viewOf, slotChoices } = await import("../src/index.js");
+    const state = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 9));
+    const v = viewOf(state);
+    expect(v.request).toEqual(["move", "move"]);
+    expect(v.sides[0].active.map((m) => m?.species)).toEqual([mine[0]!.species, mine[1]!.species]);
+    expect(v.sides[0].bench).toHaveLength(2);
+    const sc = slotChoices(ctx, state, 0);
+    expect(sc.slots).toHaveLength(2);
+    const a = sc.slots.map((x) => x.options[0]!.choice).join(", ");
+    const r1 = step(ctx, state, a, "");
+    // the step stops at the next decision: turn 2, or forced switch-ins still within turn 1
+    expect(r1.view.turn === 2 || r1.view.request.includes("switch")).toBe(true);
+    expect(r1.events.some((e) => e.t === "move")).toBe(true);
+    expect(step(ctx, state, a, "")).toEqual(r1);
+    // a re-roll may change the outcome but keeps the same decisions legal
+    const r2 = step(ctx, state, a, r1.choices[1], { reroll: 123 });
+    expect(r2.choices).toEqual(r1.choices);
+  }, 60_000);
+});
+
+describe("position keys", () => {
+  it("a live battle and a restored-then-stepped copy reach the same key", async () => {
+    const { snap, startBattle, step, battleView } = await import("../src/index.js");
+    const live = startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 21);
+    const s0 = snap(live);
+    const r = step(ctx, s0, "move 1 1, move 1 1", "move 1 1, move 1 2");
+    expect(live.choose("p1", r.choices[0])).toBe(true);
+    expect(live.choose("p2", r.choices[1])).toBe(true);
+    expect(battleView(live).key).toBe(r.view.key);
+    expect(r.view.key).not.toBe(
+      battleView(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 21)).key,
+    );
+  });
 });

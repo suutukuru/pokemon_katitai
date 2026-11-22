@@ -1,11 +1,15 @@
 import { expect, test } from "@playwright/test";
 
+// diagnosis lives in its own tab
+test.beforeEach(async ({ page }) => {
+  await page.getByRole("button", { name: "診断" }).click();
+});
+
 const SEVERITY_RANK: Record<string, number> = { critical: 0, major: 1, minor: 2, info: 3 };
 
 test("sample teams → evidence-backed findings sorted by severity (phase 3 acceptance)", async ({
   page,
 }) => {
-  await page.goto("/");
   const samples = [
     ["チーム1（ユーザー提供）", "メガリザードンY"],
     ["サンプル：トリックルーム", "ブリムオン"],
@@ -32,7 +36,6 @@ test("sample teams → evidence-backed findings sorted by severity (phase 3 acce
 });
 
 test("the user's team: weather conflict with evidence, Mega stats shown", async ({ page }) => {
-  await page.goto("/");
   await page.getByRole("button", { name: "診断する" }).click();
   const conflict = page.getByTestId("finding").filter({ hasText: "天気がぶつかる" });
   await expect(conflict).toContainText("カバルドンのすなおこし、リザードンのひでり");
@@ -44,7 +47,6 @@ test("the user's team: weather conflict with evidence, Mega stats shown", async 
 });
 
 test("name typos are flagged for confirmation", async ({ page }) => {
-  await page.goto("/");
   await page
     .getByLabel("パーティのテキスト（ポケペースト形式）")
     .fill("マスカーニヤ @ こだわりスカーフ\n特性: へんげんじざい\n- トリックフラワー\n- まもる");
@@ -56,7 +58,6 @@ test("name typos are flagged for confirmation", async ({ page }) => {
 });
 
 test("no horizontal scroll at phone width", async ({ page }) => {
-  await page.goto("/");
   await page.getByRole("button", { name: "診断する" }).click();
   await expect(page.getByTestId("finding").first()).toBeVisible();
   const overflow = await page.evaluate(
@@ -66,7 +67,6 @@ test("no horizontal scroll at phone width", async ({ page }) => {
 });
 
 test("save, export (copy) and delete use in-page controls only", async ({ page }) => {
-  await page.goto("/");
   await page.getByLabel("保存するチーム名").fill("テスト");
   await page.getByRole("button", { name: "この端末に保存" }).click();
   await page.getByText("保存したチーム（1）").click();
