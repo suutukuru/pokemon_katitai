@@ -59,7 +59,7 @@ pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率�
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
 pnpm web:data --teams my-teams/a.txt,my-teams/b.txt [--top 8] [--scale 0.5] [--think 1]  # 重い計算をCLIで済ませてWebに同梱（選出分析＋最善手の対戦＋各局面の評価）
 pnpm web:dev / pnpm web:build                    # Web 画面
-pnpm e2e                                         # Playwright（Pixel 7 表示、ビルドして preview で実行）
+pnpm e2e                                         # Playwright（iPhone 13 の画面サイズ、ビルドして preview で実行）
 ```
 
 `CA_REGULATION`（既定 M-C）で team:check / calc のレギュレーションを切り替えられる。
@@ -82,6 +82,8 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 9. データだけで表現できない新しい仕組みが必要な場合のみ、`engine` に Mechanic プラグインを追加し（ADR を書く）、manifest の `mechanics` で有効にする。
 
 ## 規約
+
+- **Git: 指定がない限り、変更は `main` に入れる**（作業ブランチでコミットしたら `main` にマージして push まで行う）。別ブランチに留める・PR にする場合はユーザーが指定する。
 
 - 外部入力・データファイルはすべて zod で検証する。スキーマは `packages/schema`。
 - 新しい判断は `docs/adr/NNNN-*.md`。フェーズごとに受け入れ条件をテストで確認してからコミット。
