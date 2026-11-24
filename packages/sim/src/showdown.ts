@@ -13,12 +13,13 @@ export interface ModdedDex {
   species: {
     get(id: string): { name: string; exists: boolean; baseStats: Record<string, number> };
   };
-  items: { get(id: string): { name: string; exists: boolean } };
+  items: { get(id: string): { name: string; exists: boolean; megaStone?: unknown } };
   abilities: { get(id: string): { name: string; exists: boolean } };
   getEffectiveness(type: string, target: string[]): number;
   getImmunity(type: string, target: string[]): boolean;
 }
 export interface PsMove {
+  exists?: boolean;
   id: string;
   name: string;
   type: string;

@@ -7,6 +7,7 @@ import {
   analyzeMatchup,
   budgetFrom,
   playBestBattle,
+  priorFromUsage,
   searchBudgetFrom,
   simContext,
   type Config,
@@ -134,6 +135,8 @@ export async function webDataCommand(
   const ctx = simContext(env.pack, env.spec);
   const budget = budgetFrom(env.pack.weights.simulation, scale);
   const search = searchBudgetFrom(env.pack.weights.simulation, think);
+  // decisions use only what each side can know: hidden sets are sampled from usage statistics
+  const prior = env.usage ? priorFromUsage(env.usage) : undefined;
   const index: unknown[] = [];
   const rollouts = deps.rollouts(deps.workers);
   try {
@@ -164,9 +167,12 @@ export async function webDataCommand(
           seed,
           search,
           rollouts,
-          (turn, an) => {
-            positions[an.key] = an;
-            io.err(`  ${name} × ${opp.label}: 最善手の対戦 ${turn}ターン目`);
+          {
+            ...(prior ? { prior } : {}),
+            onProgress: (turn, an) => {
+              positions[an.key] = an;
+              io.err(`  ${name} × ${opp.label}: 最善手の対戦 ${turn}ターン目`);
+            },
           },
         );
         const out: PrecomputedMatchup = {

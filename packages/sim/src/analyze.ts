@@ -1,4 +1,5 @@
 import type { PokemonSet } from "@ca/schema";
+import type { Prior } from "./belief.js";
 import { playBestBattle } from "./bestplay.js";
 import { maximin, solveZeroSum, wilson } from "./game.js";
 import { searchBudgetFrom, type SearchBudget } from "./search.js";
@@ -41,12 +42,28 @@ export function inProcessExecutor(
   ctx: SimContext,
   mine: readonly PokemonSet[],
   theirs: readonly PokemonSet[],
+  /** with a prior, search battles plan from each side's own view (hidden information sampled) */
+  prior?: Prior,
 ): Executor {
   return {
     bestPlay: async (jobs) => {
       const out: BattleResult[] = [];
       for (const j of jobs)
-        out.push((await playBestBattle(ctx, mine, theirs, j.a, j.b, j.seed, j.budget)).result);
+        out.push(
+          (
+            await playBestBattle(
+              ctx,
+              mine,
+              theirs,
+              j.a,
+              j.b,
+              j.seed,
+              j.budget,
+              undefined,
+              prior ? { prior } : {},
+            )
+          ).result,
+        );
       return out;
     },
     run: (jobs) =>

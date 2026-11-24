@@ -177,3 +177,34 @@ export function markLogSent(battle: PsBattle): void {
   const b = battle as unknown as { sentLogPos: number; log: string[] };
   b.sentLogPos = b.log.length;
 }
+
+/**
+ * A game where each side plays the policy with its own parameters (for tuning): returns side A's
+ * score (1 win, ½ draw, 0 loss). Both sides use the low temperature.
+ */
+export function duel(
+  ctx: SimContext,
+  a: readonly PokemonSet[],
+  b: readonly PokemonSet[],
+  ca: Config,
+  cb: Config,
+  seed: number,
+  params: [PolicyParams, PolicyParams],
+): number {
+  const tags = engineTags();
+  const battle = startBattle(ctx, a, b, ca, cb, seed);
+  const rng = new Rng(mixSeed(seed, 0xd0e1));
+  const T = (p: PolicyParams) => ({ ...p, temperature: p["selfTemperature"] ?? p["temperature"]! });
+  const ps = [T(params[0]), T(params[1])];
+  let guard = 0;
+  while (!battle.ended && battle.turn <= ctx.maxTurns && guard++ < ctx.maxTurns * 4) {
+    markLogSent(battle);
+    battle.sides.forEach((side, i) => {
+      if (battle.ended || side.isChoiceDone() || !side.activeRequest || side.activeRequest.wait)
+        return;
+      const c = chooseFor(battle, side, tags, ps[i]!, rng);
+      if (!c || !battle.choose(side.id, c)) battle.choose(side.id, "default");
+    });
+  }
+  return !battle.ended ? 0.5 : battle.winner === "A" ? 1 : battle.winner === "B" ? 0 : 0.5;
+}

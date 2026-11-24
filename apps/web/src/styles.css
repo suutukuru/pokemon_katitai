@@ -890,3 +890,21 @@ select {
 .bringpick .chip {
   min-height: 40px;
 }
+.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+}
+.kv dt {
+  color: var(--muted);
+}
+.kv dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.review {
+  border-left: 4px solid var(--accent);
+}

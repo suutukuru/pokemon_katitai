@@ -1,7 +1,7 @@
 // Main-thread engine API for the simulation tabs (lazy-loaded: pulls in Showdown).
 // Orchestration (candidate lists, matrices) runs here; rollouts and battles run in SimPool.
 import type { PokemonSet } from "@ca/schema";
-import { canonicalJson, sha256Hex } from "@ca/data";
+import { canonicalJson, engineTags, sha256Hex } from "@ca/data";
 import { parseShowdown } from "@ca/ingest";
 import {
   analyzeMatchup,
@@ -14,6 +14,13 @@ import {
   startBattle,
   step,
   battleView,
+  resolveJointIntent,
+  observe,
+  determinize,
+  Rng,
+  reviewDecision,
+  calibrated,
+  type DecisionReview,
   mixSeed,
   type Config,
   type MatchupAnalysis,
@@ -22,10 +29,18 @@ import {
   type StepResult,
   type BattleView,
 } from "@ca/sim";
-import { contextFor } from "./context";
+import { contextFor, priorFor } from "./context";
 import type { SimPool } from "./pool";
 
-export type { BattleView, PositionAnalysis, StepResult, Snapshot, MatchupAnalysis, Config };
+export type {
+  BattleView,
+  PositionAnalysis,
+  StepResult,
+  Snapshot,
+  MatchupAnalysis,
+  Config,
+  DecisionReview,
+};
 
 export const teamHash = (sets: readonly PokemonSet[]) =>
   sha256Hex(canonicalJson(sets)).slice(0, 16);
@@ -61,18 +76,51 @@ export const PRESETS = {
 } as const;
 export type Preset = keyof typeof PRESETS;
 
-export function analyze(
+/**
+ * Analyse a position from `viewer`'s point of view: the opponent's unrevealed moves, items,
+ * abilities, spreads and back line are sampled from usage statistics (never read from the game).
+ */
+export async function analyze(
   regulationId: string,
   state: Snapshot,
   pool: SimPool,
   preset: Preset,
   key: string,
+  viewer: 0 | 1 = 0,
 ): Promise<PositionAnalysis> {
   const ctx = contextFor(regulationId);
   const budget = searchBudgetFrom(ctx.params, PRESETS[preset].search);
-  let h = 7;
+  let h = 7 + viewer;
   for (let i = 0; i < key.length; i++) h = mixSeed(h, key.charCodeAt(i));
-  return analyzePosition(ctx, state, pool.rolloutExecutor(), budget, h);
+  const prior = await priorFor(regulationId);
+  return analyzePosition(ctx, state, pool.rolloutExecutor(), budget, h, {
+    viewer,
+    ...(prior ? { prior } : {}),
+  });
+}
+
+/** Turn a side's option from an analysis ("i:A1|P" intents included) into a concrete choice. */
+export function concreteChoice(
+  regulationId: string,
+  state: Snapshot,
+  side: 0 | 1,
+  choice: string,
+): string {
+  if (!choice.startsWith("i:")) return choice;
+  const ctx = contextFor(regulationId);
+  const b = restore(state);
+  return resolveJointIntent(b, b.sides[side], choice.slice(2), engineTags(), ctx.params);
+}
+
+/** Reflection on my decision once both sides' actual choices are known. */
+export function review(
+  regulationId: string,
+  state: Snapshot,
+  an: PositionAnalysis,
+  mine: string,
+  theirs: string,
+): DecisionReview {
+  return reviewDecision(contextFor(regulationId), state, an, 0, mine, theirs);
 }
 
 export function stepPosition(
@@ -162,7 +210,26 @@ export async function evaluateChoice(
     const seed = mixSeed(0x3a, k);
     return side === 0 ? { a: choice, b, seed } : { a: b, b: choice, seed };
   });
-  const res = await pool.rolloutExecutor().rollouts({ state, items });
+  // possible worlds from my point of view: the opponent's hidden information is sampled
+  const ctx = contextFor(regulationId);
+  const prior = await priorFor(regulationId);
+  let worlds = [state];
+  if (prior) {
+    const b = restore(state);
+    const obs = observe(b, side);
+    const rng = new Rng(mixSeed(0x5eed, n));
+    worlds = Array.from({ length: Math.max(1, searchBudgetFrom(ctx.params).worlds) }, () =>
+      determinize(ctx, state, b, obs, prior, rng),
+    );
+  }
+  const res = await pool
+    .rolloutExecutor()
+    .rollouts({ worlds, items: items.map((it, k) => ({ ...it, w: k % worlds.length })) });
   const v = res.reduce((x, y) => x + y, 0) / n;
   return side === 0 ? v : 1 - v;
+}
+
+/** Win rate as displayed: corrected by the calibration learned from reviews (sim:review --fit). */
+export function shown(regulationId: string, p: number): number {
+  return calibrated(p, contextFor(regulationId).params);
 }

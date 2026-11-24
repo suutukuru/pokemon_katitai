@@ -1,17 +1,28 @@
 import { parentPort, workerData } from "node:worker_threads";
 import { gameSpec, loadPack } from "@ca/data";
-import { FsPackSource } from "@ca/data/node";
+import { FsPackSource, readUsageSnapshots } from "@ca/data/node";
+import { priorFromUsage } from "./belief.js";
 import type { PokemonSet } from "@ca/schema";
 import { inProcessExecutor, type BattleJob, type BestPlayJob } from "./analyze.js";
 import { playBestBattle } from "./bestplay.js";
 import type { PoolInit } from "./pool.js";
-import { simContext, type Config } from "./runner.js";
-import { rollout, rolloutContext, type RolloutBatch, type SearchBudget } from "./search.js";
+import { duel, simContext, type Config } from "./runner.js";
+import type { DuelJob } from "./tune.js";
+import {
+  rollout,
+  rolloutContext,
+  worldOf,
+  type RolloutBatch,
+  type SearchBudget,
+} from "./search.js";
 
 const init = workerData as PoolInit;
 const ctx = simContext(loadPack(new FsPackSource(), init.regulationId), gameSpec());
 const rctx = rolloutContext(ctx);
-const exec = inProcessExecutor(ctx, init.mine, init.theirs);
+// hidden-information planning needs the usage prior (latest snapshot of this regulation)
+const usage = readUsageSnapshots(init.regulationId)[0];
+const prior = usage ? priorFromUsage(usage) : undefined;
+const exec = inProcessExecutor(ctx, init.mine, init.theirs, prior);
 interface BestTask {
   mine: PokemonSet[];
   theirs: PokemonSet[];
@@ -28,21 +39,42 @@ parentPort!.on(
     best?: BestTask;
     batch?: RolloutBatch;
     bestJobs?: BestPlayJob[];
+    duels?: DuelJob[];
   }) => {
+    if (msg.duels) {
+      parentPort!.postMessage({
+        id: msg.id,
+        results: msg.duels.map((d) => duel(ctx, d.a, d.b, d.ca, d.cb, d.seed, d.params)),
+      });
+      return;
+    }
     if (msg.bestJobs) {
       parentPort!.postMessage({ id: msg.id, results: await exec.bestPlay!(msg.bestJobs) });
       return;
     }
     if (msg.batch) {
-      const { state, items } = msg.batch;
-      parentPort!.postMessage({ id: msg.id, results: items.map((it) => rollout(rctx, state, it)) });
+      const batch = msg.batch;
+      parentPort!.postMessage({
+        id: msg.id,
+        results: batch.items.map((it) => rollout(rctx, worldOf(batch, it), it)),
+      });
       return;
     }
     if (msg.best) {
       const t = msg.best;
       parentPort!.postMessage({
         id: msg.id,
-        results: await playBestBattle(ctx, t.mine, t.theirs, t.ca, t.cb, t.seed, t.budget),
+        results: await playBestBattle(
+          ctx,
+          t.mine,
+          t.theirs,
+          t.ca,
+          t.cb,
+          t.seed,
+          t.budget,
+          undefined,
+          prior ? { prior } : {},
+        ),
       });
       return;
     }

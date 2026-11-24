@@ -31,7 +31,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
-import { runBestPlayPool, workerPoolExecutor, workerRollouts } from "@ca/sim/pool";
+import { runBestPlayPool, workerDuels, workerPoolExecutor, workerRollouts } from "@ca/sim/pool";
+import { simReview, simTune } from "./learn.js";
 import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
@@ -323,6 +324,59 @@ try {
         ),
       );
       code = 0;
+      break;
+    }
+    case "sim:review": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      code = await simReview(
+        args,
+        env,
+        {
+          play: (tasks) =>
+            runBestPlayPool(env.pack.id, tasks, workers, (i) =>
+              io.err(`… ${i + 1}/${tasks.length}戦`),
+            ),
+          write: (path, json) => {
+            mkdirSync(resolvePath(path, ".."), { recursive: true });
+            writeFileSync(path, JSON.stringify(json, null, 1) + "\n");
+            io.err(path);
+          },
+          writeWeights: (simulation) => {
+            const path = resolvePath("packages/data/regulations", env.pack.id, "weights.json");
+            const w = JSON.parse(readFileSync(path, "utf8")) as { simulation?: object };
+            w.simulation = { ...w.simulation, ...simulation };
+            writeFileSync(path, JSON.stringify(w, null, 2) + "\n");
+          },
+        },
+        io,
+      );
+      break;
+    }
+    case "sim:tune": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      const pool = workerDuels(env.pack.id, workers);
+      try {
+        code = await simTune(
+          args,
+          env,
+          {
+            run: pool.run,
+            writeWeights: (simulation) => {
+              const path = resolvePath("packages/data/regulations", env.pack.id, "weights.json");
+              const w = JSON.parse(readFileSync(path, "utf8")) as { simulation?: object };
+              w.simulation = { ...w.simulation, ...simulation };
+              writeFileSync(path, JSON.stringify(w, null, 2) + "\n");
+            },
+          },
+          io,
+        );
+      } finally {
+        await pool.close();
+      }
       break;
     }
     case "web:data": {

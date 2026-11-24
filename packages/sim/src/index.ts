@@ -8,4 +8,7 @@ export * from "./trace.js";
 export * from "./replay.js";
 export * from "./bestplay.js";
 export * from "./search.js";
+export * from "./belief.js";
+export * from "./reflection.js";
 export * from "./view.js";
+export * from "./tune.js";

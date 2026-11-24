@@ -201,6 +201,8 @@ describe("analyzeMatchup (tiny budget)", () => {
       refineRollouts: 0,
       refineSupport: 0.2,
       iterations: 200,
+      worlds: 1,
+      opponentExtra: 0,
     },
   };
   it("produces screening, a solved matrix and the turn-1 decision table, deterministically", async () => {
@@ -292,6 +294,8 @@ describe("simultaneous-move search", () => {
     refineRollouts: 2,
     refineSupport: 0.2,
     iterations: 500,
+    worlds: 2,
+    opponentExtra: 0,
   };
   it("analyses a position: matrix, equilibrium and per-option values are consistent", async () => {
     const { analyzePosition, inProcessRollouts, snap, startBattle, bestChoice } =
@@ -395,4 +399,231 @@ describe("position keys", () => {
       battleView(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 21)).key,
     );
   });
+});
+
+describe("hidden information (planner mode)", () => {
+  const tiny = {
+    width: 3,
+    pruneRollouts: 1,
+    keep: 3,
+    matrixRollouts: 2,
+    refineRollouts: 0,
+    refineSupport: 0.2,
+    iterations: 300,
+    worlds: 3,
+    opponentExtra: 1,
+  };
+  it("the planner decides the same when only the opponent's hidden set differs", async () => {
+    const { analyzePosition, inProcessRollouts, snap, startBattle, priorFromUsage } =
+      await import("../src/index.js");
+    const { readUsageSnapshots } = await import("@ca/data/node");
+    const prior = priorFromUsage(readUsageSnapshots("M-C")[0]!);
+    // same species, different unrevealed moves / item / spread for the opponent
+    const alt = rain.map((m, i) =>
+      i === 1
+        ? { ...m, moves: [...m.moves.slice(0, 3), "protect"], sp: { ...m.sp, hp: 0, spe: 0 } }
+        : i === 2
+          ? { ...m, item: m.item === "leftovers" ? "sitrusberry" : "leftovers" }
+          : m,
+    );
+    const exec = inProcessRollouts(ctx);
+    const strip = (a: Awaited<ReturnType<typeof analyzePosition>>) => ({ ...a, key: "" });
+    const s1 = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 7));
+    const s2 = snap(startBattle(ctx, mine, alt, [0, 1, 2, 5], [0, 1, 2, 3], 7));
+    const a1 = await analyzePosition(ctx, s1, exec, tiny, 3, { viewer: 0, prior });
+    const a2 = await analyzePosition(ctx, s2, exec, tiny, 3, { viewer: 0, prior });
+    expect(a1.viewer).toBe(0);
+    expect(a1.worlds).toBe(3);
+    expect(strip(a2)).toEqual(strip(a1));
+    // the opponent's options are intents, never its unrevealed concrete moves
+    expect(a1.options[1].every((o) => o.choice.startsWith("i:"))).toBe(true);
+    // the full-information search does see the difference
+    const f1 = await analyzePosition(ctx, s1, exec, tiny, 3);
+    const f2 = await analyzePosition(ctx, s2, exec, tiny, 3);
+    expect(f1.viewer).toBeNull();
+    expect(strip(f2)).not.toEqual(strip(f1));
+  }, 180_000);
+
+  it("possible worlds keep public facts and resample hidden ones", async () => {
+    const { snap, startBattle, step, restore, observe, determinize, priorFromUsage, Rng } =
+      await import("../src/index.js");
+    const { readUsageSnapshots } = await import("@ca/data/node");
+    const prior = priorFromUsage(readUsageSnapshots("M-C")[0]!);
+    let s = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 11));
+    s = step(ctx, s, "", "").state;
+    const real = restore(s);
+    const obs = observe(real, 0);
+    expect(obs.preview).toHaveLength(6);
+    const rng = new Rng(1);
+    const worlds = [0, 1, 2, 3, 4, 5].map(() =>
+      restore(determinize(ctx, s, real, obs, prior, rng)),
+    );
+    for (const w of worlds) {
+      expect(w.turn).toBe(real.turn);
+      real.sides[1].active.forEach((m, i) => {
+        const x = w.sides[1].active[i];
+        if (!m) return;
+        expect(x?.species.id).toBe(m.species.id);
+        expect(Math.round((x!.hp / x!.maxhp) * 100)).toBeCloseTo(
+          Math.round((m.hp / m.maxhp) * 100),
+          -1,
+        );
+        // moves seen in use stay
+        for (const ms of (m as unknown as { moveSlots: { id: string; used?: boolean }[] })
+          .moveSlots)
+          if (ms.used)
+            expect(
+              (x as unknown as { moveSlots: { id: string }[] }).moveSlots.map((y) => y.id),
+            ).toContain(ms.id);
+      });
+      // my own side is untouched
+      expect(w.sides[0].pokemon.map((p) => p.hp)).toEqual(real.sides[0].pokemon.map((p) => p.hp));
+      // unseen back-line Pokémon come from the opponent's team preview
+      for (const p of w.sides[1].pokemon)
+        expect(obs.preview).toContain(p.species.id.replace(/mega[xy]?$/, ""));
+    }
+    // hidden information varies between worlds
+    const sig = (b: (typeof worlds)[number]) =>
+      b.sides[1].pokemon
+        .map(
+          (p) =>
+            `${p.species.id}:${p.item}:${(p as unknown as { storedStats: { spe: number } }).storedStats.spe}`,
+        )
+        .join();
+    expect(new Set(worlds.map(sig)).size).toBeGreaterThan(1);
+  }, 60_000);
+});
+
+describe("reflection and the improvement loop", () => {
+  it("summaries: Brier score, regret, surprises and calibration buckets", async () => {
+    const { summarizeReviews } = await import("../src/index.js");
+    const base = { side: 0 as const, turn: 1, chosen: "x", predictedProb: 0.5 };
+    const s = summarizeReviews([
+      {
+        ...base,
+        expected: 0.9,
+        outcome: 1,
+        opponentActed: true,
+        actualColumn: 0,
+        regret: 0,
+        vsActual: 0.9,
+        bestVsActual: 0.9,
+      },
+      {
+        ...base,
+        expected: 0.1,
+        outcome: 0,
+        opponentActed: true,
+        actualColumn: 1,
+        regret: 0.2,
+        vsActual: 0.1,
+        bestVsActual: 0.3,
+      },
+      { ...base, expected: 0.5, outcome: 1, opponentActed: true, actualColumn: -1 },
+      { ...base, expected: 0.5, outcome: 0, opponentActed: false, actualColumn: -1 },
+    ]);
+    expect(s.decisions).toBe(4);
+    expect(s.brier).toBeCloseTo((0.01 + 0.01 + 0.25 + 0.25) / 4);
+    expect(s.meanRegret).toBeCloseTo(0.1);
+    expect(s.bestReplyRate).toBeCloseTo(0.5);
+    expect(s.surpriseRate).toBeCloseTo(1 / 3);
+    expect(s.calibration.reduce((a, c) => a + c.n, 0)).toBe(4);
+  });
+
+  it("calibration fit recovers an over-optimistic evaluator and leaves a calibrated one alone", async () => {
+    const { fitCalibration, calibrated, Rng } = await import("../src/index.js");
+    const rng = new Rng(9);
+    const make = (bias: (p: number) => number) =>
+      Array.from({ length: 4000 }, () => {
+        const p = 0.05 + 0.9 * rng.next();
+        return {
+          side: 0 as const,
+          turn: 1,
+          chosen: "",
+          expected: p,
+          opponentActed: false,
+          actualColumn: -1,
+          predictedProb: 0,
+          outcome: rng.next() < bias(p) ? 1 : 0,
+        };
+      });
+    const fair = fitCalibration(make((p) => p));
+    expect(fair.a).toBeCloseTo(1, 0);
+    expect(Math.abs(fair.b)).toBeLessThan(0.15);
+    // true win rate is lower than predicted
+    const opt = fitCalibration(make((p) => p * 0.6));
+    const params = { evalCalibA: opt.a, evalCalibB: opt.b };
+    expect(calibrated(0.7, params)).toBeLessThan(0.55);
+    expect(calibrated(0.7, {})).toBe(0.7);
+  });
+
+  it("tuning keeps a change only when it wins clearly in paired games", async () => {
+    const { tunePolicy, pairedJobs, pairedScore } = await import("../src/index.js");
+    // fake duels: the side with the larger koBonus wins; setupValue makes no difference
+    const run = async (jobs: ReturnType<typeof pairedJobs>) =>
+      jobs.map((j) =>
+        j.params[0]["koBonus"]! > j.params[1]["koBonus"]!
+          ? 1
+          : j.params[0]["koBonus"]! < j.params[1]["koBonus"]!
+            ? 0
+            : j.seed & 1,
+      );
+    const teams = [mine, rain];
+    const r = await tunePolicy(
+      { koBonus: 1, setupValue: 1 },
+      ["koBonus", "setupValue"],
+      teams,
+      run,
+      { games: 40, step: 0.3, z: 2, seed: 1, bring: 4 },
+    );
+    expect(r.params["koBonus"]).toBeCloseTo(1.3);
+    expect(r.params["setupValue"]).toBe(1);
+    expect(r.steps.find((s) => s.key === "koBonus")!.accepted).toBe(true);
+    // paired jobs swap sides with the same seed
+    const jobs = pairedJobs(teams, { k: 1 }, { k: 0 }, 4, 1, 4);
+    expect(jobs[0]!.seed).toBe(jobs[1]!.seed);
+    expect(jobs[0]!.params[0]).toEqual(jobs[1]!.params[1]);
+    expect(pairedScore([1, 0, 1, 0]).score).toBe(1);
+  });
+
+  it("a decision review compares the choice with the best reply to what actually happened", async () => {
+    const {
+      analyzePosition,
+      inProcessRollouts,
+      snap,
+      startBattle,
+      priorFromUsage,
+      bestChoice,
+      reviewDecision,
+      restore,
+      concreteFor,
+    } = await import("../src/index.js");
+    const { readUsageSnapshots } = await import("@ca/data/node");
+    const prior = priorFromUsage(readUsageSnapshots("M-C")[0]!);
+    const st = snap(startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], 7));
+    const budget = {
+      width: 3,
+      pruneRollouts: 1,
+      keep: 3,
+      matrixRollouts: 2,
+      refineRollouts: 0,
+      refineSupport: 0.2,
+      iterations: 300,
+      worlds: 2,
+      opponentExtra: 0,
+    };
+    const an = await analyzePosition(ctx, st, inProcessRollouts(ctx), budget, 5, {
+      viewer: 0,
+      prior,
+    });
+    const mineC = bestChoice(an, 0);
+    const oppIntent = an.matrixChoices[1][0]!;
+    const opp = concreteFor(ctx, restore(st), 1, oppIntent);
+    const r = reviewDecision(ctx, st, an, 0, mineC, opp);
+    expect(r.opponentActed).toBe(true);
+    expect(r.actualColumn).toBeGreaterThanOrEqual(0);
+    expect(r.bestVsActual!).toBeGreaterThanOrEqual(r.vsActual!);
+    expect(r.regret).toBeCloseTo(r.bestVsActual! - r.vsActual!);
+    expect(r.labels?.chosen?.length).toBeGreaterThan(0);
+  }, 120_000);
 });

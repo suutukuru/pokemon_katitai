@@ -4,6 +4,8 @@ Pokémon Champions ダブルバトル（VGC形式）の分析アプリ。計画�
 
 ## 最重要原則
 
+- 対戦の判断（探索・評価）は、その時点でその側が**知り得る情報だけ**で行う。相手の非公開情報（未使用の技・持ち物・特性・配分・未登場の後ろ）は使用率から抽選した「ありうる世界」で扱い、実際の値を読まない（ADR-0012）。完全情報の探索は振り返り・比較用。
+
 - 判定・数値（確定数、素早さ順、確率、勝ち筋）は決定的なコード（`calc` / `engine`）だけが出す。LLMは画像の読み取りとエンジン出力の文章化だけ（ADR-0004）。
 - Finding には必ず evidence を1件以上（スキーマで強制）。推測は `kind: "heuristic"` / `basis: "estimated"` で区別する。
 - ゲーム仕様の数値をコードに直接書かない。`packages/data/game/champions.json` かレギュレーションパックに書き、確認できていなければ `"verified": false` と `docs/OPEN_QUESTIONS.md` への記載。
@@ -18,7 +20,7 @@ packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
 packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
 packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
-packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、search.ts=毎ターンの読み合いの探索（ADR-0011）、bestplay.ts=最善手同士の対戦、analyze.ts=選出/択の分析、view.ts=画面用の局面と1手進める処理、pool.ts=並列実行(Node)
+packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針と相手の「意図」、search.ts=毎ターンの読み合いの探索（ADR-0011）、belief.ts=その側が知り得る情報とありうる世界（ADR-0012）、reflection.ts=振り返り、tune.ts=重みの調整、bestplay.ts=最善手同士の対戦、analyze.ts=選出/択の分析、view.ts=画面用の局面と1手進める処理、pool.ts=並列実行(Node)
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
 apps/web          React + Vite（iPhone向け）。タブ: パーティ／選出分析／対戦盤／診断。診断は src/worker.ts、対戦は src/engine/（simWorker.ts を並列で動かす SimPool）。
                   Showdown は scripts/build-showdown.mjs でブラウザ用にバンドル（src/gen/、ビルド時に自動生成）。事前計算は src/data/（pnpm web:data）
@@ -57,6 +59,8 @@ pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候�
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
 pnpm data:import-pokedb <dir>                    # pokedb 公開データ(手動で一度だけ保存したJSON)→ teams/pokedb/
+pnpm sim:review <自分.txt> [--top 4] [--games 2] [--think 0.3] [--fit]  # 振り返り: 予想勝率と結果、相手の行動の予測、後から見た最善手との差（--fit で表示勝率の補正を weights.json へ）
+pnpm sim:tune [--games 400] [--keys a,b] [--write]  # 行動方針の重みを1つずつ変え、同じ乱数・左右入れ替えの対局で明確に勝つ変更だけ採用
 pnpm web:data --teams my-teams/a.txt,my-teams/b.txt [--top 8] [--scale 0.5] [--think 1]  # 重い計算をCLIで済ませてWebに同梱（選出分析＋最善手の対戦＋各局面の評価）
 pnpm web:dev / pnpm web:build                    # Web 画面
 pnpm e2e                                         # Playwright（iPhone 13 の画面サイズ、ビルドして preview で実行）

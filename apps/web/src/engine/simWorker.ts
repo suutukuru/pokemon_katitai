@@ -1,6 +1,6 @@
 // Simulation worker: runs rollouts and whole battles (pokemon-showdown, bundled for the browser).
-import { inProcessExecutor, rollout, rolloutContext } from "@ca/sim";
-import { contextFor } from "./context";
+import { inProcessExecutor, rollout, rolloutContext, worldOf } from "@ca/sim";
+import { contextFor, priorFor } from "./context";
 import type { SimReply, SimRequest } from "./protocol";
 
 const post = (m: SimReply) => (self as unknown as Worker).postMessage(m);
@@ -11,11 +11,16 @@ self.onmessage = async (ev: MessageEvent<SimRequest>) => {
     const ctx = contextFor(req.regulationId);
     if (req.kind === "rollouts") {
       const rc = rolloutContext(ctx);
-      const { state, items } = req.batch;
-      post({ id: req.id, ok: true, results: items.map((it) => rollout(rc, state, it)) });
+      const batch = req.batch;
+      post({
+        id: req.id,
+        ok: true,
+        results: batch.items.map((it) => rollout(rc, worldOf(batch, it), it)),
+      });
       return;
     }
-    const exec = inProcessExecutor(ctx, req.mine, req.theirs);
+    const prior = req.kind === "bestPlay" ? await priorFor(req.regulationId) : undefined;
+    const exec = inProcessExecutor(ctx, req.mine, req.theirs, prior);
     const results =
       req.kind === "battles" ? await exec.run(req.jobs) : await exec.bestPlay!(req.jobs);
     post({ id: req.id, ok: true, results });

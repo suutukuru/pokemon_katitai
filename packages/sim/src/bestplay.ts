@@ -22,6 +22,8 @@ import {
 } from "./search.js";
 import type { PsBattle } from "./showdown.js";
 import { parseLog } from "./trace.js";
+import type { Prior } from "./belief.js";
+import { reviewDecision, type DecisionReview } from "./reflection.js";
 
 export function toWhatIf(o: SearchOption, chosen: boolean): WhatIfOption {
   return {
@@ -90,12 +92,19 @@ export async function playBestBattle(
   seed: number,
   budget: SearchBudget,
   exec: RolloutExecutor = inProcessRollouts(ctx),
-  onProgress?: (turn: number, analysis: PositionAnalysis) => void,
+  opts: {
+    /** with a prior, each side plans from its own view (hidden information sampled) */
+    prior?: Prior;
+    onProgress?: (turn: number, analysis: PositionAnalysis) => void;
+  } = {},
 ): Promise<ReplayData> {
+  const onProgress = opts.onProgress;
   const tags = engineTags();
   const battle = startBattle(ctx, a, b, ca, cb, seed);
   const rng = new Rng(mixSeed(seed, 0xbe57));
   const moves = new Map<number, PositionAnalysis>();
+  const oppMoves = new Map<number, PositionAnalysis>();
+  const reviews: DecisionReview[] = [];
   const switches = new Map<number, PositionAnalysis[]>();
   let guard = 0;
   let rollouts = 0;
@@ -111,34 +120,64 @@ export async function playBestBattle(
       continue;
     }
     const turn = battle.turn;
-    const an = await analyzePosition(
-      ctx,
-      snap(battle),
-      exec,
-      budget,
-      mixSeed(seed, 0x51, turn, guard),
-    );
-    rollouts += an.rollouts;
-    onProgress?.(turn, an);
-    if (an.kind === "move") moves.set(turn, an);
-    else switches.set(turn, [...(switches.get(turn) ?? []), an]);
+    const st = snap(battle);
+    const sd = mixSeed(seed, 0x51, turn, guard);
+    // per side: the analysis it decides with (its own view when a prior is given)
+    const views: [PositionAnalysis | null, PositionAnalysis | null] = [null, null];
+    if (opts.prior) {
+      for (const s of [0, 1] as const)
+        if (need[s])
+          views[s] = await analyzePosition(ctx, st, exec, budget, mixSeed(sd, s), {
+            viewer: s,
+            prior: opts.prior,
+          });
+    } else {
+      const an = await analyzePosition(ctx, st, exec, budget, sd);
+      views[0] = need[0] ? an : null;
+      views[1] = need[1] ? an : null;
+    }
+    const shown = views[0] ?? views[1]!;
+    rollouts +=
+      (views[0]?.rollouts ?? 0) + (views[1] && views[1] !== views[0] ? views[1].rollouts : 0);
+    onProgress?.(turn, shown);
+    const choice: [string, string] = [
+      views[0] ? bestChoice(views[0], 0) : "",
+      views[1] ? bestChoice(views[1], 1) : "",
+    ];
+    for (const s of [0, 1] as const)
+      if (views[s]) reviews.push(reviewDecision(ctx, st, views[s]!, s, choice[s], choice[1 - s]!));
+    if (shown.kind === "move") {
+      moves.set(turn, views[0] ?? shown);
+      if (views[1]) oppMoves.set(turn, views[1]);
+    } else
+      switches.set(turn, [
+        ...(switches.get(turn) ?? []),
+        ...([views[0], views[1]].filter(
+          (x, i) => x && (i === 0 || x !== views[0]),
+        ) as PositionAnalysis[]),
+      ]);
     for (const s of [0, 1] as const) {
-      if (!an.needs[s]) continue;
+      if (!need[s]) continue;
       const id = s === 0 ? "p1" : "p2";
-      const c = bestChoice(an, s);
-      if (!c || !battle.choose(id, c)) battle.choose(id, "default");
+      if (!choice[s] || !battle.choose(id, choice[s])) battle.choose(id, "default");
     }
   }
+  const final = resultOf(battle);
+  for (const r of reviews)
+    r.outcome = final.winner === null ? 0.5 : final.winner === r.side ? 1 : 0;
   const events = parseLog(battle);
   const maxTurn = Math.max(battle.turn, ...events.keys());
   const turns: ReplayTurn[] = [];
   for (let t = 0; t <= maxTurn; t++) {
     const ev = events.get(t) ?? [];
     const mv = moves.get(t);
+    const om = oppMoves.get(t) ?? mv;
     // Showdown asks for forced switch-ins before it starts the next turn, so they share turn t.
     const sw = switches.get(t);
     if (!ev.length && !mv && !sw) continue;
     const opts = (an: PositionAnalysis, s: 0 | 1) => {
+      // in planner mode a side's own options come from its own analysis
+      if (an.viewer !== null && an.viewer !== s) return [];
       const c = bestChoice(an, s);
       return an.options[s].map((o) => toWhatIf(o, o.choice === c));
     };
@@ -147,13 +186,18 @@ export async function playBestBattle(
       events: ev,
       decisions: [],
       ...(mv && mv.needs[0] ? { whatIf: opts(mv, 0) } : {}),
-      ...(mv && mv.needs[1] ? { whatIfOpp: opts(mv, 1) } : {}),
+      ...(om && om.needs[1] ? { whatIfOpp: opts(om, 1) } : {}),
       ...(mv ? { eval: mv.value } : {}),
       ...(sw
         ? {
             switchIf: sw.flatMap((an) =>
               ([0, 1] as const)
-                .filter((s) => an.needs[s] && an.options[s].length > 1)
+                .filter(
+                  (s) =>
+                    an.needs[s] &&
+                    an.options[s].length > 1 &&
+                    (an.viewer === null || an.viewer === s),
+                )
                 .map((s) => ({ side: s, options: opts(an, s) })),
             ),
           }
@@ -162,7 +206,9 @@ export async function playBestBattle(
   }
   return {
     seed,
-    result: resultOf(battle),
+    result: final,
+    reviews: reviews.filter((r) => r.turn >= 0),
+    planner: !!opts.prior,
     brought: [ca.map((i) => a[i]!.species), cb.map((i) => b[i]!.species)],
     members: replayMembers(battle, a, b, ca, cb),
     turns,

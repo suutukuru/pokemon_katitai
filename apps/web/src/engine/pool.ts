@@ -107,7 +107,7 @@ export class SimPool {
       rollouts: (batch) =>
         this.split<RolloutBatch["items"][number], number>(batch.items, (items) => ({
           kind: "rollouts",
-          batch: { state: batch.state, items },
+          batch: { ...batch, items },
         })),
     };
   }

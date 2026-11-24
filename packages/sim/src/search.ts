@@ -1,31 +1,51 @@
-// Per-position search for simultaneous moves (ADR-0011).
+// Per-position search for simultaneous moves (ADR-0011, ADR-0012).
 //
 // A doubles turn is a simultaneous-move game: both players pick a joint action without seeing the
 // other's. At a position we
 //   1) list candidate joint actions for each side (heuristic top-N plus every single-slot option),
 //   2) prune each side's list by rollouts against the other side's policy,
 //   3) fill a payoff matrix (kept × kept) with rollouts that share random seeds per column of
-//      games (common random numbers: every cell's k-th game uses the same Showdown seed),
+//      games (common random numbers: every cell's k-th game uses the same seed and world),
 //   4) solve the matrix as a zero-sum game and spend extra rollouts on the equilibrium's support.
+//
+// Planner mode (`viewer`): the search may only use what that side can know. Rollouts start from
+// possible worlds (belief.ts) in which the opponent's hidden information is sampled, and the
+// opponent's options are intents ("its strongest attack on slot 1", "Protect") that each world
+// resolves to its own moves. Full-information mode is kept for hindsight reviews and tests.
 // Values are p1's win probability (draws = ½). Everything is deterministic for a given seed.
 import { engineTags } from "@ca/data";
+import { determinize, observe, type Prior } from "./belief.js";
 import { solveZeroSum } from "./game.js";
-import { forcedSwitchOptions, searchCandidates, type JointOption } from "./policy.js";
+import {
+  forcedSwitchOptions,
+  intentOf,
+  jointIntentOf,
+  resolveJointIntent,
+  revealedMoves,
+  searchCandidates,
+  slotOptions,
+  type JointOption,
+} from "./policy.js";
 import { restore, reseed, type Snapshot } from "./replay.js";
-import { mixSeed } from "./rng.js";
+import { mixSeed, Rng } from "./rng.js";
 import { playOut, type SimContext } from "./runner.js";
 import type { PsBattle, PsSide } from "./showdown.js";
 
 export interface RolloutItem {
-  /** p1's choice for this decision ("" = let the policy choose) */
+  /** p1's choice for this decision ("" = let the policy choose, "i:…" = an intent) */
   a: string;
-  /** p2's choice ("" = policy) */
+  /** p2's choice (same forms) */
   b: string;
   seed: number;
+  /** index into the batch's worlds (default 0) */
+  w?: number;
 }
 
 export interface RolloutBatch {
-  state: Snapshot;
+  /** the position (full information) — or use `worlds` */
+  state?: Snapshot;
+  /** possible worlds; items pick one with `w` */
+  worlds?: Snapshot[];
   items: RolloutItem[];
 }
 
@@ -40,20 +60,35 @@ export function rolloutContext(ctx: SimContext): SimContext {
   return { ...ctx, params: { ...ctx.params, ...(T !== undefined ? { temperature: T } : {}) } };
 }
 
-/** One rollout from `state`: apply the given choices, then both sides follow the policy. */
+/** Send one side's choice; intents are resolved in this world first. */
+function send(ctx: SimContext, b: PsBattle, s: 0 | 1, choice: string): void {
+  if (!choice) return;
+  const id = s === 0 ? "p1" : "p2";
+  const c = choice.startsWith("i:")
+    ? resolveJointIntent(b, b.sides[s], choice.slice(2), engineTags(), ctx.params)
+    : choice;
+  if (!b.choose(id, c)) b.choose(id, "default");
+}
+
+/** One rollout: apply the given choices, then both sides follow the policy to the end. */
 export function rollout(ctx: SimContext, state: Snapshot, item: RolloutItem): number {
   const b = restore(state);
   reseed(b, item.seed);
-  if (item.a && !b.choose("p1", item.a)) b.choose("p1", "default");
-  if (item.b && !b.choose("p2", item.b)) b.choose("p2", "default");
+  send(ctx, b, 0, item.a);
+  send(ctx, b, 1, item.b);
   const r = playOut(ctx, b, item.seed);
   return r.winner === 0 ? 1 : r.winner === 1 ? 0 : 0.5;
 }
 
+/** The world an item runs in. */
+export const worldOf = (batch: RolloutBatch, item: RolloutItem): Snapshot =>
+  batch.worlds ? batch.worlds[item.w ?? 0]! : batch.state!;
+
 export function inProcessRollouts(ctx: SimContext): RolloutExecutor {
   const rc = rolloutContext(ctx);
   return {
-    rollouts: (batch) => Promise.resolve(batch.items.map((it) => rollout(rc, batch.state, it))),
+    rollouts: (batch) =>
+      Promise.resolve(batch.items.map((it) => rollout(rc, worldOf(batch, it), it))),
   };
 }
 
@@ -72,6 +107,10 @@ export interface SearchBudget {
   refineSupport: number;
   /** fictitious-play iterations */
   iterations: number;
+  /** possible worlds sampled per decision in planner (hidden-information) mode */
+  worlds: number;
+  /** extra opponent columns kept in planner mode (its options are uncertain, so cover more) */
+  opponentExtra: number;
 }
 
 /** Read the search budget from weights.json `simulation` (search* keys). `scale` multiplies rollouts. */
@@ -93,11 +132,15 @@ export function searchBudgetFrom(params: Record<string, number>, scale = 1): Sea
     refineRollouts: Math.max(0, Math.round(req("searchRefineRollouts") * scale)),
     refineSupport: req("searchRefineSupport"),
     iterations: req("fictitiousIterations"),
+    worlds: Math.max(1, Math.round(params["searchWorlds"] ?? 8)),
+    opponentExtra: Math.max(0, Math.round(params["searchOpponentExtra"] ?? 0)),
   };
 }
 
 export interface OptionSlot {
   species: string;
+  /** set for the opponent's options in planner mode: an intent (policy.ts), not a concrete move */
+  intent?: string;
   moveId?: string;
   targetSpecies?: string;
   switchTo?: string;
@@ -135,6 +178,10 @@ export function positionKey(b: PsBattle): string {
 }
 
 export interface PositionAnalysis {
+  /** the side whose information was used: 0/1 = that side's view (hidden info sampled), null = full information */
+  viewer: 0 | 1 | null;
+  /** possible worlds the rollouts were spread over */
+  worlds: number;
   /** positionKey of the analysed state */
   key: string;
   turn: number;
@@ -177,11 +224,42 @@ function labelSlots(side: PsSide, c: JointOption | string): OptionSlot[] {
     const m = side.active[si];
     const sw = /^switch (\d+)/.exec(part);
     const to = sw ? side.pokemon[Number(sw[1]) - 1] : undefined;
+    const seen =
+      to && ((to as unknown as { previouslySwitchedIn?: number }).previouslySwitchedIn ?? 0) > 0;
     return {
       species: m ? m.species.id : "",
-      ...(to ? { switchTo: to.species.id } : {}),
+      ...(to && seen ? { switchTo: to.species.id } : to ? { intent: "W?" } : {}),
       mega: false,
     };
+  });
+}
+
+/** Labels for an opponent's joint intent, from what the planner can see. */
+function labelIntent(side: PsSide, joint: string): OptionSlot[] {
+  return joint.split("|").map((it, si) => {
+    const m = side.active[si];
+    const foe = side.foe.active;
+    const slot: OptionSlot = {
+      species: m && !m.fainted ? m.species.id : "",
+      intent: it,
+      mega: false,
+    };
+    const tgt = (t: string | undefined) => {
+      const f = t && t !== "-" ? foe[Number(t) - 1] : undefined;
+      return f && !f.fainted ? { targetSpecies: f.species.id } : {};
+    };
+    if (it.startsWith("M:")) {
+      const [, id, t] = it.split(":");
+      return { ...slot, moveId: id!, ...tgt(t) };
+    }
+    if (/^[AF]\d$/.test(it)) return { ...slot, ...tgt(it.slice(1)) };
+    if (it.startsWith("W")) {
+      const to = side.pokemon[Number(it.slice(1)) - 1];
+      const seen =
+        to && ((to as unknown as { previouslySwitchedIn?: number }).previouslySwitchedIn ?? 0) > 0;
+      return seen ? { ...slot, switchTo: to.species.id } : slot;
+    }
+    return slot;
   });
 }
 
@@ -191,24 +269,59 @@ interface Cand {
   rank: number;
 }
 
-function candidates(ctx: SimContext, b: PsBattle, s: 0 | 1, width: number): Cand[] {
+function concreteCandidates(ctx: SimContext, b: PsBattle, s: 0 | 1, width: number): Cand[] {
   const kind = decisionOf(b, s);
   const side = b.sides[s];
-  if (kind === "switch") {
+  if (kind === "switch")
     return forcedSwitchOptions(side, side.activeRequest!).map((choice, rank) => ({
       choice,
       slots: labelSlots(side, choice),
       rank,
     }));
-  }
-  if (kind === "move") {
+  if (kind === "move")
     return searchCandidates(b, side, engineTags(), ctx.params, width).map((j, rank) => ({
       choice: j.choice,
       slots: labelSlots(side, j),
       rank,
     }));
-  }
   return [];
+}
+
+/**
+ * The opponent's options as intents, gathered over several worlds (an intent that is good in
+ * many worlds ranks first). Forced switches stay concrete: team positions are public.
+ */
+function intentCandidates(
+  ctx: SimContext,
+  real: PsBattle,
+  worlds: PsBattle[],
+  s: 0 | 1,
+  width: number,
+): Cand[] {
+  const kind = decisionOf(real, s);
+  if (kind === "switch") return concreteCandidates(ctx, real, s, width);
+  if (kind !== "move") return [];
+  const revealed = revealedMoves(real.sides[s]);
+  const agg = new Map<string, { score: number; n: number }>();
+  for (const w of worlds) {
+    for (const j of searchCandidates(w, w.sides[s], engineTags(), ctx.params, width)) {
+      const k = jointIntentOf(j, revealed);
+      const a = agg.get(k) ?? { score: -Infinity, n: 0 };
+      a.score = Math.max(a.score, j.score);
+      a.n++;
+      agg.set(k, a);
+    }
+  }
+  return [...agg.entries()]
+    .sort((x, y) => y[1].n - x[1].n || y[1].score - x[1].score || x[0].localeCompare(y[0]))
+    .map(([k], rank) => ({ choice: `i:${k}`, slots: labelIntent(real.sides[s], k), rank }));
+}
+
+export interface AnalyzeOptions {
+  /** plan from this side's point of view (hidden information sampled); omit for full information */
+  viewer?: 0 | 1;
+  /** prior over hidden sets (required for planner mode; without it the search uses full information) */
+  prior?: Prior;
 }
 
 /**
@@ -221,26 +334,47 @@ export async function analyzePosition(
   exec: RolloutExecutor,
   budget: SearchBudget,
   seed: number,
+  opts: AnalyzeOptions = {},
 ): Promise<PositionAnalysis> {
-  const b = restore(state);
-  const needs: [boolean, boolean] = [decisionOf(b, 0) !== null, decisionOf(b, 1) !== null];
-  const kind = decisionOf(b, 0) === "move" || decisionOf(b, 1) === "move" ? "move" : "switch";
-  const cands: [Cand[], Cand[]] = [
-    needs[0] ? candidates(ctx, b, 0, budget.width) : [],
-    needs[1] ? candidates(ctx, b, 1, budget.width) : [],
-  ];
+  const real = restore(state);
+  const needs: [boolean, boolean] = [decisionOf(real, 0) !== null, decisionOf(real, 1) !== null];
+  const kind = decisionOf(real, 0) === "move" || decisionOf(real, 1) === "move" ? "move" : "switch";
+  const viewer = opts.viewer !== undefined && opts.prior ? opts.viewer : null;
+
+  // possible worlds (planner mode) or the real state
+  let worlds: Snapshot[] = [state];
+  if (viewer !== null) {
+    const obs = observe(real, viewer);
+    const rng = new Rng(mixSeed(seed, 0x77));
+    worlds = Array.from({ length: budget.worlds }, () =>
+      determinize(ctx, state, real, obs, opts.prior!, rng),
+    );
+  }
+  const W = worlds.length;
+  const worldBattles = viewer !== null ? worlds.map(restore) : [real];
+  const cands: [Cand[], Cand[]] = [[], []];
+  for (const s of [0, 1] as const) {
+    if (!needs[s]) continue;
+    if (viewer === null) cands[s] = concreteCandidates(ctx, real, s, budget.width);
+    // the planner's own options are ranked in a sampled world (its own side is the same in all)
+    else if (s === viewer) cands[s] = concreteCandidates(ctx, worldBattles[0]!, s, budget.width);
+    else cands[s] = intentCandidates(ctx, real, worldBattles, s, budget.width);
+  }
   let rollouts = 0;
   const run = async (items: RolloutItem[]) => {
     rollouts += items.length;
-    return items.length ? exec.rollouts({ state, items }) : [];
+    return items.length
+      ? exec.rollouts(W === 1 ? { state: worlds[0]!, items } : { worlds, items })
+      : [];
   };
 
-  // 2) pruning: each candidate vs the other side's policy (shared seeds per k)
+  // 2) pruning: each candidate vs the other side's policy (shared seeds and worlds per k)
   const pruneVal: [number[], number[]] = [[], []];
   const kept: [number[], number[]] = [[], []];
   for (const s of [0, 1] as const) {
     const cs = cands[s];
-    if (cs.length <= budget.keep) {
+    const keep = budget.keep + (viewer !== null && s !== viewer ? budget.opponentExtra : 0);
+    if (cs.length <= keep) {
       kept[s] = cs.map((_, i) => i);
       continue;
     }
@@ -251,6 +385,7 @@ export async function analyzePosition(
           a: s === 0 ? c.choice : "",
           b: s === 1 ? c.choice : "",
           seed: mixSeed(seed, 0x9e, s, k),
+          w: k % W,
         });
     });
     const res = await run(items);
@@ -261,17 +396,16 @@ export async function analyzePosition(
       v /= n;
       return s === 0 ? v : 1 - v;
     });
-    // keep the best by rollouts; ties and the heuristic favourite go first
     const order = cs.map((_, i) => i).sort((x, y) => pruneVal[s][y]! - pruneVal[s][x]! || x - y);
-    const top = new Set(order.slice(0, budget.keep));
+    const top = new Set(order.slice(0, keep));
     if (!top.has(0)) {
-      top.delete(order[budget.keep - 1]!);
+      top.delete(order[keep - 1]!);
       top.add(0);
     }
     kept[s] = [...top].sort((x, y) => x - y);
   }
 
-  // 3) payoff matrix with common random numbers
+  // 3) payoff matrix with common random numbers (same seed and world for the k-th game)
   const rows = needs[0] ? kept[0] : [-1];
   const cols = needs[1] ? kept[1] : [-1];
   const sum = rows.map(() => cols.map(() => 0));
@@ -286,6 +420,7 @@ export async function analyzePosition(
             a: rows[i]! >= 0 ? cands[0][rows[i]!]!.choice : "",
             b: cols[j]! >= 0 ? cands[1][cols[j]!]!.choice : "",
             seed: mixSeed(seed, 0x3a, k),
+            w: k % W,
           });
           where.push([i, j]);
         }
@@ -366,8 +501,10 @@ export async function analyzePosition(
       );
   }
   return {
-    key: positionKey(b),
-    turn: b.turn,
+    viewer,
+    worlds: W,
+    key: positionKey(real),
+    turn: real.turn,
     needs,
     kind,
     options,
@@ -390,4 +527,43 @@ export function bestChoice(a: PositionAnalysis, s: 0 | 1): string {
     if (o.prob > best.prob + 1e-9 || (Math.abs(o.prob - best.prob) <= 1e-9 && o.value > best.value))
       best = o;
   return best.choice;
+}
+
+/**
+ * The column of an analysis that a concrete action of side `s` corresponds to (its intent in the
+ * planner's terms, or the choice itself). -1 when the action was not among the candidates.
+ */
+export function columnOf(
+  ctx: SimContext,
+  a: PositionAnalysis,
+  b: PsBattle,
+  s: 0 | 1,
+  choice: string,
+): number {
+  const list = a.matrixChoices[s];
+  const direct = list.indexOf(choice);
+  if (direct >= 0) return direct;
+  if (!list.some((c) => c.startsWith("i:"))) return -1;
+  const side = b.sides[s];
+  const req = side.activeRequest;
+  if (!req?.active) return -1;
+  const revealed = revealedMoves(side);
+  const parts = choice.split(", ").map((x) => x.replace(/ mega$/, ""));
+  const opts = req.active.map((_, slot) =>
+    slotOptions(b, side, slot, req, engineTags(), ctx.params),
+  );
+  const intent = parts
+    .map((p, slot) => {
+      const o = opts[slot]?.find((x) => x.choice.replace(/ mega$/, "") === p);
+      return o ? intentOf(o, revealed) : p === "pass" ? "X" : "?";
+    })
+    .join("|");
+  return list.indexOf(`i:${intent}`);
+}
+
+/** Concrete choice for side `s` in battle `b` (intents resolved). */
+export function concreteFor(ctx: SimContext, b: PsBattle, s: 0 | 1, choice: string): string {
+  return choice.startsWith("i:")
+    ? resolveJointIntent(b, b.sides[s], choice.slice(2), engineTags(), ctx.params)
+    : choice;
 }

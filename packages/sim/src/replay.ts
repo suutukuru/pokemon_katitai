@@ -13,6 +13,7 @@ import {
 import { Battle, type PsBattle } from "./showdown.js";
 import { parseLog, type BattleEvent } from "./trace.js";
 import { wilson } from "./game.js";
+import type { DecisionReview } from "./reflection.js";
 
 /**
  * Saved battle state as a JSON string. Showdown's toJSON() shares arrays (e.g. the log) with the
@@ -77,6 +78,10 @@ export interface ReplayData {
   members: { side: 0 | 1; species: string; maxhp: number; item?: string }[];
   turns: ReplayTurn[];
   rollouts: number;
+  /** per-decision reviews (expected vs what was achievable once the opponent's move was known) */
+  reviews?: DecisionReview[];
+  /** true when each side planned from its own view (hidden information sampled) */
+  planner?: boolean;
   /** "sampled": AI policy game with what-if analysis; "best": both sides pick their highest win-rate action. */
   mode?: "sampled" | "best";
 }

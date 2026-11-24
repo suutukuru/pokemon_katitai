@@ -35,7 +35,9 @@
     "web:artifact": "pnpm --filter @ca/web build && node apps/web/scripts/artifact-page.mjs",
     "e2e": "pnpm --filter @ca/web e2e",
     "ci": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
-    "web:data": "tsx packages/cli/src/bin.ts web:data"
+    "web:data": "tsx packages/cli/src/bin.ts web:data",
+    "sim:review": "tsx packages/cli/src/bin.ts sim:review",
+    "sim:tune": "tsx packages/cli/src/bin.ts sim:tune"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

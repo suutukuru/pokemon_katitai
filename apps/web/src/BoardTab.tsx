@@ -10,7 +10,7 @@ import type {
   Snapshot,
 } from "@ca/sim";
 import { poolFor, useSession } from "./engine/useEngine";
-import type { Preset } from "./engine/session";
+import type { DecisionReview, Preset } from "./engine/session";
 import type { BoardStart } from "./SimTab";
 import type { TeamEntry } from "./teams";
 import { EvalSpark, RateBar } from "./ui/bits";
@@ -35,9 +35,13 @@ interface Node {
   events: BattleEvent[];
   /** choices that led here (p1, p2) */
   choices?: [string, string];
+  /** reflection on my decision that led here */
+  review?: DecisionReview;
+  /** the analysis that decision was made with */
+  decidedWith?: PositionAnalysis;
 }
 
-type OppMode = "mix" | "best" | "manual";
+type OppMode = "mix" | "search" | "manual";
 
 const optLabel = (o: SearchOption) =>
   o.slots
@@ -125,6 +129,65 @@ function FieldChips({ v }: { v: BattleView }) {
   );
 }
 
+/** Reflection on the decision that led to this position. */
+function ReviewCard({
+  r,
+  an,
+  after: afterRaw,
+  cv,
+}: {
+  r: DecisionReview;
+  an: PositionAnalysis;
+  after: number | undefined;
+  cv: (p: number) => number;
+}) {
+  const expected = cv(r.expected);
+  const after = afterRaw === undefined ? undefined : cv(afterRaw);
+  const label = (c: string | undefined, s: 0 | 1) => {
+    const o = c ? an.options[s].find((x) => x.choice === c) : undefined;
+    return o ? optLabel(o) : "—";
+  };
+  const opp = r.actualColumn >= 0 ? an.matrixChoices[1][r.actualColumn] : undefined;
+  const good = (r.regret ?? 0) <= 0.005;
+  return (
+    <section className="card review" aria-labelledby="review-h">
+      <h2 id="review-h">振り返り（直前の判断）</h2>
+      <dl className="kv">
+        <dt>決めたときの予想勝率</dt>
+        <dd>{pct(expected)}</dd>
+        {after !== undefined && (
+          <>
+            <dt>結果を見た後の評価</dt>
+            <dd>
+              {pct(after)}（{after >= expected ? "+" : ""}
+              {Math.round((after - expected) * 100)}）
+            </dd>
+          </>
+        )}
+        <dt>相手の実際の行動</dt>
+        <dd>
+          {r.opponentActed
+            ? opp
+              ? `${label(opp, 1)}（予測していた確率 ${pct(r.predictedProb)}）`
+              : "予測の候補になかった行動"
+            : "相手は行動なし"}
+        </dd>
+      </dl>
+      {r.bestVsActual !== undefined && (
+        <p className={`small ${good ? "win" : ""}`}>
+          {good
+            ? `相手の実際の行動に対しても、選んだ手が最善でした（勝率 ${pct(r.vsActual ?? r.bestVsActual)}）。`
+            : `相手の行動が分かっていれば「${label(r.bestChoice, 0)}」が最善でした（${pct(r.vsActual ?? 0)} → ${pct(r.bestVsActual)}、差 ${Math.round((r.regret ?? 0) * 100)}ポイント）。`}
+        </p>
+      )}
+      <p className="muted small">
+        予想と結果のずれは、相手の読み（予測の割合）と評価の精度の手がかりです。CLI の pnpm
+        sim:review で多数の対戦をまとめて振り返り、pnpm sim:tune で重みを調整できます。
+      </p>
+    </section>
+  );
+}
+
 /** Pick a bring by tapping members in order (1–2 lead, 3–4 back). */
 function BringPicker({
   team,
@@ -184,6 +247,8 @@ export function BoardTab({
   setStart: (s: BoardStart | null) => void;
 }) {
   const session = useSession();
+  /** displayed win rate (calibrated by reviews when weights.json has a fit) */
+  const cv = (p: number) => (session ? session.shown(regulationId, p) : p);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [cur, setCur] = useState(0);
   const [preset, setPreset] = useState<Preset>("normal");
@@ -285,26 +350,54 @@ export function BoardTab({
     if (myPick) return myPick;
     return an ? (bestOf(an, 0)?.choice ?? "") : "";
   };
-  const oppChoice = (): string => {
-    if (!needs[1] || !an) return "";
-    if (oppMode === "manual" && oppPick) return oppPick;
-    if (oppMode === "best") return bestOf(an, 1)?.choice ?? "";
-    const mix = an.options[1].filter((o) => o.inMatrix && o.prob > 0);
-    return session ? session.drawFrom(mix, `${view!.key}:${cur}`) : "";
+  /** The opponent's concrete choice. Intents are resolved in the real game only at this point. */
+  const oppChoice = async (): Promise<string> => {
+    if (!session || !node || !needs[1]) return "";
+    let c = "";
+    if (oppMode === "search") {
+      // the opponent plans from its own point of view (my hidden information sampled)
+      setBusy(true);
+      try {
+        const a1 = await session.analyze(regulationId, node.state, pool, preset, view!.key, 1);
+        c = bestOf(a1, 1)?.choice ?? "";
+      } finally {
+        setBusy(false);
+      }
+    } else if (an) {
+      if (oppMode === "manual" && oppPick) c = oppPick;
+      else {
+        const mix = an.options[1].filter((o) => o.inMatrix && o.prob > 0);
+        c = session.drawFrom(mix, `${view!.key}:${cur}`);
+      }
+    }
+    return c ? session.concreteChoice(regulationId, node.state, 1, c) : "";
   };
 
-  const play = () => {
+  const play = async () => {
     if (!session || !node) return;
     stop();
     try {
+      const mine = myChoice();
+      const theirs = await oppChoice();
       const r = session.stepPosition(
         regulationId,
         node.state,
-        myChoice(),
-        oppChoice(),
+        mine,
+        theirs,
         reroll ? { reroll: (Date.now() & 0x7fffffff) | 1 } : {},
       );
-      const next: Node = { state: r.state, view: r.view, events: r.events, choices: r.choices };
+      const review =
+        an && needs[0]
+          ? session.review(regulationId, node.state, an, r.choices[0], r.choices[1])
+          : undefined;
+      const next: Node = {
+        state: r.state,
+        view: r.view,
+        events: r.events,
+        choices: r.choices,
+        ...(review ? { review } : {}),
+        ...(an ? { decidedWith: an } : {}),
+      };
       setNodes([...nodes.slice(0, cur + 1), next]);
       setCur(cur + 1);
     } catch (e) {
@@ -420,8 +513,7 @@ export function BoardTab({
   const oppOpts = an?.options[1] ?? [];
   const shown = showAll ? myOpts : myOpts.slice(0, 6);
   const chosenMine = myChoice();
-  const chosenOpp =
-    oppMode === "manual" ? oppPick : oppMode === "best" && an ? bestOf(an, 1)?.choice : null;
+  const chosenOpp = oppMode === "manual" ? oppPick : null;
   const cell =
     an && chosenOpp
       ? (() => {
@@ -454,7 +546,7 @@ export function BoardTab({
               </strong>
             ) : an ? (
               <>
-                <span className="muted small">勝率</span> <strong>{pct(an.value)}</strong>
+                <span className="muted small">勝率</span> <strong>{pct(cv(an.value))}</strong>
               </>
             ) : (
               <span className="muted small">{busy ? "評価中…" : "未評価"}</span>
@@ -470,7 +562,7 @@ export function BoardTab({
                 : n.view.ended
                   ? "終"
                   : `${n.view.turn}${n.view.request.includes("switch") ? "交" : ""}`}
-              {analyses[n.view.key] ? ` ${pct(analyses[n.view.key]!.value)}` : ""}
+              {analyses[n.view.key] ? ` ${pct(cv(analyses[n.view.key]!.value))}` : ""}
             </button>
           ))}
         </div>
@@ -504,6 +596,18 @@ export function BoardTab({
             })}
           </ul>
         </details>
+      )}
+
+      {node.review && node.decidedWith && (
+        <ReviewCard
+          cv={cv}
+          r={node.review}
+          an={node.decidedWith}
+          after={
+            an?.value ??
+            (view.ended ? (view.winner === 0 ? 1 : view.winner === 1 ? 0 : 0.5) : undefined)
+          }
+        />
       )}
 
       {!view.ended && (
@@ -583,7 +687,7 @@ export function BoardTab({
                           onClick={() => setMyPick(o.choice)}
                         >
                           <span className="opt-text">{optLabel(o)}</span>
-                          <RateBar value={o.value} />
+                          <RateBar value={cv(o.value)} />
                           <span className="opt-meta muted small">
                             {o.inMatrix ? (
                               <>
@@ -683,8 +787,8 @@ export function BoardTab({
           <div className="seg" role="group" aria-label="相手の動き方">
             {(
               [
-                ["mix", "読み合いの混ぜ方で抽選"],
-                ["best", "最有力"],
+                ["mix", "予測の割合で抽選"],
+                ["search", "相手視点で探索"],
                 ["manual", "指定"],
               ] as const
             ).map(([k, l]) => (
@@ -752,7 +856,11 @@ export function BoardTab({
             <input type="checkbox" checked={reroll} onChange={(e) => setReroll(e.target.checked)} />
             乱数を変える
           </label>
-          <button className="primary" onClick={play} disabled={needs[0] && !myChoice() && !!an}>
+          <button
+            className="primary"
+            onClick={() => void play()}
+            disabled={busy || (needs[0] && !myChoice() && !!an)}
+          >
             このターンを実行
           </button>
         </div>

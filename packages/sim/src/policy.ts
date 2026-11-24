@@ -581,3 +581,87 @@ export function searchCandidates(
   });
   return [...picked.values()].sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
 }
+
+// ---------- intents: actions described without hidden information (ADR-0012) ----------
+//
+// When one side plans, it cannot refer to the opponent's unrevealed moves. The opponent's options
+// are described by intent instead, and each possible world resolves an intent to that world's
+// concrete move:
+//   M:<move>:<t>  a revealed move (t = target foe slot, "-" for none)
+//   A<t>          its strongest single-target attack on foe slot t
+//   F<t>          Fake Out on slot t
+//   S             its strongest spread attack
+//   P             a protecting move
+//   X             its best non-attacking move
+//   W<k>          switch to team position k (1-based)
+
+/** Intent label of one slot option; `revealed` = moves the planner has seen this Pokémon use. */
+export function intentOf(o: SlotOption, revealed: ReadonlySet<string>): string {
+  if (o.switchTo || o.choice.startsWith("switch")) return `W${o.choice.split(" ")[1]}`;
+  const id = o.moveId ?? "";
+  const t = /^move \d+ (-?\d)/.exec(o.choice)?.[1] ?? "-";
+  if (revealed.has(id)) return `M:${id}:${t}`;
+  if (PROTECT.has(id)) return "P";
+  if (id === "fakeout") return `F${t}`;
+  const dmg = o.dmg ? o.dmg[0] + o.dmg[1] : 0;
+  if (dmg > 0 || o.dmg) return t === "-" ? "S" : `A${t}`;
+  return "X";
+}
+
+/** The best option of this slot that matches `intent` in this world (null if none). */
+export function resolveIntent(opts: SlotOption[], intent: string): SlotOption | null {
+  const sorted = [...opts].sort((a, b) => b.score - a.score);
+  if (intent.startsWith("M:")) {
+    const [, id, t] = intent.split(":");
+    return (
+      sorted.find(
+        (o) => o.moveId === id && (t === "-" || new RegExp(`^move \\d+ ${t}( |$)`).test(o.choice)),
+      ) ??
+      sorted.find((o) => o.moveId === id) ??
+      null
+    );
+  }
+  return sorted.find((o) => intentOf(o, new Set()) === intent) ?? null;
+}
+
+/**
+ * Turn a joint intent ("A1|P") into a concrete choice for `side` in this world. Slots whose
+ * intent cannot be met fall back to the policy's favourite option for that slot.
+ */
+export function resolveJointIntent(
+  b: PsBattle,
+  side: PsSide,
+  joint: string,
+  tags: EngineTags,
+  params: PolicyParams,
+): string {
+  const req = side.activeRequest;
+  if (!req?.active) return "default";
+  const want = joint.split("|");
+  const picks = req.active.map((_, slot) => {
+    const opts = slotOptions(b, side, slot, req, tags, params);
+    return resolveIntent(opts, want[slot] ?? "") ?? opts[0]!;
+  });
+  if (conflicts(picks)) {
+    const last = picks.length - 1;
+    const alt = slotOptions(b, side, last, req, tags, params).find(
+      (o) => o.choice !== picks[0]!.choice && !o.choice.startsWith("switch"),
+    );
+    if (alt) picks[last] = alt;
+  }
+  return dedupeMega(picks.map((x) => x.choice)).join(", ");
+}
+
+/** Moves of `side`'s Pokémon that the other side has seen used. */
+export function revealedMoves(side: PsSide): Set<string> {
+  const out = new Set<string>();
+  for (const m of side.pokemon)
+    for (const s of (m as unknown as { moveSlots: { id: string; used?: boolean }[] }).moveSlots)
+      if (s.used) out.add(s.id);
+  return out;
+}
+
+/** Joint intent of a concrete joint option. */
+export function jointIntentOf(j: JointOption, revealed: ReadonlySet<string>): string {
+  return j.slots.map((s) => intentOf(s, revealed)).join("|");
+}

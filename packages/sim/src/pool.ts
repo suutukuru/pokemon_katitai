@@ -5,6 +5,7 @@ import type { BattleJob, BestPlayJob, Executor } from "./analyze.js";
 import type { BattleResult } from "./runner.js";
 import type { ReplayData } from "./replay.js";
 import type { RolloutBatch, RolloutExecutor, SearchBudget } from "./search.js";
+import type { DuelJob, DuelRunner } from "./tune.js";
 
 export interface PoolInit {
   regulationId: string;
@@ -159,11 +160,58 @@ export function workerRollouts(
           const id = nextId++;
           return new Promise<number[]>((resolve) => {
             pending.set(id, resolve);
-            w.postMessage({ id, batch: { state: batch.state, items } });
+            w.postMessage({ id, batch: { ...batch, items } });
           });
         }),
       );
       return parts.flat();
+    },
+    async close() {
+      await Promise.all(pool.map((w) => w.terminate()));
+    },
+  };
+}
+
+/** Run duels across worker threads (contiguous chunks; results keep job order). */
+export function workerDuels(
+  regulationId: string,
+  workers: number,
+): { run: DuelRunner; close(): Promise<void> } {
+  const pool = Array.from(
+    { length: Math.max(1, workers) },
+    () =>
+      new Worker(new URL("./worker.ts", import.meta.url), {
+        workerData: { regulationId, mine: [], theirs: [] },
+        execArgv: ["--import", "tsx"],
+      }),
+  );
+  let nextId = 0;
+  const pending = new Map<number, (r: number[]) => void>();
+  for (const w of pool)
+    w.on("message", (msg: { id: number; results: number[] }) => {
+      pending.get(msg.id)?.(msg.results);
+      pending.delete(msg.id);
+    });
+  return {
+    async run(jobs: DuelJob[]) {
+      const size = Math.max(1, Math.ceil(jobs.length / (pool.length * 4)));
+      const chunks: DuelJob[][] = [];
+      for (let i = 0; i < jobs.length; i += size) chunks.push(jobs.slice(i, i + size));
+      const out: number[][] = new Array(chunks.length);
+      let next = 0;
+      await Promise.all(
+        pool.map(async (w) => {
+          while (next < chunks.length) {
+            const i = next++;
+            const id = nextId++;
+            out[i] = await new Promise<number[]>((resolve) => {
+              pending.set(id, resolve);
+              w.postMessage({ id, duels: chunks[i] });
+            });
+          }
+        }),
+      );
+      return out.flat();
     },
     async close() {
       await Promise.all(pool.map((w) => w.terminate()));

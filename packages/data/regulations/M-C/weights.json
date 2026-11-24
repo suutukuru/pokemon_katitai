@@ -124,6 +124,8 @@
     "searchRefineSupport": 0.1,
     "strongConfigs": 3,
     "strongGames": 2,
-    "strongSearchScale": 0.25
+    "strongSearchScale": 0.25,
+    "searchWorlds": 8,
+    "searchOpponentExtra": 3
   }
 }

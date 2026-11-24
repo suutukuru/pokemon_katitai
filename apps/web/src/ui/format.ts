@@ -51,8 +51,22 @@ export function condLabel(id: string): string {
   return mv(x) !== x ? mv(x) : id;
 }
 
+const INTENT: Record<string, string> = {
+  P: "まもる系",
+  S: "全体攻撃",
+  X: "補助技",
+};
+
 export function slotText(s: OptionSlot, withSpecies = true): string {
   const who = withSpecies && s.species ? `${sp(s.species)}: ` : "";
+  if (s.intent && !s.intent.startsWith("M:")) {
+    const tgt = s.targetSpecies ? ` → ${sp(s.targetSpecies)}` : "";
+    if (s.intent.startsWith("A")) return `${who}一番強い攻撃${tgt}`;
+    if (s.intent.startsWith("F")) return `${who}ねこだまし（持っていれば）${tgt}`;
+    if (s.intent.startsWith("W"))
+      return `${who}${s.switchTo ? `${sp(s.switchTo)}に交代` : "控えに交代"}`;
+    return `${who}${INTENT[s.intent] ?? s.intent}`;
+  }
   if (s.switchTo) return `${who}${sp(s.switchTo)}に交代`;
   if (!s.moveId) return `${who}—`;
   const tgt = s.targetSpecies ? ` → ${sp(s.targetSpecies)}` : "";
