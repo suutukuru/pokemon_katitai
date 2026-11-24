@@ -218,6 +218,21 @@ describe("analyzeMatchup (tiny budget)", () => {
     expect(a.turnOne.mine).toHaveLength(4);
     expect(await run()).toEqual(a);
     expect(a.strong).toBeUndefined();
+    // a required member is in every screened bring
+    const req = await analyzeMatchup(
+      ctx,
+      mine,
+      rain,
+      inProcessExecutor(ctx, mine, rain),
+      budget,
+      7,
+      undefined,
+      {
+        require: [5],
+      },
+    );
+    expect(req.screening.mine.length).toBe(60);
+    for (const s of req.screening.mine) expect(s.config).toContain(5);
   }, 120_000);
 
   it("strong stage: search-vs-search battles on the top configs decide the recommendation", async () => {

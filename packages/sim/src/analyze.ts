@@ -204,9 +204,14 @@ export async function analyzeMatchup(
   budget: Budget,
   seed: number,
   onProgress?: (stage: string, done: number, total: number) => void,
+  /** `require`: my team indices that every bring must include (e.g. "always bring Steelix") */
+  opts: { require?: number[] } = {},
 ): Promise<MatchupAnalysis> {
   const bring = ctx.pack.rules.bringCount;
-  const myConfigs = allConfigs(mine.length, Math.min(bring, mine.length));
+  const myConfigs = allConfigs(mine.length, Math.min(bring, mine.length)).filter((c) =>
+    (opts.require ?? []).every((i) => c.includes(i)),
+  );
+  if (myConfigs.length === 0) throw new Error("no bring satisfies the required members");
   const theirConfigs = allConfigs(theirs.length, Math.min(bring, theirs.length));
   let battles = 0;
 
