@@ -216,14 +216,21 @@ export async function simTune(
   const res = await tunePolicy(env.pack.weights.simulation, keys, teams, deps.run, o, (s) =>
     io.err(fmt(s)),
   );
-  const changed = res.steps.filter((s) => s.accepted);
+  const passed = res.steps.filter((s) => s.accepted);
   io.out(
-    `調整: ${res.steps.length}案を試し、${changed.length}件を採用（基準: 現行より ${o.z}標準誤差以上 強い）`,
+    `調整: ${res.steps.length}案を試し、${passed.length}件が基準（現行より ${o.z}標準誤差以上 強い）を通過`,
   );
   for (const s of res.steps) io.out(fmt(s));
-  if (changed.length && args.includes("--write") && deps.writeWeights) {
+  const v = res.validation;
+  if (v)
+    io.out(
+      `検証（使っていない乱数で、通過した変更をまとめて元の重みと対戦）: 勝率 ${(v.score * 100).toFixed(1)}% ± ${(v.se * 196).toFixed(1)}（${v.games}戦）→ ${v.accepted ? "採用" : "再現しないので不採用（偶然の勝ちの可能性が高い）"}`,
+    );
+  const adopted = v?.accepted ? passed : [];
+  if (adopted.length && args.includes("--write") && deps.writeWeights) {
     deps.writeWeights(res.params);
     io.out("weights.json に書き込みました（差分を確認してからコミットしてください）。");
-  } else if (changed.length) io.out("--write を付けると weights.json に反映します。");
+  } else if (adopted.length) io.out("--write を付けると weights.json に反映します。");
+  else io.out("weights.json は変更しません。");
   return 0;
 }
