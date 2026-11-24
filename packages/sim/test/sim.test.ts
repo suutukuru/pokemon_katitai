@@ -574,11 +574,29 @@ describe("reflection and the improvement loop", () => {
       ["koBonus", "setupValue"],
       teams,
       run,
-      { games: 40, step: 0.3, z: 2, seed: 1, bring: 4 },
+      { games: 40, step: 0.3, z: 2, seed: 1, bring: 4, validate: 40 },
     );
+    expect(r.validation?.accepted).toBe(true);
     expect(r.params["koBonus"]).toBeCloseTo(1.3);
     expect(r.params["setupValue"]).toBe(1);
     expect(r.steps.find((s) => s.key === "koBonus")!.accepted).toBe(true);
+    // a change that only looked good by chance is dropped by the held-out check
+    let calls = 0;
+    const lucky = async (jobs: ReturnType<typeof pairedJobs>) =>
+      calls++ === 0
+        ? jobs.map((_, i) => (i % 2 === 0 ? 1 : 0)) // challenger "wins" every pair
+        : jobs.map((j) => (j.seed >>> 3) & 1); // later: no real difference
+    const r2 = await tunePolicy({ koBonus: 1 }, ["koBonus"], teams, lucky, {
+      games: 40,
+      step: 0.3,
+      z: 2,
+      seed: 2,
+      bring: 4,
+      validate: 400,
+    });
+    expect(r2.steps[0]!.accepted).toBe(true);
+    expect(r2.validation?.accepted).toBe(false);
+    expect(r2.params["koBonus"]).toBe(1);
     // paired jobs swap sides with the same seed
     const jobs = pairedJobs(teams, { k: 1 }, { k: 0 }, 4, 1, 4);
     expect(jobs[0]!.seed).toBe(jobs[1]!.seed);

@@ -38,6 +38,8 @@ export interface TuneOptions {
   z: number;
   seed: number;
   bring: number;
+  /** games for the final held-out check of all accepted changes together (0 = skip) */
+  validate?: number;
 }
 
 /** Paired games: every matchup is played with the challenger on each side, same seed. */
@@ -87,7 +89,7 @@ export async function tunePolicy(
   run: DuelRunner,
   o: TuneOptions,
   onStep?: (s: TuneStep) => void,
-): Promise<{ params: PolicyParams; steps: TuneStep[] }> {
+): Promise<{ params: PolicyParams; steps: TuneStep[]; validation?: TuneStep }> {
   let params = { ...base };
   const steps: TuneStep[] = [];
   for (const [ki, key] of keys.entries()) {
@@ -116,7 +118,24 @@ export async function tunePolicy(
       }
     }
   }
-  return { params, steps };
+  // Many tries at a fixed threshold produce chance winners: re-check everything accepted
+  // together against the starting weights on seeds that were never used above.
+  const changed = Object.keys(params).filter((k) => params[k] !== base[k]);
+  if (changed.length === 0 || !o.validate) return { params, steps };
+  const jobs = pairedJobs(teams, params, base, o.validate, mixSeed(o.seed, 0x7a11d), o.bring);
+  const { score, se } = pairedScore(await run(jobs));
+  const ok = score > 0.5 && score - 0.5 > o.z * se;
+  const validation: TuneStep = {
+    key: changed.join("+"),
+    from: 0,
+    to: 0,
+    score,
+    se,
+    games: jobs.length,
+    accepted: ok,
+  };
+  onStep?.(validation);
+  return { params: ok ? params : { ...base }, steps, validation };
 }
 
 /** Policy weights that the tuner may change (all in weights.json `simulation`). */

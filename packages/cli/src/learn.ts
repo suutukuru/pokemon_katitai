@@ -204,6 +204,9 @@ export async function simTune(
     z: Number(opt(args, "z", "2")),
     seed: Number(opt(args, "seed", "1")),
     bring: env.pack.rules.bringCount,
+    validate: Number(
+      opt(args, "validate", String(Math.max(400, Number(opt(args, "games", "400")) * 2))),
+    ),
   };
   io.err(
     `… ${teams.length}チーム、${keys.length}項目 × 最大2方向 × ${o.games}戦（同じ乱数で左右を入れ替えた対局）`,
