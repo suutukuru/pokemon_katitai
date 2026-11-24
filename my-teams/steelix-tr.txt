@@ -1,0 +1,54 @@
+Steelix @ Steelixite
+Ability: Sturdy
+EVs: 32 HP / 32 Def / 2 Atk
+Relaxed Nature
+- Body Press
+- Heavy Slam
+- Rock Slide
+- Protect
+
+Farigiraf @ Sitrus Berry
+Ability: Armor Tail
+EVs: 10 HP / 13 Def / 30 SpA / 13 SpD
+Quiet Nature
+- Trick Room
+- Psychic
+- Thunderbolt
+- Helping Hand
+
+Torkoal @ Charcoal
+Ability: Drought
+EVs: 32 HP / 32 SpA / 2 SpD
+Quiet Nature
+- Eruption
+- Protect
+- Weather Ball
+- Earth Power
+
+Tyranitar @ Chople Berry
+Ability: Sand Stream
+EVs: 32 HP / 32 Atk / 2 Def
+Brave Nature
+- Rock Slide
+- Knock Off
+- Protect
+- Low Kick
+
+Primarina @ Leftovers
+Ability: Liquid Voice
+EVs: 32 HP / 24 Def / 10 SpA
+Quiet Nature
+- Protect
+- Hyper Voice
+- Moonblast
+- Calm Mind
+
+Kingambit @ Life Orb
+Ability: Defiant
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Kowtow Cleave
+- Sucker Punch
+- Iron Head
+- Low Kick
+
