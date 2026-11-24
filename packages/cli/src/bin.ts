@@ -40,6 +40,7 @@ import {
 } from "@ca/sim/pool";
 import { simReview, simTune } from "./learn.js";
 import { teamBuild } from "./build.js";
+import { teamPairs } from "./pairs.js";
 import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
@@ -331,6 +332,26 @@ try {
         ),
       );
       code = 0;
+      break;
+    }
+    case "team:pairs": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      const pool = workerSimPool(env.pack.id, workers);
+      try {
+        code = await teamPairs(
+          args,
+          env,
+          {
+            executor: (mine, theirs) => pool.executor(mine, theirs),
+            dex: dexWithNewSpecies(baseDex(), env.pack.overrides.newSpecies),
+          },
+          io,
+        );
+      } finally {
+        await pool.close();
+      }
       break;
     }
     case "team:build": {
