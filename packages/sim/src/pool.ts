@@ -111,6 +111,7 @@ export async function runBestPlayPool(
             const onMsg = (msg: { id: number; results: ReplayData }) => {
               if (msg.id !== i) return;
               w.off("message", onMsg);
+              w.off("error", reject);
               resolve(msg.results);
             };
             w.on("message", onMsg);

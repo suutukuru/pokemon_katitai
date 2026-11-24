@@ -126,6 +126,8 @@
     "strongGames": 2,
     "strongSearchScale": 0.25,
     "searchWorlds": 8,
-    "searchOpponentExtra": 3
+    "searchOpponentExtra": 3,
+    "evalCalibA": 1.375,
+    "evalCalibB": -0.071
   }
 }
