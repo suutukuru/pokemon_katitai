@@ -31,8 +31,15 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
-import { runBestPlayPool, workerDuels, workerPoolExecutor, workerRollouts } from "@ca/sim/pool";
+import {
+  runBestPlayPool,
+  workerDuels,
+  workerPoolExecutor,
+  workerRollouts,
+  workerSimPool,
+} from "@ca/sim/pool";
 import { simReview, simTune } from "./learn.js";
+import { teamBuild } from "./build.js";
 import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
@@ -326,6 +333,31 @@ try {
       code = 0;
       break;
     }
+    case "team:build": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      const pool = workerSimPool(env.pack.id, workers);
+      try {
+        code = await teamBuild(
+          args,
+          env,
+          {
+            executor: (mine, theirs) => pool.executor(mine, theirs),
+            dex: dexWithNewSpecies(baseDex(), env.pack.overrides.newSpecies),
+            write: (path, text) => {
+              mkdirSync(resolvePath(path, ".."), { recursive: true });
+              writeFileSync(path, text);
+              io.err(path);
+            },
+          },
+          io,
+        );
+      } finally {
+        await pool.close();
+      }
+      break;
+    }
     case "sim:review": {
       const env = simEnv(args);
       const wi = args.indexOf("--workers");
@@ -604,5 +636,6 @@ try {
   process.exitCode = code;
 } catch (e) {
   io.err(e instanceof PackValidationError || e instanceof Error ? e.message : String(e));
+  if (process.env["CA_DEBUG"] && e instanceof Error) io.err(e.stack ?? "");
   process.exitCode = 1;
 }

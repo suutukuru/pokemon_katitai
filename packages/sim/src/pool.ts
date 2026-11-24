@@ -219,3 +219,61 @@ export function workerDuels(
     },
   };
 }
+
+/**
+ * A persistent pool for many matchups: teams travel with each job, so one set of workers serves
+ * every team pair (no restart per matchup). Same chunking as workerPoolExecutor (deterministic).
+ */
+export function workerSimPool(
+  regulationId: string,
+  workers: number,
+): { executor(mine: PokemonSet[], theirs: PokemonSet[]): Executor; close(): Promise<void> } {
+  const pool = Array.from(
+    { length: Math.max(1, workers) },
+    () =>
+      new Worker(new URL("./worker.ts", import.meta.url), {
+        workerData: { regulationId, mine: [], theirs: [] },
+        execArgv: ["--import", "tsx"],
+      }),
+  );
+  let nextId = 0;
+  const pending = new Map<number, (r: BattleResult[]) => void>();
+  for (const w of pool)
+    w.on("message", (msg: { id: number; results: BattleResult[] }) => {
+      pending.get(msg.id)?.(msg.results);
+      pending.delete(msg.id);
+    });
+  const send = (w: Worker, msg: object) =>
+    new Promise<BattleResult[]>((resolve) => {
+      const id = nextId++;
+      pending.set(id, resolve);
+      w.postMessage({ id, ...msg });
+    });
+  const spread = async <J>(jobs: J[], size: number, make: (c: J[]) => object) => {
+    const chunks: J[][] = [];
+    for (let i = 0; i < jobs.length; i += size) chunks.push(jobs.slice(i, i + size));
+    const out: BattleResult[][] = new Array(chunks.length);
+    let next = 0;
+    await Promise.all(
+      pool.map(async (w) => {
+        while (next < chunks.length) {
+          const i = next++;
+          out[i] = await send(w, make(chunks[i]!));
+        }
+      }),
+    );
+    return out.flat();
+  };
+  return {
+    executor: (mine, theirs) => ({
+      run: (jobs) =>
+        spread(jobs, Math.max(1, Math.ceil(jobs.length / (pool.length * 2))), (c) => ({
+          teamJobs: { mine, theirs, jobs: c },
+        })),
+      bestPlay: (jobs) => spread(jobs, 1, (c) => ({ teamBest: { mine, theirs, jobs: c } })),
+    }),
+    async close() {
+      await Promise.all(pool.map((w) => w.terminate()));
+    },
+  };
+}

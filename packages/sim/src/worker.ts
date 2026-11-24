@@ -40,7 +40,26 @@ parentPort!.on(
     batch?: RolloutBatch;
     bestJobs?: BestPlayJob[];
     duels?: DuelJob[];
+    /** battles for teams given with the job (persistent pools) */
+    teamJobs?: { mine: PokemonSet[]; theirs: PokemonSet[]; jobs: BattleJob[] };
+    teamBest?: { mine: PokemonSet[]; theirs: PokemonSet[]; jobs: BestPlayJob[] };
   }) => {
+    if (msg.teamJobs) {
+      const t = msg.teamJobs;
+      parentPort!.postMessage({
+        id: msg.id,
+        results: await inProcessExecutor(ctx, t.mine, t.theirs, prior).run(t.jobs),
+      });
+      return;
+    }
+    if (msg.teamBest) {
+      const t = msg.teamBest;
+      parentPort!.postMessage({
+        id: msg.id,
+        results: await inProcessExecutor(ctx, t.mine, t.theirs, prior).bestPlay!(t.jobs),
+      });
+      return;
+    }
     if (msg.duels) {
       parentPort!.postMessage({
         id: msg.id,

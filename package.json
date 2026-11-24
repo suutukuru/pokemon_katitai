@@ -37,7 +37,8 @@
     "ci": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
     "web:data": "tsx packages/cli/src/bin.ts web:data",
     "sim:review": "tsx packages/cli/src/bin.ts sim:review",
-    "sim:tune": "tsx packages/cli/src/bin.ts sim:tune"
+    "sim:tune": "tsx packages/cli/src/bin.ts sim:tune",
+    "team:build": "tsx packages/cli/src/bin.ts team:build"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

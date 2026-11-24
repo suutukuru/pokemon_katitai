@@ -1,0 +1,9 @@
+Steelix @ Steelixite
+Ability: Sturdy
+EVs: 32 HP / 32 Atk / 2 Def
+Brave Nature
+Level: 50
+- Body Press
+- Gyro Ball
+- Rock Slide
+- Protect
