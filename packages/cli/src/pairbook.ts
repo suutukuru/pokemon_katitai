@@ -168,12 +168,12 @@ const optHtml=o=>o.slots.filter(s=>s.species||s.switchTo).map(s=>esc(slot(s,true
 function evText(e){const S=x=>x===0?"":"相手の";
  switch(e.t){case"switch":return S(e.side)+sp(e.who)+" が出てきた";
  case"move":return S(e.side)+sp(e.who)+" の "+mv(e.move)+(e.target&&!e.spread&&!(e.target.side===e.side&&e.target.who===e.who)?"（→ "+S(e.target.side)+sp(e.target.who)+"）":"");
- case"damage":return "　"+S(e.side)+sp(e.who)+" 残り "+e.hp+"%"+(e.from?"（"+it(e.from)+"）":"");
- case"heal":return "　"+S(e.side)+sp(e.who)+" 回復 "+e.hp+"%";case"faint":return "　"+S(e.side)+sp(e.who)+" たおれた";
- case"crit":return "　急所";case"super":return "　効果はばつぐん";case"resisted":return "　いまひとつ";case"immune":return "　効果なし";
- case"miss":return "　外れた";case"protected":return "　"+S(e.side)+sp(e.who)+" は守った";case"mega":return S(e.side)+sp(e.who)+" メガシンカ";
- case"boost":return "　"+S(e.side)+sp(e.who)+" "+e.stat+(e.n>0?" +":" ")+e.n;case"status":return "　"+S(e.side)+sp(e.who)+" "+e.status;
- case"cant":return "　"+S(e.side)+sp(e.who)+" 動けない";case"weather":return e.upkeep?null:"天気: "+e.weather;
+ case"damage":return "\\u3000"+S(e.side)+sp(e.who)+" 残り "+e.hp+"%"+(e.from?"（"+it(e.from)+"）":"");
+ case"heal":return "\\u3000"+S(e.side)+sp(e.who)+" 回復 "+e.hp+"%";case"faint":return "\\u3000"+S(e.side)+sp(e.who)+" たおれた";
+ case"crit":return "\\u3000急所";case"super":return "\\u3000効果はばつぐん";case"resisted":return "\\u3000いまひとつ";case"immune":return "\\u3000効果なし";
+ case"miss":return "\\u3000外れた";case"protected":return "\\u3000"+S(e.side)+sp(e.who)+" は守った";case"mega":return S(e.side)+sp(e.who)+" メガシンカ";
+ case"boost":return "\\u3000"+S(e.side)+sp(e.who)+" "+e.stat+(e.n>0?" +":" ")+e.n;case"status":return "\\u3000"+S(e.side)+sp(e.who)+" "+e.status;
+ case"cant":return "\\u3000"+S(e.side)+sp(e.who)+" 動けない";case"weather":return e.upkeep?null:"天気: "+e.weather;
  case"sidestart":return (e.side?"相手":"自分")+"の場: "+e.cond;case"fieldstart":return "場: "+e.cond;default:return null;}}
 const label=ids=>ids.map(sp).join("＋");
 const stats=m=>{let w=0,n=m.games.length;m.games.forEach(g=>{w+=g.r.winner===0?1:g.r.winner===null?0.5:0});return{w,n,rate:n?w/n:0,turns:n?m.games.reduce((a,g)=>a+g.r.turns,0)/n:0}};
