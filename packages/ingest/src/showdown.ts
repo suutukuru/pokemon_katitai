@@ -362,8 +362,20 @@ export function formatShowdown(sets: readonly PokemonSet[], lang: "en" | "ja" = 
   return sets
     .map((s) => {
       const species = name("species", s.species);
+      // Some forms do not read back from their display name: "Indeedee (Female)" looks like a
+      // nickname, and both Squawkabilly forms share one name. Then write "<name> (<species ID>)",
+      // which the parser resolves to the exact form.
+      const formInParens =
+        / \(.+\)$/.test(species) ||
+        parseShowdown(
+          `${species}\nAbility: ${name("abilities", s.ability)}\n- ${name("moves", s.moves[0] ?? "protect")}`,
+        ).members[0]?.species !== s.species;
       const head = [
-        s.nickname ? `${s.nickname} (${species})` : species,
+        s.nickname
+          ? `${s.nickname} (${formInParens ? s.species : species})`
+          : formInParens
+            ? `${species.replace(/ \(.+\)$/, "")} (${s.species})`
+            : species,
         s.gender && s.gender !== "N" ? `(${s.gender})` : "",
       ]
         .filter(Boolean)

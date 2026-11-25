@@ -176,3 +176,29 @@ describe("gender formes", () => {
     );
   });
 });
+
+describe("formatShowdown round trip", () => {
+  it("every legal species (incl. forms written with parentheses) reads back as itself, en and ja", async () => {
+    const { loadPack } = await import("@ca/data");
+    const { FsPackSource } = await import("@ca/data/node");
+    const { formatShowdown, parseShowdown } = await import("../src/index.js");
+    const pack = loadPack(new FsPackSource(), "M-C");
+    const legal = { legal: { species: pack.legal.species, items: pack.legal.items } };
+    const bad: string[] = [];
+    for (const id of pack.legal.species)
+      for (const lang of ["en", "ja"] as const) {
+        const set = {
+          species: id,
+          ability: "pressure",
+          nature: "Hardy" as const,
+          sp: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
+          moves: ["protect"],
+          assumed: [],
+          confidence: {},
+        };
+        const back = parseShowdown(formatShowdown([set], lang), legal).members[0]?.species;
+        if (back !== id) bad.push(`${lang}:${id}→${back}`);
+      }
+    expect(bad).toEqual([]);
+  });
+});

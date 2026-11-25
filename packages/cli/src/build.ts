@@ -147,6 +147,12 @@ export async function teamBuild(
     .map((s) => env.resolveTeam!(s))
     .filter((o): o is NonNullable<typeof o> => !!o && o.members.length >= env.pack.rules.bringCount)
     .map((o) => ({ label: o.label, members: o.members }));
+  // teams the user wants to be measured against as well (e.g. a rain team with Wide Guard)
+  for (const f of opt(args, "extra-opp", "").split(",").filter(Boolean))
+    opponents.push({
+      label: f.replace(/^.*\//, "").replace(/\.txt$/, ""),
+      members: parseShowdown(env.readText(f), legal).members,
+    });
 
   // candidate sets (no second Mega Stone; Item Clause against the core)
   const coreItems = new Set<string>(core.map((m) => m.item).filter((x): x is string => !!x));
@@ -236,10 +242,10 @@ export async function teamBuild(
   s1.forEach((r, rank) =>
     r.ids.forEach((id) => score.set(id, Math.max(score.get(id) ?? -1, r.avg - rank * 1e-6))),
   );
-  const next = [...score.entries()]
-    .sort((x, y) => y[1] - x[1])
-    .map(([id]) => id)
-    .slice(0, Number(opt(args, "next", "8")));
+  // with a 4-member core there is no stage-1 choice: every candidate goes on to stage 2
+  const next = (
+    score.size ? [...score.entries()].sort((x, y) => y[1] - x[1]).map(([id]) => id) : ids
+  ).slice(0, Number(opt(args, "next", "8")));
   const s2: TeamScore[] = [];
   for (const b of beam) {
     const rest = next.filter((id) => !b.ids.includes(id));
