@@ -6,7 +6,10 @@ import { displayName } from "@ca/data";
 import type { ReplayData, WhatIfOption } from "@ca/sim";
 
 export interface PairBookMatch {
-  opp: [string, string];
+  /** the opposing pair, or the opponent's bring (lead, lead, back, back) */
+  opp: string[];
+  /** my bring for this match when it is a 4-vs-4 game (lead, lead, back, back) */
+  mine?: string[];
   /** how often this pair appears together (relative; usage × teammate share) */
   weight: number;
   /** listed because the user asked for it rather than by frequency */
@@ -16,6 +19,10 @@ export interface PairBookMatch {
 
 export interface PairBookInput {
   title: string;
+  /** trusted HTML shown above the list (e.g. the selection analysis) */
+  intro?: string;
+  /** how the weight is described ("出現頻度" by default) */
+  weightLabel?: string;
   mine: PokemonSet[];
   opponents: Record<string, PokemonSet[]>;
   matches: PairBookMatch[];
@@ -100,6 +107,8 @@ function slim(g: ReplayData) {
 export function renderPairBook(input: PairBookInput): string {
   const payload = JSON.stringify({
     title: input.title,
+    intro: input.intro ?? "",
+    wl: input.weightLabel ?? "出現頻度",
     method: input.method,
     source: input.source,
     mine: input.mine,
@@ -190,7 +199,7 @@ function evText(e){const S=x=>x===0?"":"相手の";
  case"boost":return "\\u3000"+S(e.side)+sp(e.who)+" "+e.stat+(e.n>0?" +":" ")+e.n;case"status":return "\\u3000"+S(e.side)+sp(e.who)+" "+e.status;
  case"cant":return "\\u3000"+S(e.side)+sp(e.who)+" 動けない";case"weather":return e.upkeep?null:"天気: "+e.weather;
  case"sidestart":return (e.side?"相手":"自分")+"の場: "+e.cond;case"fieldstart":return "場: "+e.cond;default:return null;}}
-const label=ids=>ids.map(sp).join("＋");
+const label=ids=>ids.length>2?ids.slice(0,2).map(sp).join("・")+" ／ 後ろ "+ids.slice(2).map(sp).join("・"):ids.map(sp).join("＋");
 const stats=m=>{let w=0,n=m.games.length;m.games.forEach(g=>{w+=g.r.winner===0?1:g.r.winner===null?0.5:0});return{w,n,rate:n?w/n:0,turns:n?m.games.reduce((a,g)=>a+g.r.turns,0)/n:0}};
 const totalW=D.matches.filter(m=>!m.extra).reduce((a,m)=>a+m.weight,0)||1;
 let sort="freq",q="";
@@ -200,8 +209,8 @@ function overview(){
  ms.sort((a,b)=>sort==="rate"?a.s.rate-b.s.rate:sort==="rateDesc"?b.s.rate-a.s.rate:(b.m.weight-a.m.weight)||(a.i-b.i));
  const all=D.matches.reduce((a,m)=>{const s=stats(m);return{w:a.w+s.w,n:a.n+s.n,ws:a.ws+(m.extra?0:s.rate*m.weight)}},{w:0,n:0,ws:0});
  return '<section class="card"><h1>'+esc(D.title)+'</h1><p class="sub">'+esc(D.method)+'</p>'+
- '<dl class="kv"><dt>対面</dt><dd>'+D.matches.length+'組（そのうち指定 '+D.matches.filter(m=>m.extra).length+'組）</dd><dt>対戦</dt><dd>'+all.n+'戦・'+all.w+'勝</dd><dt>頻度で重み付けした勝率</dt><dd>'+pct(all.ws/totalW)+'</dd></dl>'+
- '<details><summary>使った型</summary><div class="sets">'+D.mine.map(setLine).join("")+'</div></details><p class="muted">出典: '+esc(D.source)+'</p></section>'+
+ '<dl class="kv"><dt>対面</dt><dd>'+D.matches.length+'組（そのうち指定 '+D.matches.filter(m=>m.extra).length+'組）</dd><dt>対戦</dt><dd>'+all.n+'戦・'+all.w+'勝</dd><dt>'+esc(D.wl)+'で重み付けした勝率</dt><dd>'+pct(all.ws/totalW)+'</dd></dl>'+
+ '<details><summary>使った型</summary><div class="sets">'+D.mine.map(setLine).join("")+'</div></details><p class="muted">出典: '+esc(D.source)+'</p></section>'+D.intro+
  '<section class="card"><div class="controls"><input type="search" id="q" placeholder="ポケモン名で絞り込み（例: ブリジュラス）" value="'+esc(q)+'" aria-label="相手のポケモン名で絞り込み">'+
  '<button data-sort="freq" class="'+(sort==="freq"?"on":"")+'">よく見る順</button><button data-sort="rate" class="'+(sort==="rate"?"on":"")+'">苦手順</button><button data-sort="rateDesc" class="'+(sort==="rateDesc"?"on":"")+'">得意順</button></div></section>'+
  '<section class="list" aria-label="相手の並び">'+ms.map(({m,i,s})=>'<button class="row card" data-go="'+i+'"><span class="nm">'+esc(label(m.opp))+(m.extra?'<span class="tag">指定</span>':'')+'</span><span class="rate '+tone(s.rate)+'">'+pct(s.rate)+'</span><span class="meta">'+(m.extra?'':'<span class="freq" style="width:'+Math.max(4,Math.round(m.weight/totalW*600))+'px"></span>出現頻度 '+(m.weight/totalW*100).toFixed(1)+'% ・ ')+s.n+'戦 '+s.w+'勝 ・ 平均 '+s.turns.toFixed(1)+'ターン</span></button>').join("")+'</section>';}
@@ -233,7 +242,7 @@ function summary(m){const agg=new Map(),oppAgg=new Map();let games=0;
  rows.map(([k,a])=>'<tr><td>'+esc(k)+'</td><td class="c">'+a.n+'</td><td class="c">'+pct(a.v/a.n)+'</td><td class="c">'+a.chosen+(a.chosen?'（'+a.wins+'）':'')+'</td></tr>').join("")+'</tbody></table></div>'+
  '<div class="scroll" style="margin-top:8px"><table><thead><tr><th>予測した相手の行動</th><th>平均の予測割合</th></tr></thead><tbody>'+orows.map(([k,a])=>'<tr><td>'+esc(k)+'</td><td class="c">'+pct(a.p/games)+'</td></tr>').join("")+'</tbody></table></div>'}
 function detail(i){const m=D.matches[i];const s=stats(m);const opp=D.opponents[m.opp.join("+")]||[];
- let h='<p><a href="#" data-back>← 一覧に戻る</a></p><section class="card"><h1>vs '+esc(label(m.opp))+'</h1><dl class="kv"><dt>結果</dt><dd>'+s.n+'戦 '+s.w+'勝（'+pct(s.rate)+'）</dd><dt>平均ターン</dt><dd>'+s.turns.toFixed(1)+'</dd>'+(m.extra?'':'<dt>出現頻度</dt><dd>'+(m.weight/totalW*100).toFixed(1)+'%</dd>')+'</dl>'+
+ let h='<p><a href="#" data-back>← 一覧に戻る</a></p><section class="card"><h1>vs '+esc(label(m.opp))+'</h1><dl class="kv"><dt>結果</dt><dd>'+s.n+'戦 '+s.w+'勝（'+pct(s.rate)+'）</dd><dt>平均ターン</dt><dd>'+s.turns.toFixed(1)+'</dd>'+(m.mine?'<dt>自分の選出</dt><dd>'+esc(label(m.mine))+'</dd>':'')+(m.extra?'':'<dt>'+esc(D.wl)+'</dt><dd>'+(m.weight/totalW*100).toFixed(1)+'%</dd>')+'</dl>'+
  '<details><summary>相手の型（使用率から推定）</summary><div class="sets">'+opp.map(setLine).join("")+'</div></details></section>';
  h+='<section class="card">'+summary(m)+'</section>';
  m.games.forEach((g,gi)=>{h+='<section class="card"><details'+(gi===0?' open':'')+'><summary>'+(gi+1)+'戦目: '+(g.r.winner===0?'勝ち':g.r.winner===1?'負け':'引き分け')+'（'+g.r.turns+'ターン、残り '+g.r.remaining[0]+'対'+g.r.remaining[1]+'）</summary>'+g.turns.filter(t=>t.plan||t.events.length).map(t=>turnView(t,g)).join("")+'</details></section>'});

@@ -58,6 +58,7 @@ pnpm report:book <自分.txt> [--top 10]           # 上位構築すべてと「
 pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候補ペアを上位構築との勝率で比較
 pnpm team:pairs [--pool 30 | --first a,b --second c,d] [--tr] [--ensure trickroom] [--focus x+y] [--opp 24] [--games 16] [--final 12]  # 使用率上位の2体の組み合わせを、よく一緒に使われる相手の2体と2対2で総当たり（上位は探索で再対戦）
 pnpm report:pairbook <a,b> [--opp 40] [--extra x+y] [--games 8] [--think 0.6]  # 2体の並びの対面ブック（相手の並びごとの全対戦・各ターンに想定した自分×相手のパターン表）をHTMLに
+pnpm report:teambook <自分.txt> <相手.txt|pokedb:M-7:4> [--brings 3] [--games 6]  # 4対4の対面ブック（選出の読み合いの表＋推奨選出で相手の有力な選出ごとに対戦、各ターンの想定パターン）
 pnpm team:build <核.txt> [--with a,b] --pool c,d,... [--tr] [--require trickroom] [--top 8]  # 核から6体を探索（4体→6体→最終評価）。--tr で遅いポケモンをトリル用の配分に
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
 pnpm meta [--from 6] [--to 7] [--top 25] [--teams]  # 上位構築の採用率・組み合わせ・型（既定はレギュレーションのシーズン）
