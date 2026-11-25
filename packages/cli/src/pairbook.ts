@@ -3,7 +3,7 @@
 // as one self-contained browser page (also emitted in Artifact form).
 import type { PokemonSet } from "@ca/schema";
 import { displayName } from "@ca/data";
-import type { ReplayData } from "@ca/sim";
+import type { ReplayData, WhatIfOption } from "@ca/sim";
 
 export interface PairBookMatch {
   opp: [string, string];
@@ -67,6 +67,21 @@ function names(input: PairBookInput): Record<string, string> {
   return out;
 }
 
+const r3 = (x: number | undefined) => (x === undefined ? undefined : Math.round(x * 1000) / 1000);
+/** Options as the page needs them (no confidence intervals, rounded numbers, no empty fields). */
+function opts(xs: WhatIfOption[]) {
+  return xs.map((o) => ({
+    choice: o.choice,
+    slots: o.slots.map((sl) =>
+      Object.fromEntries(Object.entries(sl).filter(([, v]) => v !== "" && v !== false)),
+    ),
+    winRate: r3(o.winRate),
+    ...(o.prob ? { prob: r3(o.prob) } : {}),
+    ...(o.chosen ? { chosen: true } : {}),
+    ...(o.inMatrix ? { inMatrix: true } : {}),
+  }));
+}
+
 /** Strip what the page does not use (keeps the payload small). */
 function slim(g: ReplayData) {
   return {
@@ -75,7 +90,7 @@ function slim(g: ReplayData) {
       turn: t.turn,
       events: t.events,
       eval: t.eval,
-      plan: t.plan,
+      ...(t.plan ? { plan: { ...t.plan, mine: opts(t.plan.mine), opp: opts(t.plan.opp) } } : {}),
       opp: (t.whatIfOpp ?? []).filter((o) => o.chosen).map((o) => o.slots),
     })),
     reviews: (g.reviews ?? []).filter((r) => r.side === 0),
