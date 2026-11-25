@@ -139,7 +139,7 @@ ${matrix}
   const html = renderPairBook({
     title: `${myName} vs ${oppName}`,
     intro,
-    weightLabel: "相手がこの選出をする割合",
+    weightLabel: "相手の選出割合",
     mine,
     opponents: Object.fromEntries(theirOrder.map(({ j }) => [src.theirs[j]!.join("+"), theirs])),
     matches: theirOrder.map(({ j, p }, k) => ({

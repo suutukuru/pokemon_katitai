@@ -141,7 +141,7 @@ button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .freq{display:inline-block;height:6px;background:var(--accent);opacity:.5;border-radius:3px;vertical-align:middle;margin-right:6px}
 .tag{font-size:11px;background:var(--chip);border-radius:4px;padding:1px 6px;margin-left:6px;color:var(--muted)}
 .sets{display:grid;gap:4px;font-size:12px}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:minmax(5em,40%) 1fr;gap:3px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
 table{border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 th,td{border:1px solid var(--line);padding:3px 5px;text-align:left;vertical-align:top}
 th{background:var(--chip);font-weight:600}
@@ -209,11 +209,11 @@ function overview(){
  ms.sort((a,b)=>sort==="rate"?a.s.rate-b.s.rate:sort==="rateDesc"?b.s.rate-a.s.rate:(b.m.weight-a.m.weight)||(a.i-b.i));
  const all=D.matches.reduce((a,m)=>{const s=stats(m);return{w:a.w+s.w,n:a.n+s.n,ws:a.ws+(m.extra?0:s.rate*m.weight)}},{w:0,n:0,ws:0});
  return '<section class="card"><h1>'+esc(D.title)+'</h1><p class="sub">'+esc(D.method)+'</p>'+
- '<dl class="kv"><dt>対面</dt><dd>'+D.matches.length+'組（そのうち指定 '+D.matches.filter(m=>m.extra).length+'組）</dd><dt>対戦</dt><dd>'+all.n+'戦・'+all.w+'勝</dd><dt>'+esc(D.wl)+'で重み付けした勝率</dt><dd>'+pct(all.ws/totalW)+'</dd></dl>'+
+ '<dl class="kv"><dt>対面</dt><dd>'+D.matches.length+'組'+(D.matches.some(m=>m.extra)?'（そのうち指定 '+D.matches.filter(m=>m.extra).length+'組）':'')+'</dd><dt>対戦</dt><dd>'+all.n+'戦・'+all.w+'勝</dd><dt>'+esc(D.wl)+'で重み付けした勝率</dt><dd>'+pct(all.ws/totalW)+'</dd></dl>'+
  '<details><summary>使った型</summary><div class="sets">'+D.mine.map(setLine).join("")+'</div></details><p class="muted">出典: '+esc(D.source)+'</p></section>'+D.intro+
  '<section class="card"><div class="controls"><input type="search" id="q" placeholder="ポケモン名で絞り込み（例: ブリジュラス）" value="'+esc(q)+'" aria-label="相手のポケモン名で絞り込み">'+
  '<button data-sort="freq" class="'+(sort==="freq"?"on":"")+'">よく見る順</button><button data-sort="rate" class="'+(sort==="rate"?"on":"")+'">苦手順</button><button data-sort="rateDesc" class="'+(sort==="rateDesc"?"on":"")+'">得意順</button></div></section>'+
- '<section class="list" aria-label="相手の並び">'+ms.map(({m,i,s})=>'<button class="row card" data-go="'+i+'"><span class="nm">'+esc(label(m.opp))+(m.extra?'<span class="tag">指定</span>':'')+'</span><span class="rate '+tone(s.rate)+'">'+pct(s.rate)+'</span><span class="meta">'+(m.extra?'':'<span class="freq" style="width:'+Math.max(4,Math.round(m.weight/totalW*600))+'px"></span>出現頻度 '+(m.weight/totalW*100).toFixed(1)+'% ・ ')+s.n+'戦 '+s.w+'勝 ・ 平均 '+s.turns.toFixed(1)+'ターン</span></button>').join("")+'</section>';}
+ '<section class="list" aria-label="相手の並び">'+ms.map(({m,i,s})=>'<button class="row card" data-go="'+i+'"><span class="nm">'+esc(label(m.opp))+(m.extra?'<span class="tag">指定</span>':'')+'</span><span class="rate '+tone(s.rate)+'">'+pct(s.rate)+'</span><span class="meta">'+(m.extra?'':'<span class="freq" style="width:'+Math.max(4,Math.round(m.weight/totalW*600))+'px"></span>'+esc(D.wl)+' '+(m.weight/totalW*100).toFixed(1)+'% ・ ')+s.n+'戦 '+s.w+'勝 ・ 平均 '+s.turns.toFixed(1)+'ターン</span></button>').join("")+'</section>';}
 function board(b){const side=x=>b.filter(m=>m.side===x).map(m=>'<div class="mon '+(x?"op":"me")+(m.status==="fnt"?" out":"")+'"><span class="n">'+esc(sp(m.species))+(m.active?"":"（控え）")+'</span><span class="num">'+(m.status==="fnt"?"×":m.hp+"%")+'</span><span class="bar"><i style="width:'+(m.status==="fnt"?0:m.hp)+'%"></i></span></div>').join("");
  return '<div class="board"><div>'+side(0)+'</div><div>'+side(1)+'</div></div>'}
 function matrix(p,review){if(!p.matrix.length)return"";
