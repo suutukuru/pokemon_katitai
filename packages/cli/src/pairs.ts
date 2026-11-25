@@ -16,7 +16,9 @@ import {
   type Config,
   type Executor,
   type ReplayData,
+  Dex as PsDex,
 } from "@ca/sim";
+import { trickRoomSet } from "./build.js";
 import { renderPairBook, type PairBookMatch } from "./pairbook.js";
 import type { Io } from "./commands.js";
 import { candidateSet } from "./fill.js";
@@ -172,15 +174,50 @@ export async function teamPairs(
       const team = makePair(p.ids, u, deps.dex);
       return team ? [{ ...p, team }] : [];
     });
+  // optional shaping of my candidates: Trick Room spreads, a required move on the first member
+  const tr = args.includes("--tr");
+  const trMax = Number(opt(args, "tr-max-speed", "70"));
+  const ensure = opt(args, "ensure", "");
+  const shape = (team: PokemonSet[], firstIdx: number | null): PokemonSet[] =>
+    team.map((m, i) => {
+      let x = m;
+      if (ensure && i === firstIdx && !x.moves.includes(ensure)) {
+        const d = u.entries.find((e) => e.species === x.species && e.distributions)?.distributions;
+        if (d?.moves.some((mm) => mm.id === ensure))
+          x = { ...x, moves: [...x.moves.slice(0, 3), ensure] };
+      }
+      if (
+        tr &&
+        (PsDex.forFormat(ctx.format).species.get(x.species).baseStats["spe"] ?? 999) <= trMax
+      )
+        x = trickRoomSet(ctx, x);
+      return x;
+    });
+  const first = opt(args, "first", "")
+    .split(",")
+    .filter((x) => legal.has(x));
+  const second = opt(args, "second", "")
+    .split(",")
+    .filter((x) => legal.has(x));
   const cands: { ids: [string, string]; team: PokemonSet[] }[] = [];
-  pool.forEach((a, i) =>
-    pool.slice(i + 1).forEach((b) => {
-      const team = makePair([a, b], u, deps.dex);
-      if (team) cands.push({ ids: [a, b], team });
-    }),
-  );
+  const seen = new Set<string>();
+  const add = (ids: [string, string], firstIdx: number | null) => {
+    const key = [...ids].sort().join("+");
+    if (ids[0] === ids[1] || seen.has(key)) return;
+    seen.add(key);
+    const team = makePair(ids, u, deps.dex);
+    if (team) cands.push({ ids, team: shape(team, firstIdx) });
+  };
+  if (first.length && second.length) {
+    for (const a of first) for (const b of second) add([a, b], 0);
+  } else pool.forEach((a, i) => pool.slice(i + 1).forEach((b) => add([a, b], null)));
+  // opposing pairs the user wants to see separately (not part of the weighted score)
+  const focus = opt(args, "focus", "")
+    .split(",")
+    .filter(Boolean)
+    .map((x) => x.split("+").sort() as [string, string]);
   io.err(
-    `段階1: 使用率上位${pool.length}体の組み合わせ ${cands.length}組 × よく一緒に使われる相手の2体 ${opps.length}組（${u.source.title}）`,
+    `段階1: ${first.length ? `${first.length}体 × ${second.length}体` : `使用率上位${pool.length}体`}の組み合わせ ${cands.length}組${tr ? "（遅いポケモンはトリックルーム用の配分）" : ""} × よく一緒に使われる相手の2体 ${opps.length}組（${u.source.title}）`,
   );
   const games = Number(opt(args, "games", "16"));
   const s1: PairResult[] = [];
@@ -190,7 +227,16 @@ export async function teamPairs(
   }
   s1.sort((x, y) => y.score - x.score || x.ids.join().localeCompare(y.ids.join()));
   io.err("段階1の上位:");
-  for (const r of s1.slice(0, 15)) io.err(`  ${r.ids.map(nm).join("＋")}: ${pct(r.score)}`);
+  const focusOf = (r: PairResult) =>
+    focus
+      .map((f) => r.vs.find((v) => v.ids.join() === f.join()))
+      .filter((v): v is PairResult["vs"][number] => !!v)
+      .map((v) => `vs ${v.ids.map(nm).join("＋")} ${pct(v.rate)}`)
+      .join(" / ");
+  for (const r of s1.slice(0, 15))
+    io.err(
+      `  ${r.ids.map(nm).join("＋")}: ${pct(r.score)}${focus.length ? `（${focusOf(r)}）` : ""}`,
+    );
 
   // stage 2: search on both sides (hidden information sampled) for the best pairs
   const fin = Number(opt(args, "final", "12"));
@@ -222,7 +268,7 @@ export async function teamPairs(
   s2.forEach((r, i) => {
     const sorted = [...r.vs].sort((x, y) => y.rate - x.rate);
     io.out(
-      `${i + 1}. ${r.ids.map(nm).join(" ＋ ")}  ${pct(r.score)}（方針のみ ${pct(r.quick)}、${r.games}戦）`,
+      `${i + 1}. ${r.ids.map(nm).join(" ＋ ")}  ${pct(r.score)}（方針のみ ${pct(r.quick)}、${r.games}戦）${focus.length ? `  ${focusOf(r)}` : ""}`,
     );
     io.out(
       `   得意: ${sorted
