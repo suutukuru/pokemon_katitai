@@ -1,0 +1,53 @@
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+SPs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Dragon Claw
+- Rock Slide
+- Stomping Tantrum
+- Earthquake
+
+Staraptor @ Staraptite
+Ability: Intimidate
+SPs: 29 HP / 1 Atk / 4 SpD / 32 Spe
+Jolly Nature
+- Close Combat
+- Protect
+- Brave Bird
+- Tailwind
+
+Armarouge @ Focus Sash
+Ability: Weak Armor
+SPs: 32 SpA / 2 SpD / 32 Spe
+Modest Nature
+- Expanding Force
+- Armor Cannon
+- Protect
+- Trick Room
+
+Indeedee (indeedeef) @ Rocky Helmet
+Ability: Psychic Surge
+SPs: 32 HP / 32 Def / 2 SpD
+Bold Nature
+- Follow Me
+- Helping Hand
+- Psychic
+- Trick Room
+
+Kingambit @ Chople Berry
+Ability: Defiant
+SPs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Kowtow Cleave
+- Sucker Punch
+- Iron Head
+- Low Kick
+
+Archaludon @ Leftovers
+Ability: Stamina
+SPs: 30 HP / 1 Def / 1 SpA / 19 SpD / 15 Spe
+Bold Nature
+- Protect
+- Electro Shot
+- Dragon Pulse
+- Flash Cannon
