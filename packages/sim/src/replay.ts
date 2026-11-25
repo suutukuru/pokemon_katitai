@@ -42,6 +42,8 @@ export interface WhatIfOption {
     moveId?: string;
     targetSpecies?: string;
     switchTo?: string;
+    /** the opponent's options in planner mode are intents (policy.ts) */
+    intent?: string;
     mega: boolean;
   }[];
   winRate: number;
@@ -66,8 +68,24 @@ export interface ReplayTurn {
   whatIfOpp?: WhatIfOption[];
   /** my win rate at this turn's equilibrium (search mode): the position's evaluation */
   eval?: number;
+  /** side 0's plan at this turn (search mode): what it considered and the matrix it solved */
+  plan?: TurnPlan;
   /** forced switch-ins decided after this turn's moves (search mode), per side */
   switchIf?: { side: 0 | 1; options: WhatIfOption[] }[];
+}
+
+export interface TurnPlan {
+  /** HP% and status of every brought Pokémon when the decision was made */
+  board: { side: 0 | 1; species: string; hp: number; status: string; active: boolean }[];
+  /** side 0's candidates (concrete) and its prediction of side 1 (intents in planner mode) */
+  mine: WhatIfOption[];
+  opp: WhatIfOption[];
+  /** payoff matrix (side 0's win rate) over rows = mine in matrix, cols = opp in matrix */
+  rows: string[];
+  cols: string[];
+  matrix: number[][];
+  worlds: number;
+  rollouts: number;
 }
 
 export interface ReplayData {

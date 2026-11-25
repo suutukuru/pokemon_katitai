@@ -2,7 +2,13 @@ import type { PokemonSet } from "@ca/schema";
 import { engineTags } from "@ca/data";
 import { wilson } from "./game.js";
 import { chooseFor } from "./policy.js";
-import { snap, type ReplayData, type ReplayTurn, type WhatIfOption } from "./replay.js";
+import {
+  snap,
+  type ReplayData,
+  type ReplayTurn,
+  type TurnPlan,
+  type WhatIfOption,
+} from "./replay.js";
 import { mixSeed, Rng } from "./rng.js";
 import {
   markLogSent,
@@ -103,6 +109,7 @@ export async function playBestBattle(
   const battle = startBattle(ctx, a, b, ca, cb, seed);
   const rng = new Rng(mixSeed(seed, 0xbe57));
   const moves = new Map<number, PositionAnalysis>();
+  const boards = new Map<number, TurnPlan["board"]>();
   const oppMoves = new Map<number, PositionAnalysis>();
   const reviews: DecisionReview[] = [];
   const switches = new Map<number, PositionAnalysis[]>();
@@ -148,6 +155,18 @@ export async function playBestBattle(
       if (views[s]) reviews.push(reviewDecision(ctx, st, views[s]!, s, choice[s], choice[1 - s]!));
     if (shown.kind === "move") {
       moves.set(turn, views[0] ?? shown);
+      boards.set(
+        turn,
+        battle.sides.flatMap((side, si) =>
+          side.pokemon.map((m) => ({
+            side: si as 0 | 1,
+            species: m.species.id,
+            hp: m.maxhp ? Math.round((m.hp / m.maxhp) * 100) : 0,
+            status: m.fainted ? "fnt" : m.status,
+            active: side.active.includes(m) && !m.fainted,
+          })),
+        ),
+      );
       if (views[1]) oppMoves.set(turn, views[1]);
     } else
       switches.set(turn, [
@@ -188,6 +207,20 @@ export async function playBestBattle(
       ...(mv && mv.needs[0] ? { whatIf: opts(mv, 0) } : {}),
       ...(om && om.needs[1] ? { whatIfOpp: opts(om, 1) } : {}),
       ...(mv ? { eval: mv.value } : {}),
+      ...(mv && mv.needs[0]
+        ? {
+            plan: {
+              board: boards.get(t) ?? [],
+              mine: mv.options[0].map((o) => toWhatIf(o, o.choice === bestChoice(mv, 0))),
+              opp: mv.options[1].map((o) => toWhatIf(o, false)),
+              rows: mv.matrixChoices[0],
+              cols: mv.matrixChoices[1],
+              matrix: mv.matrix.map((r) => r.map((v) => Math.round(v * 1000) / 1000)),
+              worlds: mv.worlds,
+              rollouts: mv.rollouts,
+            },
+          }
+        : {}),
       ...(sw
         ? {
             switchIf: sw.flatMap((an) =>

@@ -39,7 +39,8 @@
     "sim:review": "tsx packages/cli/src/bin.ts sim:review",
     "sim:tune": "tsx packages/cli/src/bin.ts sim:tune",
     "team:build": "tsx packages/cli/src/bin.ts team:build",
-    "team:pairs": "tsx packages/cli/src/bin.ts team:pairs"
+    "team:pairs": "tsx packages/cli/src/bin.ts team:pairs",
+    "report:pairbook": "tsx packages/cli/src/bin.ts report:pairbook"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

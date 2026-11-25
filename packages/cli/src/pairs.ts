@@ -15,7 +15,9 @@ import {
   type BattleResult,
   type Config,
   type Executor,
+  type ReplayData,
 } from "@ca/sim";
+import { renderPairBook, type PairBookMatch } from "./pairbook.js";
 import type { Io } from "./commands.js";
 import { candidateSet } from "./fill.js";
 import type { SimEnv } from "./sim-commands.js";
@@ -236,5 +238,106 @@ export async function teamPairs(
         .join(" / ")}`,
     );
   });
+  return 0;
+}
+
+export interface PairBookDeps {
+  dex: Dex;
+  /** best-play games (each side plans from its own view), results in task order */
+  play: (
+    tasks: {
+      mine: PokemonSet[];
+      theirs: PokemonSet[];
+      ca: Config;
+      cb: Config;
+      seed: number;
+      budget: ReturnType<typeof searchBudgetFrom>;
+    }[],
+    onDone: (done: number) => void,
+  ) => Promise<ReplayData[]>;
+  write: (path: string, text: string) => void;
+}
+
+/**
+ * `report:pairbook <a,b> [--opp 40] [--extra x+y,z+w] [--games 6] [--think 0.6] [--seed 1]
+ *  [--out reports/pairbook]`: every game of the pair against the most common opposing pairs
+ *  (plus any listed with --extra), with what was considered at each turn, as a browser page.
+ */
+export async function pairBookCommand(
+  args: string[],
+  env: SimEnv,
+  deps: PairBookDeps,
+  io: Io,
+): Promise<number> {
+  const u = env.usage;
+  const ids = (args.find((x, i) => !x.startsWith("--") && !args[i - 1]?.startsWith("--")) ?? "")
+    .split(",")
+    .filter(Boolean) as [string, string];
+  if (!u || ids.length !== 2) {
+    io.err(
+      "usage: pnpm report:pairbook garchomp,staraptor [--opp 40] [--extra sableye+archaludon]",
+    );
+    return 2;
+  }
+  const ctx = simContext(env.pack, env.spec);
+  const legal = new Set(env.pack.legal.species);
+  const mine = makePair(ids, u, deps.dex);
+  if (!mine) {
+    io.err(`${ids.join(",")}: 型を作れません`);
+    return 1;
+  }
+  const extras = opt(args, "extra", "")
+    .split(",")
+    .filter(Boolean)
+    .map((x) => x.split("+").sort() as [string, string]);
+  const common = commonPairs(u, Number(opt(args, "opp", "40"))).filter((p) =>
+    p.ids.every((id) => legal.has(id)),
+  );
+  const list = [
+    ...common.map((p) => ({ ...p, extra: false })),
+    ...extras
+      .filter((e) => !common.some((p) => p.ids.join() === e.join()))
+      .map((e) => ({ ids: e, weight: 0, extra: true })),
+  ].flatMap((p) => {
+    const team = makePair(p.ids, u, deps.dex);
+    if (!team) io.err(`skip ${p.ids.join("+")}: 型を作れません`);
+    return team ? [{ ...p, team }] : [];
+  });
+  const games = Number(opt(args, "games", "6"));
+  const seed = Number(opt(args, "seed", "1"));
+  const budget = searchBudgetFrom(ctx.params, Number(opt(args, "think", "0.6")));
+  const tasks = list.flatMap((p, j) =>
+    Array.from({ length: games }, (_, k) => ({
+      mine,
+      theirs: p.team,
+      ca: PAIR,
+      cb: PAIR,
+      seed: mixSeed(seed, j, k),
+      budget,
+    })),
+  );
+  io.err(`${list.length}組 × ${games}戦 = ${tasks.length}戦（両者が毎ターン探索）`);
+  const res = await deps.play(tasks, (d) => d % 20 === 0 && io.err(`  … ${d}/${tasks.length}`));
+  const matches: PairBookMatch[] = list.map((p, j) => ({
+    opp: p.ids,
+    weight: p.weight,
+    extra: p.extra,
+    games: res.slice(j * games, (j + 1) * games),
+  }));
+  const title = `${ids.map(nm).join("＋")} 対面ブック`;
+  const html = renderPairBook({
+    title,
+    mine,
+    opponents: Object.fromEntries(list.map((p) => [p.ids.join("+"), p.team])),
+    matches,
+    method: `よく一緒に使われる2体 ${common.length}組${extras.length ? `＋指定 ${extras.length}組` : ""}と、2対2で各${games}戦。両者とも毎ターン、自分から見える情報だけで候補を総当たりして読み合いを解く（探索の計算量 ${opt(args, "think", "0.6")}）。`,
+    source: `${u.source.title}。型は各ポケモンの最多の型（推定）。`,
+  });
+  const out = opt(args, "out", "reports/pairbook");
+  const file = `${out}/${ids.join("-")}.html`;
+  deps.write(file, html);
+  io.out(file);
+  const wins = res.filter((r) => r.result.winner === 0).length;
+  io.out(`${tasks.length}戦 ${wins}勝（${pct(wins / Math.max(1, tasks.length))}）`);
   return 0;
 }

@@ -40,7 +40,7 @@ import {
 } from "@ca/sim/pool";
 import { simReview, simTune } from "./learn.js";
 import { teamBuild } from "./build.js";
-import { teamPairs } from "./pairs.js";
+import { pairBookCommand, teamPairs } from "./pairs.js";
 import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
@@ -352,6 +352,28 @@ try {
       } finally {
         await pool.close();
       }
+      break;
+    }
+    case "report:pairbook": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      code = await pairBookCommand(
+        args,
+        env,
+        {
+          dex: dexWithNewSpecies(baseDex(), env.pack.overrides.newSpecies),
+          play: (tasks, onDone) => {
+            let done = 0;
+            return runBestPlayPool(env.pack.id, tasks, workers, () => onDone(++done));
+          },
+          write: (path, text) => {
+            mkdirSync(resolvePath(path, ".."), { recursive: true });
+            writeFileSync(path, text);
+          },
+        },
+        io,
+      );
       break;
     }
     case "team:build": {
