@@ -6,7 +6,6 @@ import { displayName } from "@ca/data";
 import { parseShowdown } from "@ca/ingest";
 import {
   analyzeMatchup,
-  budgetFrom,
   mixSeed,
   searchBudgetFrom,
   simContext,
@@ -16,7 +15,7 @@ import {
 } from "@ca/sim";
 import type { Io } from "./commands.js";
 import { renderPairBook } from "./pairbook.js";
-import type { SimEnv } from "./sim-commands.js";
+import { budgetWithOverrides, type SimEnv } from "./sim-commands.js";
 
 const esc = (s: string) =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
@@ -81,7 +80,7 @@ export async function teamBookCommand(
     mine,
     theirs,
     exec,
-    budgetFrom(ctx.params, Number(opt(args, "scale", "0.4"))),
+    budgetWithOverrides(ctx.params, Number(opt(args, "scale", "0.4")), args),
     seed,
     (st, _d, n) => io.err(`  ${st}: ${n}戦`),
   );

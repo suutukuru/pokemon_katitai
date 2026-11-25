@@ -4,6 +4,7 @@ import {
   analyzeMatchup,
   budgetFrom,
   inProcessExecutor,
+  searchBudgetFrom,
   simContext,
   type Executor,
   type MatchupAnalysis,
@@ -107,6 +108,30 @@ export function formatAnalysis(a: MatchupAnalysis, regulation: string): string[]
   return out;
 }
 
+/**
+ * Selection budget with optional overrides of the search-vs-search stage:
+ * `--strong-configs N` (brings per side), `--strong-games N` (games per cell),
+ * `--strong-think X` (search budget of those games).
+ */
+export function budgetWithOverrides(
+  params: Record<string, number>,
+  scale: number,
+  args: readonly string[],
+): ReturnType<typeof budgetFrom> {
+  const b = budgetFrom(params, scale);
+  const num = (k: string) => {
+    const i = args.indexOf(`--${k}`);
+    return i >= 0 && args[i + 1] !== undefined ? Number(args[i + 1]) : undefined;
+  };
+  const c = num("strong-configs");
+  const g = num("strong-games");
+  const t = num("strong-think");
+  if (c !== undefined) b.strongConfigs = c;
+  if (g !== undefined) b.strongGames = g;
+  if (t !== undefined) b.strongSearch = searchBudgetFrom(params, t);
+  return b;
+}
+
 export interface SimEnv extends TeamEnv {
   executor?: (
     mine: PokemonSet[],
@@ -206,12 +231,12 @@ export interface MetaRow {
 export async function runSimMeta(
   mine: PokemonSet[],
   env: SimEnv,
-  opts: { top: number; scale: number; seed: number },
+  opts: { top: number; scale: number; seed: number; args?: readonly string[] },
   io: Io,
 ): Promise<MetaRow[]> {
   if (!env.topTeams || !env.resolveTeam) throw new Error("team database is not available");
   const ctx = simContext(env.pack, env.spec);
-  const budget = budgetFrom(env.pack.weights.simulation, opts.scale);
+  const budget = budgetWithOverrides(env.pack.weights.simulation, opts.scale, opts.args ?? []);
   const rows: MetaRow[] = [];
   for (const spec of env.topTeams(opts.top)) {
     const opp = env.resolveTeam(spec);
@@ -278,6 +303,7 @@ export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promi
     {
       top: Number(opt("top") ?? 10),
       scale: Number(opt("scale") ?? 0.3),
+      args,
       seed: Number(opt("seed") ?? 1),
     },
     io,
