@@ -219,6 +219,8 @@ export interface MetaRow {
   opponent: string[];
   missing: string[];
   winRate: number;
+  /** the policy-only estimate when the search-vs-search stage decided `winRate` */
+  policyWinRate?: number;
   safestRate: number;
   /** recommended bring: [lead1, lead2, back1, back2] species IDs */
   bring: string[];
@@ -249,7 +251,11 @@ export async function runSimMeta(
       : inProcessExecutor(ctx, mine, opp.members);
     try {
       const a = await analyzeMatchup(ctx, mine, opp.members, exec, budget, opts.seed);
-      const best = a.equilibrium.mine.indexOf(Math.max(...a.equilibrium.mine));
+      // the search-vs-search stage (when it ran) decides the recommendation
+      const src = a.strong ?? a.matrix;
+      const eq = a.strong ? a.strong.equilibrium : a.equilibrium;
+      const safe = a.strong ? a.strong.safest : a.safest;
+      const best = eq.mine.indexOf(Math.max(...eq.mine));
       const t1 =
         a.turnOne.myOptions[
           a.turnOne.equilibrium.mine.indexOf(Math.max(...a.turnOne.equilibrium.mine))
@@ -259,9 +265,10 @@ export async function runSimMeta(
         label: opp.label,
         opponent: opp.members.map((m) => m.species),
         missing: opp.missing ?? [],
-        winRate: a.equilibrium.value,
-        safestRate: a.safest.worstRate,
-        bring: a.matrix.mine[best]!,
+        winRate: eq.value,
+        safestRate: safe.worstRate,
+        bring: src.mine[best]!,
+        ...(a.strong ? { policyWinRate: a.equilibrium.value } : {}),
         turnOne: t1 ? optionStr(t1) : "",
         isGuess: a.turnOne.isGuess,
         battles: a.battles,
@@ -322,7 +329,9 @@ export async function simMetaCommand(args: string[], env: SimEnv, io: Io): Promi
   for (const r of rows) {
     io.out(`■ ${r.label}\n  相手: ${r.opponent.map(name).join("・")}`);
     if (r.missing.length) io.out(`  ※ 型を推定できず除外: ${r.missing.map(name).join("・")}`);
-    io.out(`  期待勝率 ${pct(r.winRate)}（安全策の最低勝率 ${pct(r.safestRate)}）`);
+    io.out(
+      `  期待勝率 ${pct(r.winRate)}（安全策の最低勝率 ${pct(r.safestRate)}）${r.policyWinRate !== undefined ? `　※両者が探索する対戦での評価。行動方針だけの評価では ${pct(r.policyWinRate)}` : ""}`,
+    );
     io.out(`  推奨選出: ${names(r.bring)}`);
     if (r.turnOne) io.out(`  1ターン目の基本: ${r.turnOne}${r.isGuess ? "（択あり）" : ""}`);
   }
