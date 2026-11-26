@@ -42,6 +42,7 @@ import { simReview, simTune } from "./learn.js";
 import { teamBuild } from "./build.js";
 import { pairBookCommand, teamPairs } from "./pairs.js";
 import { teamBookCommand } from "./teambook.js";
+import { selectCommand } from "./select.js";
 import { webDataCommand } from "./web-data.js";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
@@ -353,6 +354,25 @@ try {
       } finally {
         await pool.close();
       }
+      break;
+    }
+    case "sim:select": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      code = await selectCommand(
+        args,
+        env,
+        {
+          executor: (mine, theirs) =>
+            workerPoolExecutor({ regulationId: env.pack.id, mine, theirs }, workers),
+          write: (path, text) => {
+            mkdirSync(resolvePath(path, ".."), { recursive: true });
+            writeFileSync(path, text);
+          },
+        },
+        io,
+      );
       break;
     }
     case "report:teambook": {
