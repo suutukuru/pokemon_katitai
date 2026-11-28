@@ -118,6 +118,7 @@
     "searchStage3": 40,
     "searchKeep3": 1,
     "switchBase": 0.05,
-    "switchThreatBonus": 0.3
+    "switchThreatBonus": 0.3,
+    "evalReplayRetries": 64
   }
 }

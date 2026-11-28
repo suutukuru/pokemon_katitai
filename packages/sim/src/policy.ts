@@ -21,7 +21,7 @@ export interface JointOption {
   score: number;
 }
 
-const PROTECT = new Set([
+export const PROTECT = new Set([
   "protect",
   "detect",
   "spikyshield",
@@ -280,6 +280,47 @@ function switchChoice(side: PsSide, req: PsRequest): string {
     .join(", ");
 }
 
+/** My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`. */
+export function sideTemperature(sideId: "p1" | "p2", params: PolicyParams): number {
+  return sideId === "p1" && params["selfTemperature"] !== undefined
+    ? params["selfTemperature"]
+    : p(params, "temperature");
+}
+
+/** A joint action with its probability under the policy. */
+export interface WeightedJoint {
+  slots: SlotOption[];
+  prob: number;
+}
+
+/**
+ * The policy's probability distribution over joint actions at a move request (used by the
+ * evaluation against real battles, sim:eval). Currently each slot is sampled independently from
+ * a softmax of its own scores, so the joint is the product; joints switching both slots to the
+ * same Pokémon are dropped and the rest renormalized.
+ */
+export function policyDistribution(
+  b: PsBattle,
+  side: PsSide,
+  tags: EngineTags,
+  params: PolicyParams,
+  temperature: number,
+): WeightedJoint[] {
+  const req = side.activeRequest;
+  if (!req?.active) return [];
+  let joint: WeightedJoint[] = [{ slots: [], prob: 1 }];
+  req.active.forEach((_, slot) => {
+    const opts = slotOptions(b, side, slot, req, tags, params);
+    const probs = softmaxProbs(opts, temperature);
+    joint = joint.flatMap((j) =>
+      opts.map((o, k) => ({ slots: [...j.slots, o], prob: j.prob * probs[k]! })),
+    );
+  });
+  const legal = joint.filter((j) => !conflicts(j.slots));
+  const total = legal.reduce((a, j) => a + j.prob, 0);
+  return legal.map((j) => ({ ...j, prob: total > 0 ? j.prob / total : 0 }));
+}
+
 /** Sample this turn's choice for a side. */
 export function chooseFor(
   b: PsBattle,
@@ -292,11 +333,7 @@ export function chooseFor(
   const req = side.activeRequest;
   if (!req || req.wait) return "";
   if (req.forceSwitch) return switchChoice(side, req);
-  // My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`.
-  const T =
-    side.id === "p1" && params["selfTemperature"] !== undefined
-      ? params["selfTemperature"]
-      : p(params, "temperature");
+  const T = sideTemperature(side.id, params);
   const picks = (req.active ?? []).map((_, slot) => {
     const opts = slotOptions(b, side, slot, req, tags, params);
     const i = softmaxPick(opts, T, rng);

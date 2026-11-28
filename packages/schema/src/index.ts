@@ -7,3 +7,4 @@ export * from "./team.js";
 export * from "./i18n.js";
 export * from "./engine-data.js";
 export * from "./teamdb.js";
+export * from "./battle-record.js";

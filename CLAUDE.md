@@ -18,7 +18,7 @@ packages/calc     Champions の実数値の式（stats.ts、ここだけ）と @
 packages/ingest   Extractor インターフェースと Showdown/ポケペースト（日本語可）パーサ
 packages/engine   ルールエンジン（rules/*.ts）、RuleContext、diagnose()、Mechanic プラグイン
 packages/explain  Finding → 日本語（テンプレート）と LLM 出力の数値ガード
-packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、analyze.ts=選出/択の分析、pool.ts=並列実行(Node)
+packages/sim      対戦シミュレーション（pokemon-showdown の champions mod）。policy.ts=行動方針、analyze.ts=選出/択の分析、eval.ts=実戦の記録での方針の検証、pool.ts=並列実行(Node)
 packages/cli      reg:* / data:* / team:check / calc（bin.ts が入口。各 *-commands.ts はテスト可能な部分）
 apps/web          React + Vite。診断は Web Worker（src/worker.ts）。パックとサンプルはビルド時に同梱
 (予定) apps/api
@@ -51,6 +51,7 @@ pnpm sim:meta <自分.txt> [--top 10] [--scale 0.3] # M-C 上位構築すべて�
 pnpm report:meta <自分.txt> [--top 10]           # 上位構築との結果を画像(reports/*.png)にする（チャットで見せる用）
 pnpm report:battle <自分.txt> <相手|pokedb:M-7:4> [--games 30]  # 1戦ごとの中身（評価値・選ぶ確率・出来事・HP）を画像に
 pnpm report:replay <自分.txt> <相手|pokedb:M-7:68> [--pick lose|win] [--rollouts 16]  # 1戦を操作できる再生ページ(HTML1枚)＋各ターンの「もしこう動いていたら」勝率
+pnpm sim:eval <記録.json|records/> [--json] [--baseline 前回.json] [--no-selection]  # 方針が実戦の行動・選出をどれだけ当てるか（ADR-0011）
 pnpm report:book <自分.txt> [--top 10]           # 上位構築すべてと「両者が毎ターン勝率最大の行動を選ぶ」対戦をして、全部を1つのHTMLで再生
 pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候補ペアを上位構築との勝率で比較
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
@@ -92,6 +93,7 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 ## 自分のパーティ・相手のパーティ
 
 - `my-teams/*.txt` に自分のパーティ（コピーして改造案を作る）、`opponents/*.txt` に対策したい構築（技構成込み）。
+- `records/*.json` に実戦の対戦記録（手入力 or 自分で保存した Showdown ログ。形式は `records/README.md`）。方針を変えたら `pnpm sim:eval records/ --baseline docs/sim-eval/baseline.json` で前後比較し、悪化した変更は取り込まない。
 - シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。
 
 ## 外部データの扱い

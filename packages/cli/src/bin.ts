@@ -4,6 +4,7 @@ import { gameSpec, loadPack, PackValidationError } from "@ca/data";
 import { FsPackSource, readTeamDbFiles, readUsageSnapshots } from "@ca/data/node";
 import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
+import { simEvalCommand } from "./eval-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
 import {
@@ -27,7 +28,7 @@ import {
   searchOptionsFrom,
   type Config,
 } from "@ca/sim";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
@@ -128,6 +129,17 @@ try {
     case "sim:meta": {
       const env = simEnv(args);
       code = cmd === "sim" ? await simCommand(args, env, io) : await simMetaCommand(args, env, io);
+      break;
+    }
+    case "sim:eval": {
+      const listRecordFiles = (p: string) =>
+        statSync(p).isDirectory()
+          ? readdirSync(p)
+              .filter((f) => f.endsWith(".json"))
+              .sort()
+              .map((f) => resolvePath(p, f))
+          : [p];
+      code = await simEvalCommand(args, { ...simEnv(args), listRecordFiles }, io);
       break;
     }
     case "report:meta": {
