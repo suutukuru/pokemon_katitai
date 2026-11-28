@@ -30,6 +30,8 @@ export const TeacherPositionSchema = z.object({
   seed: z.number().int(),
   history: z.array(z.tuple([z.union([z.literal(0), z.literal(1)]), z.string()])),
   side: z.union([z.literal(0), z.literal(1)]),
+  /** a move request (both sides choose) or a forced switch (after a faint, U-turn …) */
+  kind: z.enum(["move", "switch"]).default("move"),
   turn: z.number().int().min(1),
   /** the teacher's pick (highest win rate among the finalists) */
   best: z.string(),

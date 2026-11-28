@@ -196,6 +196,9 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
     const scale = Number(opt("scale") ?? 1);
     const seed = Number(opt("seed") ?? 1);
     const opts = searchOptionsFrom(ctx.params, scale);
+    const kinds = (opt("kinds") ?? "move")
+      .split(",")
+      .filter((k): k is "move" | "switch" => k === "move" || k === "switch");
     const tasks: TeacherTask[] = [];
     keys.forEach((ka, i) =>
       keys.forEach((kb, j) => {
@@ -211,6 +214,7 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
             configs: [ca[s % ca.length]!, cb[(s >>> 8) % cb.length]!],
             seed: s,
             opts,
+            kinds,
           });
         }
       }),
@@ -224,6 +228,7 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
         searchWidth: opts.options,
         stages: opts.stages.map((s) => `${s.rollouts}/${s.keep}`).join(" "),
         battles: tasks.length,
+        kinds: kinds.join(","),
         seed,
         temperature,
       },
@@ -237,6 +242,10 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
   }
   if (sub === "eval" && args[1]) {
     const data = TeacherDatasetSchema.parse(JSON.parse(env.readText(args[1])));
+    // `--half even|odd`: every other position, to check a change holds on both halves
+    const half = opt("half");
+    if (half === "even" || half === "odd")
+      data.positions = data.positions.filter((_, i) => i % 2 === (half === "even" ? 0 : 1));
     // `--set key=value` (repeatable): try other weights.simulation values without editing the pack
     const params = { ...ctx.params };
     args.forEach((x, i) => {
@@ -262,6 +271,10 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
       io.out(row("2匹まとめて", ev.rates.joint));
       for (const [k, t] of Object.entries(ev.rates.byCategory))
         if (t.n) io.out(row(CATEGORY_JA[k] ?? k, t));
+      if (ev.forcedSwitch.n)
+        io.out(
+          `  倒れた後などの交代 ${ev.forcedSwitch.n}件: 探索と一致 ${pct(ev.forcedSwitch.top1)} / 方針の選択の勝率 ${pct(ev.forcedSwitch.meanPolicyRate)}（探索の最善 ${pct(ev.forcedSwitch.meanBestRate)}）`,
+        );
       io.out(
         `  探索の最善手の勝率 ${pct(ev.meanBestRate)} / 方針の期待勝率 ${pct(ev.meanPolicyRate)}（失う勝率 ${pct(ev.meanRegret)}、探索が評価した候補に乗った確率 ${pct(ev.coverage)}）`,
       );
@@ -279,7 +292,7 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
     "usage: pnpm sim:teacher build [--teams a.txt,b.txt] [--battles 2] [--scale 1] [--out f.json]",
   );
   io.err(
-    "       pnpm sim:teacher eval <f.json> [--json] [--baseline 前回.json] [--set key=value ...]",
+    "       pnpm sim:teacher eval <f.json> [--json] [--baseline 前回.json] [--set key=value ...] [--half even|odd]",
   );
   return 2;
 }

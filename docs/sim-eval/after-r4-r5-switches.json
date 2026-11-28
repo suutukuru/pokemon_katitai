@@ -1,0 +1,132 @@
+{
+  "positions": 0,
+  "forcedSwitch": {
+    "n": 127,
+    "top1": 0.6142,
+    "meanPolicyRate": 0.4511,
+    "meanBestRate": 0.4871
+  },
+  "temperature": 0.35,
+  "actions": {
+    "slot": {
+      "n": 0,
+      "top1": 0,
+      "top3": 0,
+      "logProb": 0
+    },
+    "joint": {
+      "n": 0,
+      "top1": 0,
+      "top3": 0,
+      "logProb": 0
+    },
+    "byCategory": {
+      "protect": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "fakeout": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "switch": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "speedControl": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "attack": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "other": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      },
+      "focus": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "logProb": 0
+      }
+    },
+    "unmatched": 0,
+    "unknown": 0
+  },
+  "rates": {
+    "slot": {
+      "n": 0,
+      "top1": 0,
+      "top3": 0,
+      "meanLogProb": 0
+    },
+    "joint": {
+      "n": 0,
+      "top1": 0,
+      "top3": 0,
+      "meanLogProb": 0
+    },
+    "byCategory": {
+      "protect": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "fakeout": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "switch": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "speedControl": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "attack": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "other": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      },
+      "focus": {
+        "n": 0,
+        "top1": 0,
+        "top3": 0,
+        "meanLogProb": 0
+      }
+    }
+  },
+  "meanBestRate": 0,
+  "meanPolicyRate": 0,
+  "meanRegret": 0,
+  "coverage": 0
+}

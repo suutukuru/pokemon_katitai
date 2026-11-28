@@ -1,0 +1,132 @@
+{
+  "positions": 178,
+  "forcedSwitch": {
+    "n": 0,
+    "top1": 0,
+    "meanPolicyRate": 0,
+    "meanBestRate": 0
+  },
+  "temperature": 0.35,
+  "actions": {
+    "slot": {
+      "n": 325,
+      "top1": 180,
+      "top3": 269,
+      "logProb": -479.83660848431117
+    },
+    "joint": {
+      "n": 178,
+      "top1": 68,
+      "top3": 107,
+      "logProb": -479.56275048088963
+    },
+    "byCategory": {
+      "protect": {
+        "n": 21,
+        "top1": 8,
+        "top3": 17,
+        "logProb": -35.895433915087736
+      },
+      "fakeout": {
+        "n": 7,
+        "top1": 6,
+        "top3": 7,
+        "logProb": -10.999266288562293
+      },
+      "switch": {
+        "n": 22,
+        "top1": 0,
+        "top3": 6,
+        "logProb": -57.98603298970701
+      },
+      "speedControl": {
+        "n": 33,
+        "top1": 17,
+        "top3": 30,
+        "logProb": -49.632420915463456
+      },
+      "attack": {
+        "n": 229,
+        "top1": 148,
+        "top3": 200,
+        "logProb": -299.2023674466773
+      },
+      "other": {
+        "n": 13,
+        "top1": 1,
+        "top3": 9,
+        "logProb": -26.121086928813465
+      },
+      "focus": {
+        "n": 23,
+        "top1": 9,
+        "top3": 13,
+        "logProb": -61.466310627388715
+      }
+    },
+    "unmatched": 0,
+    "unknown": 0
+  },
+  "rates": {
+    "slot": {
+      "n": 325,
+      "top1": 0.5538,
+      "top3": 0.8277,
+      "meanLogProb": -1.4764
+    },
+    "joint": {
+      "n": 178,
+      "top1": 0.382,
+      "top3": 0.6011,
+      "meanLogProb": -2.6942
+    },
+    "byCategory": {
+      "protect": {
+        "n": 21,
+        "top1": 0.381,
+        "top3": 0.8095,
+        "meanLogProb": -1.7093
+      },
+      "fakeout": {
+        "n": 7,
+        "top1": 0.8571,
+        "top3": 1,
+        "meanLogProb": -1.5713
+      },
+      "switch": {
+        "n": 22,
+        "top1": 0,
+        "top3": 0.2727,
+        "meanLogProb": -2.6357
+      },
+      "speedControl": {
+        "n": 33,
+        "top1": 0.5152,
+        "top3": 0.9091,
+        "meanLogProb": -1.504
+      },
+      "attack": {
+        "n": 229,
+        "top1": 0.6463,
+        "top3": 0.8734,
+        "meanLogProb": -1.3066
+      },
+      "other": {
+        "n": 13,
+        "top1": 0.0769,
+        "top3": 0.6923,
+        "meanLogProb": -2.0093
+      },
+      "focus": {
+        "n": 23,
+        "top1": 0.3913,
+        "top3": 0.5652,
+        "meanLogProb": -2.6724
+      }
+    }
+  },
+  "meanBestRate": 0.623,
+  "meanPolicyRate": 0.457,
+  "meanRegret": 0.166,
+  "coverage": 0.9731
+}

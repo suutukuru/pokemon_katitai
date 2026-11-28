@@ -1,0 +1,3259 @@
+{
+  "regulationId": "M-C",
+  "generator": {
+    "searchWidth": 40,
+    "stages": "8/8 32/3 80/1",
+    "battles": 80,
+    "kinds": "switch",
+    "seed": 2,
+    "temperature": 0.35
+  },
+  "teams": {
+    "user-team-1": [
+      {
+        "species": "charizard",
+        "item": "charizarditey",
+        "ability": "blaze",
+        "nature": "Modest",
+        "sp": { "hp": 22, "atk": 0, "def": 12, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["heatwave", "solarbeam", "weatherball", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "whimsicott",
+        "item": "focussash",
+        "ability": "prankster",
+        "nature": "Timid",
+        "sp": { "hp": 2, "atk": 0, "def": 0, "spa": 32, "spd": 0, "spe": 32 },
+        "moves": ["moonblast", "encore", "tailwind", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "aerodactyl",
+        "item": "aerodactylite",
+        "ability": "pressure",
+        "nature": "Jolly",
+        "sp": { "hp": 24, "atk": 17, "def": 0, "spa": 0, "spd": 0, "spe": 25 },
+        "moves": ["rockslide", "dualwingbeat", "tailwind", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "hippowdon",
+        "item": "sitrusberry",
+        "ability": "sandstream",
+        "nature": "Impish",
+        "sp": { "hp": 32, "atk": 2, "def": 0, "spa": 0, "spd": 32, "spe": 0 },
+        "moves": ["highhorsepower", "heavyslam", "icefang", "slackoff"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "milotic",
+        "item": "leftovers",
+        "ability": "competitive",
+        "nature": "Timid",
+        "sp": { "hp": 32, "atk": 0, "def": 2, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["scald", "icywind", "hypnosis", "coil"],
+        "gender": "F",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "meowscarada",
+        "item": "choicescarf",
+        "ability": "protean",
+        "nature": "Adamant",
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["flowertrick", "knockoff", "tripleaxel", "seedbomb"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      }
+    ],
+    "sample-rain": [
+      {
+        "species": "pelipper",
+        "item": "focussash",
+        "ability": "drizzle",
+        "nature": "Timid",
+        "sp": { "hp": 2, "atk": 0, "def": 0, "spa": 32, "spd": 0, "spe": 32 },
+        "moves": ["hurricane", "weatherball", "tailwind", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "archaludon",
+        "item": "lifeorb",
+        "ability": "stamina",
+        "nature": "Modest",
+        "sp": { "hp": 32, "atk": 0, "def": 0, "spa": 32, "spd": 2, "spe": 0 },
+        "moves": ["electroshot", "flashcannon", "dracometeor", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "basculegion",
+        "item": "mysticwater",
+        "ability": "swiftswim",
+        "nature": "Adamant",
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["wavecrash", "lastrespects", "aquajet", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "rillaboom",
+        "item": "assaultvest",
+        "ability": "grassysurge",
+        "nature": "Adamant",
+        "sp": { "hp": 32, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 2 },
+        "moves": ["fakeout", "grassyglide", "woodhammer", "uturn"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "sinistcha",
+        "item": "sitrusberry",
+        "ability": "hospitality",
+        "nature": "Bold",
+        "sp": { "hp": 32, "atk": 0, "def": 32, "spa": 0, "spd": 2, "spe": 0 },
+        "moves": ["matchagotcha", "ragepowder", "trickroom", "strengthsap"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "kangaskhan",
+        "item": "kangaskhanite",
+        "ability": "innerfocus",
+        "nature": "Jolly",
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["fakeout", "doubleedge", "lowkick", "protect"],
+        "confidence": {},
+        "assumed": []
+      }
+    ],
+    "sample-trickroom": [
+      {
+        "species": "hatterene",
+        "item": "mentalherb",
+        "ability": "magicbounce",
+        "nature": "Quiet",
+        "sp": { "hp": 32, "atk": 0, "def": 0, "spa": 32, "spd": 2, "spe": 0 },
+        "moves": ["trickroom", "mysticalfire", "psychic", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "indeedeef",
+        "item": "rockyhelmet",
+        "ability": "psychicsurge",
+        "nature": "Sassy",
+        "sp": { "hp": 32, "atk": 0, "def": 2, "spa": 0, "spd": 32, "spe": 0 },
+        "moves": ["followme", "allyswitch", "psychic", "protect"],
+        "gender": "F",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "torkoal",
+        "item": "charcoal",
+        "ability": "drought",
+        "nature": "Quiet",
+        "sp": { "hp": 32, "atk": 0, "def": 0, "spa": 32, "spd": 2, "spe": 0 },
+        "moves": ["eruption", "heatwave", "solarbeam", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "incineroar",
+        "item": "sitrusberry",
+        "ability": "intimidate",
+        "nature": "Careful",
+        "sp": { "hp": 32, "atk": 2, "def": 0, "spa": 0, "spd": 32, "spe": 0 },
+        "moves": ["fakeout", "flareblitz", "partingshot", "knockoff"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "kingambit",
+        "item": "blackglasses",
+        "ability": "defiant",
+        "nature": "Adamant",
+        "sp": { "hp": 32, "atk": 32, "def": 2, "spa": 0, "spd": 0, "spe": 0 },
+        "moves": ["kowtowcleave", "suckerpunch", "ironhead", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "gardevoir",
+        "item": "gardevoirite",
+        "ability": "trace",
+        "nature": "Quiet",
+        "sp": { "hp": 32, "atk": 0, "def": 2, "spa": 32, "spd": 0, "spe": 0 },
+        "moves": ["hypervoice", "psyshock", "trickroom", "protect"],
+        "confidence": {},
+        "assumed": []
+      }
+    ],
+    "team1": [
+      {
+        "species": "charizard",
+        "item": "charizarditey",
+        "ability": "blaze",
+        "nature": "Modest",
+        "sp": { "hp": 22, "atk": 0, "def": 12, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["heatwave", "solarbeam", "weatherball", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "whimsicott",
+        "item": "focussash",
+        "ability": "prankster",
+        "nature": "Timid",
+        "sp": { "hp": 2, "atk": 0, "def": 0, "spa": 32, "spd": 0, "spe": 32 },
+        "moves": ["moonblast", "encore", "tailwind", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "aerodactyl",
+        "item": "aerodactylite",
+        "ability": "pressure",
+        "nature": "Jolly",
+        "sp": { "hp": 24, "atk": 17, "def": 0, "spa": 0, "spd": 0, "spe": 25 },
+        "moves": ["rockslide", "dualwingbeat", "tailwind", "protect"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "hippowdon",
+        "item": "sitrusberry",
+        "ability": "sandstream",
+        "nature": "Impish",
+        "sp": { "hp": 32, "atk": 2, "def": 0, "spa": 0, "spd": 32, "spe": 0 },
+        "moves": ["highhorsepower", "heavyslam", "icefang", "slackoff"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "milotic",
+        "item": "leftovers",
+        "ability": "competitive",
+        "nature": "Timid",
+        "sp": { "hp": 32, "atk": 0, "def": 2, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["scald", "icywind", "hypnosis", "coil"],
+        "gender": "F",
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "meowscarada",
+        "item": "choicescarf",
+        "ability": "protean",
+        "nature": "Adamant",
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["flowertrick", "knockoff", "tripleaxel", "seedbomb"],
+        "gender": "M",
+        "confidence": {},
+        "assumed": []
+      }
+    ],
+    "team2": [
+      {
+        "species": "excadrill",
+        "item": "excadrite",
+        "ability": "moldbreaker",
+        "nature": "Jolly",
+        "sp": { "hp": 0, "atk": 32, "def": 0, "spa": 0, "spd": 2, "spe": 32 },
+        "moves": ["earthquake", "rockblast", "swordsdance", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "altaria",
+        "ability": "cloudnine",
+        "nature": "Modest",
+        "sp": { "hp": 1, "atk": 23, "def": 0, "spa": 30, "spd": 0, "spe": 12 },
+        "moves": ["acrobatics", "dracometeor", "tailwind", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "meowscarada",
+        "item": "choicescarf",
+        "ability": "protean",
+        "nature": "Adamant",
+        "sp": { "hp": 2, "atk": 32, "def": 0, "spa": 0, "spd": 0, "spe": 32 },
+        "moves": ["flowertrick", "knockoff", "tripleaxel", "brickbreak"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "incineroar",
+        "item": "chopleberry",
+        "ability": "intimidate",
+        "nature": "Adamant",
+        "sp": { "hp": 5, "atk": 32, "def": 0, "spa": 0, "spd": 1, "spe": 28 },
+        "moves": ["flareblitz", "throatchop", "fakeout", "lowkick"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "gholdengo",
+        "item": "lifeorb",
+        "ability": "goodasgold",
+        "nature": "Timid",
+        "sp": { "hp": 2, "atk": 0, "def": 0, "spa": 32, "spd": 0, "spe": 32 },
+        "moves": ["makeitrain", "shadowball", "nastyplot", "protect"],
+        "confidence": {},
+        "assumed": []
+      },
+      {
+        "species": "basculegion",
+        "item": "sitrusberry",
+        "ability": "adaptability",
+        "nature": "Jolly",
+        "sp": { "hp": 0, "atk": 32, "def": 0, "spa": 0, "spd": 2, "spe": 32 },
+        "moves": ["wavecrash", "lastrespects", "aquajet", "protect"],
+        "confidence": {},
+        "assumed": []
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "sample-rain-sample-trickroom-3027596303-t3-0-sw6",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [4, 5, 1, 3],
+        [0, 4, 1, 2]
+      ],
+      "seed": 3027596303,
+      "history": [
+        [0, "move 2, move 1 1 mega"],
+        [1, "switch 3, move 2 1"],
+        [0, "move 2, move 2 1"],
+        [1, "switch 3, move 3 2"],
+        [0, "move 1, move 2 1"],
+        [1, "move 2 1, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.65, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.725, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-3027596303-t3-1-sw6",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [4, 5, 1, 3],
+        [0, 4, 1, 2]
+      ],
+      "seed": 3027596303,
+      "history": [
+        [0, "move 2, move 1 1 mega"],
+        [1, "switch 3, move 2 1"],
+        [0, "move 2, move 2 1"],
+        [1, "switch 3, move 3 2"],
+        [0, "move 1, move 2 1"],
+        [1, "move 2 1, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.375, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.15, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-3010809456-t2-0-sw4",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [0, 2, 3, 4],
+        [0, 5, 2, 3]
+      ],
+      "seed": 3010809456,
+      "history": [
+        [0, "move 1 2, move 2 2"],
+        [1, "move 3 2, switch 4"],
+        [0, "move 3, move 1 2"],
+        [1, "move 3 2, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-3010809456-t2-1-sw4",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [0, 2, 3, 4],
+        [0, 5, 2, 3]
+      ],
+      "seed": 3010809456,
+      "history": [
+        [0, "move 1 2, move 2 2"],
+        [1, "move 3 2, switch 4"],
+        [0, "move 3, move 1 2"],
+        [1, "move 3 2, move 2 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.85, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.8, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-2994030565-t5-1-sw10",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [0, 3, 1, 5],
+        [1, 3, 0, 4]
+      ],
+      "seed": 2994030565,
+      "history": [
+        [0, "move 3, move 1 1"],
+        [1, "move 3 1, move 1 2"],
+        [0, "move 4, move 3 1"],
+        [1, "move 3 1, move 4 2"],
+        [0, "switch 3, move 3 1"],
+        [1, "switch 4, move 4 1"],
+        [0, "move 1 1, switch 4"],
+        [1, "move 2 2, move 4 2"],
+        [0, "move 3 2, move 2 1 mega"],
+        [1, "move 1 2, move 4 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 5,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.05, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-2994030565-t6-0-sw13",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [0, 3, 1, 5],
+        [1, 3, 0, 4]
+      ],
+      "seed": 2994030565,
+      "history": [
+        [0, "move 3, move 1 1"],
+        [1, "move 3 1, move 1 2"],
+        [0, "move 4, move 3 1"],
+        [1, "move 3 1, move 4 2"],
+        [0, "switch 3, move 3 1"],
+        [1, "switch 4, move 4 1"],
+        [0, "move 1 1, switch 4"],
+        [1, "move 2 2, move 4 2"],
+        [0, "move 3 2, move 2 1 mega"],
+        [1, "move 1 2, move 4 2"],
+        [1, "switch 3, pass"],
+        [0, "move 1 2, move 2 2"],
+        [1, "move 3 2, move 2 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 6,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.9875, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.95, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-2977257814-t1-1-sw2",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [1, 5, 0, 4],
+        [3, 4, 0, 1]
+      ],
+      "seed": 2977257814,
+      "history": [
+        [0, "move 1 2, move 3 2 mega"],
+        [1, "move 1 1, move 2 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1125, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-sample-trickroom-2977257814-t2-0-sw5",
+      "teams": ["sample-rain", "sample-trickroom"],
+      "configs": [
+        [1, 5, 0, 4],
+        [3, 4, 0, 1]
+      ],
+      "seed": 2977257814,
+      "history": [
+        [0, "move 1 2, move 3 2 mega"],
+        [1, "move 1 1, move 2 2"],
+        [1, "pass, switch 3"],
+        [0, "move 2 2, move 2 1"],
+        [1, "switch 4, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1920783808-t2-0-sw4",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [1, 5, 0, 3],
+        [0, 4, 1, 5]
+      ],
+      "seed": 1920783808,
+      "history": [
+        [0, "move 1 1, move 1 2 mega"],
+        [1, "move 1 mega, switch 4"],
+        [0, "move 1, move 3 2"],
+        [1, "move 1, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.9, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.2125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1920783808-t2-1-sw4",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [1, 5, 0, 3],
+        [0, 4, 1, 5]
+      ],
+      "seed": 1920783808,
+      "history": [
+        [0, "move 1 1, move 1 2 mega"],
+        [1, "move 1 mega, switch 4"],
+        [0, "move 1, move 3 2"],
+        [1, "move 1, move 3 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.0875, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1937562679-t1-0-sw2",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [0, 3, 1, 4],
+        [0, 3, 4, 5]
+      ],
+      "seed": 1937562679,
+      "history": [
+        [0, "move 3, move 3 2"],
+        [1, "move 1 mega, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.0375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1887224046-t1-1-sw2",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [0, 1, 2, 4],
+        [1, 5, 2, 3]
+      ],
+      "seed": 1887224046,
+      "history": [
+        [0, "move 1 1, move 2 1"],
+        [1, "move 3, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.15, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1887224046-t2-0-sw5",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [0, 1, 2, 4],
+        [1, 5, 2, 3]
+      ],
+      "seed": 1887224046,
+      "history": [
+        [0, "move 1 1, move 2 1"],
+        [1, "move 3, move 1 1"],
+        [1, "switch 3, pass"],
+        [0, "move 1 2, move 3 1"],
+        [1, "move 1 mega, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.9125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.9375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1904004957-t2-1-sw4",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [3, 4, 0, 5],
+        [1, 2, 0, 4]
+      ],
+      "seed": 1904004957,
+      "history": [
+        [0, "switch 4, move 1"],
+        [1, "move 3, switch 3"],
+        [0, "move 2 1 mega, switch 3"],
+        [1, "move 1 1, move 2 1 mega"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.975, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.9125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team1-1904004957-t3-0-sw7",
+      "teams": ["sample-rain", "team1"],
+      "configs": [
+        [3, 4, 0, 5],
+        [1, 2, 0, 4]
+      ],
+      "seed": 1904004957,
+      "history": [
+        [0, "switch 4, move 1"],
+        [1, "move 3, switch 3"],
+        [0, "move 2 1 mega, switch 3"],
+        [1, "move 1 1, move 2 1 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 3"],
+        [1, "move 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2401883494-t2-1-sw4",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 5, 0, 4],
+        [0, 3, 2, 4]
+      ],
+      "seed": 2401883494,
+      "history": [
+        [0, "move 1 2, move 1 2 mega"],
+        [1, "move 2 2 mega, move 3 2"],
+        [0, "move 1, move 2 2"],
+        [1, "move 2 1, switch 3"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.35, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2401883494-t3-0-sw7",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 5, 0, 4],
+        [0, 3, 2, 4]
+      ],
+      "seed": 2401883494,
+      "history": [
+        [0, "move 1 2, move 1 2 mega"],
+        [1, "move 2 2 mega, move 3 2"],
+        [0, "move 1, move 2 2"],
+        [1, "move 2 1, switch 3"],
+        [1, "pass, switch 3"],
+        [0, "move 3 2, move 2 2"],
+        [1, "move 4, move 4 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.7375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.7375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2385107733-t1-1-sw2",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 2, 0, 3],
+        [1, 3, 0, 5]
+      ],
+      "seed": 2385107733,
+      "history": [
+        [0, "move 3 1, move 1 2"],
+        [1, "move 4, move 2 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.325, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.25, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2385107733-t2-0-sw5",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 2, 0, 3],
+        [1, 3, 0, 5]
+      ],
+      "seed": 2385107733,
+      "history": [
+        [0, "move 3 1, move 1 2"],
+        [1, "move 4, move 2 2"],
+        [1, "pass, switch 3"],
+        [0, "move 3 1, move 1 2"],
+        [1, "move 3, move 1 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.15, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.725, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2435393116-t3-0-sw6",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [2, 5, 0, 3],
+        [1, 5, 2, 4]
+      ],
+      "seed": 2435393116,
+      "history": [
+        [0, "move 2 2, move 1 1 mega"],
+        [1, "switch 3, move 1 2"],
+        [0, "switch 3, move 3 1"],
+        [1, "switch 4, move 1 1"],
+        [0, "move 1 2, switch 4"],
+        [1, "move 1, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.025, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.0625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2418617587-t1-0-sw2",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 3, 2, 5],
+        [2, 4, 1, 3]
+      ],
+      "seed": 2418617587,
+      "history": [
+        [0, "move 3 1, move 4 1"],
+        [1, "move 4 1, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.0125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-team2-2418617587-t1-0-sw3",
+      "teams": ["sample-rain", "team2"],
+      "configs": [
+        [1, 3, 2, 5],
+        [2, 4, 1, 3]
+      ],
+      "seed": 2418617587,
+      "history": [
+        [0, "move 3 1, move 4 1"],
+        [1, "move 4 1, move 2 1"],
+        [0, "pass, switch 3"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-user-team-1-2386196020-t1-0-sw2",
+      "teams": ["sample-rain", "user-team-1"],
+      "configs": [
+        [1, 4, 0, 2],
+        [0, 2, 4, 5]
+      ],
+      "seed": 2386196020,
+      "history": [
+        [0, "move 1 1, move 3"],
+        [1, "move 3 2 mega, move 3"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.7625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.7125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-user-team-1-2402971815-t1-0-sw2",
+      "teams": ["sample-rain", "user-team-1"],
+      "configs": [
+        [2, 4, 1, 5],
+        [3, 5, 0, 4]
+      ],
+      "seed": 2402971815,
+      "history": [
+        [0, "move 1 1, move 1"],
+        [1, "switch 3, move 4 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.0875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-user-team-1-2419755802-t2-0-sw4",
+      "teams": ["sample-rain", "user-team-1"],
+      "configs": [
+        [2, 5, 0, 4],
+        [2, 4, 0, 1]
+      ],
+      "seed": 2419755802,
+      "history": [
+        [0, "move 1 1, move 2 2 mega"],
+        [1, "move 1 mega, switch 3"],
+        [0, "move 1 1, move 2 2"],
+        [1, "move 2 1, move 3 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1375, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.2875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-rain-user-team-1-2436531597-t1-1-sw2",
+      "teams": ["sample-rain", "user-team-1"],
+      "configs": [
+        [1, 3, 0, 5],
+        [1, 3, 0, 4]
+      ],
+      "seed": 2436531597,
+      "history": [
+        [0, "move 2 1, move 3 2"],
+        [1, "move 1 2, switch 4"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.1125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.05, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2175075356-t1-0-sw2",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [2, 5, 3, 4],
+        [1, 5, 0, 3]
+      ],
+      "seed": 2175075356,
+      "history": [
+        [0, "move 1, switch 3"],
+        [1, "move 3 1, switch 4"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.4125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.5125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2191859631-t1-1-sw2",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [3, 4, 1, 5],
+        [3, 5, 1, 2]
+      ],
+      "seed": 2191859631,
+      "history": [
+        [0, "move 2 1, move 1 2"],
+        [1, "move 4 1, move 1 1 mega"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.7, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.575, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2191859631-t2-0-sw5",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [3, 4, 1, 5],
+        [3, 5, 1, 2]
+      ],
+      "seed": 2191859631,
+      "history": [
+        [0, "move 2 1, move 1 2"],
+        [1, "move 4 1, move 1 1 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 1 2"],
+        [1, "move 1 1, move 3 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.075, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.0375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2191859631-t2-1-sw5",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [3, 4, 1, 5],
+        [3, 5, 1, 2]
+      ],
+      "seed": 2191859631,
+      "history": [
+        [0, "move 2 1, move 1 2"],
+        [1, "move 4 1, move 1 1 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 1 2"],
+        [1, "move 1 1, move 3 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.975, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2208633138-t1-0-sw2",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [0, 1, 3, 4],
+        [1, 4, 2, 5]
+      ],
+      "seed": 2208633138,
+      "history": [
+        [0, "move 1, move 4"],
+        [1, "move 2 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.2375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-sample-rain-2225416389-t1-0-sw2",
+      "teams": ["sample-trickroom", "sample-rain"],
+      "configs": [
+        [2, 3, 1, 5],
+        [1, 4, 0, 3]
+      ],
+      "seed": 2225416389,
+      "history": [
+        [0, "move 1, move 2 2"],
+        [1, "move 3 1, move 4 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1974863023-t2-0-sw4",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [0, 3, 2, 5],
+        [0, 2, 4, 5]
+      ],
+      "seed": 1974863023,
+      "history": [
+        [0, "move 3 2, move 1 1"],
+        [1, "move 2 1 mega, switch 4"],
+        [0, "move 2 2, move 2 2"],
+        [1, "move 1, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.175, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.6125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1974863023-t2-1-sw4",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [0, 3, 2, 5],
+        [0, 2, 4, 5]
+      ],
+      "seed": 1974863023,
+      "history": [
+        [0, "move 3 2, move 1 1"],
+        [1, "move 2 1 mega, switch 4"],
+        [0, "move 2 2, move 2 2"],
+        [1, "move 1, move 3 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.7, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1991647032-t1-1-sw2",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [0, 2, 3, 5],
+        [0, 2, 1, 3]
+      ],
+      "seed": 1991647032,
+      "history": [
+        [0, "move 3 2, move 1"],
+        [1, "move 4 mega, move 2 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.4875, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1991647032-t6-0-sw14",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [0, 2, 3, 5],
+        [0, 2, 1, 3]
+      ],
+      "seed": 1991647032,
+      "history": [
+        [0, "move 3 2, move 1"],
+        [1, "move 4 mega, move 2 1"],
+        [1, "pass, switch 3"],
+        [0, "move 2 2, move 1"],
+        [1, "move 2 1, move 1 1"],
+        [1, "pass, switch 4"],
+        [0, "switch 3, move 1"],
+        [1, "move 1, move 1 1"],
+        [0, "move 1 1, move 3 2"],
+        [1, "move 2 1, move 3 1"],
+        [0, "move 2 1, move 1"],
+        [1, "move 4, move 1 2"],
+        [0, "move 2 1, move 1"],
+        [1, "move 1, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 6,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1941321841-t3-1-sw6",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [1, 3, 2, 4],
+        [1, 5, 2, 3]
+      ],
+      "seed": 1941321841,
+      "history": [
+        [0, "move 3 1, move 2 1"],
+        [1, "move 4, switch 3"],
+        [0, "move 3 2, move 2 1"],
+        [1, "move 3, move 3 mega"],
+        [0, "move 3 1, move 4 1"],
+        [1, "move 1 2, move 2 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.175, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.0875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1941321841-t4-0-sw9",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [1, 3, 2, 4],
+        [1, 5, 2, 3]
+      ],
+      "seed": 1941321841,
+      "history": [
+        [0, "move 3 1, move 2 1"],
+        [1, "move 4, switch 3"],
+        [0, "move 3 2, move 2 1"],
+        [1, "move 3, move 3 mega"],
+        [0, "move 3 1, move 4 1"],
+        [1, "move 1 2, move 2 1"],
+        [1, "switch 3, switch 4"],
+        [0, "switch 3, move 2 1"],
+        [1, "move 3 1, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.8625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team1-1958085314-t2-1-sw4",
+      "teams": ["sample-trickroom", "team1"],
+      "configs": [
+        [0, 5, 2, 3],
+        [0, 1, 4, 5]
+      ],
+      "seed": 1958085314,
+      "history": [
+        [0, "move 3 1, move 3 mega"],
+        [1, "switch 3, move 4"],
+        [0, "move 3 2, move 1"],
+        [1, "move 3 1, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1907085917-t2-0-sw4",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [3, 5, 0, 2],
+        [1, 5, 2, 4]
+      ],
+      "seed": 1907085917,
+      "history": [
+        [0, "move 1 1, move 2 1 mega"],
+        [1, "move 3, move 2 1"],
+        [0, "move 2 1, move 1"],
+        [1, "move 1 2, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.3625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1907085917-t2-1-sw4",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [3, 5, 0, 2],
+        [1, 5, 2, 4]
+      ],
+      "seed": 1907085917,
+      "history": [
+        [0, "move 1 1, move 2 1 mega"],
+        [1, "move 3, move 2 1"],
+        [0, "move 2 1, move 1"],
+        [1, "move 1 2, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.3875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.7875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1890310350-t1-0-sw2",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [0, 1, 4, 5],
+        [2, 4, 1, 3]
+      ],
+      "seed": 1890310350,
+      "history": [
+        [0, "move 2 1, move 1"],
+        [1, "move 2 2, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.4125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.4, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1940651782-t2-1-sw4",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [2, 5, 0, 4],
+        [1, 3, 2, 4]
+      ],
+      "seed": 1940651782,
+      "history": [
+        [0, "move 1, move 3 mega"],
+        [1, "move 2 1, move 1 2"],
+        [0, "move 1, move 1"],
+        [1, "move 1 2, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1923872241-t1-1-sw2",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [1, 3, 0, 4],
+        [4, 5, 0, 1]
+      ],
+      "seed": 1923872241,
+      "history": [
+        [0, "switch 4, move 2 1"],
+        [1, "move 1, move 3 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.9, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.7, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-team2-1923872241-t2-0-sw5",
+      "teams": ["sample-trickroom", "team2"],
+      "configs": [
+        [1, 3, 0, 4],
+        [4, 5, 0, 1]
+      ],
+      "seed": 1923872241,
+      "history": [
+        [0, "switch 4, move 2 1"],
+        [1, "move 1, move 3 2"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 2 1"],
+        [1, "move 1 mega, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.175, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1889240192-t2-0-sw4",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [1, 4, 2, 3],
+        [0, 1, 3, 5]
+      ],
+      "seed": 1889240192,
+      "history": [
+        [0, "move 3 1, move 3 2"],
+        [1, "move 2 1 mega, move 3"],
+        [0, "move 4, move 2 2"],
+        [1, "move 1, switch 4"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.05, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.0875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1906019603-t1-1-sw2",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [4, 5, 0, 2],
+        [0, 4, 2, 5]
+      ],
+      "seed": 1906019603,
+      "history": [
+        [0, "move 1 2, move 2 2 mega"],
+        [1, "move 4 mega, move 1 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.775, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1906019603-t2-0-sw5",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [4, 5, 0, 2],
+        [0, 4, 2, 5]
+      ],
+      "seed": 1906019603,
+      "history": [
+        [0, "move 1 2, move 2 2 mega"],
+        [1, "move 4 mega, move 1 2"],
+        [1, "pass, switch 3"],
+        [0, "move 3 2, move 1"],
+        [1, "move 1, move 2 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1922799526-t1-1-sw2",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [1, 5, 0, 2],
+        [2, 4, 1, 5]
+      ],
+      "seed": 1922799526,
+      "history": [
+        [0, "move 3 1, move 2 1 mega"],
+        [1, "switch 3, move 4"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.075, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1922799526-t4-0-sw10",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [1, 5, 0, 2],
+        [2, 4, 1, 5]
+      ],
+      "seed": 1922799526,
+      "history": [
+        [0, "move 3 1, move 2 1 mega"],
+        [1, "switch 3, move 4"],
+        [1, "switch 3, pass"],
+        [0, "move 3 1, move 1"],
+        [1, "move 1 mega, move 1 2"],
+        [0, "move 3 1, move 1"],
+        [1, "move 3, move 2"],
+        [1, "switch 4, pass"],
+        [0, "switch 3, move 1"],
+        [1, "move 4 2, pass"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "sample-trickroom-user-team-1-1939576889-t2-0-sw4",
+      "teams": ["sample-trickroom", "user-team-1"],
+      "configs": [
+        [3, 5, 0, 1],
+        [0, 3, 1, 2]
+      ],
+      "seed": 1939576889,
+      "history": [
+        [0, "move 1 1, move 3 mega"],
+        [1, "move 1 mega, move 2 2"],
+        [0, "move 2 2, move 1"],
+        [1, "move 2 2, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.4375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.325, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3068211579-t1-1-sw2",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [2, 3, 1, 5],
+        [3, 4, 1, 5]
+      ],
+      "seed": 3068211579,
+      "history": [
+        [0, "move 2 1 mega, move 2 2"],
+        [1, "move 3 1, move 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.975, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.8625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3068211579-t2-0-sw5",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [2, 3, 1, 5],
+        [3, 4, 1, 5]
+      ],
+      "seed": 3068211579,
+      "history": [
+        [0, "move 2 1 mega, move 2 2"],
+        [1, "move 3 1, move 1"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 1 1"],
+        [1, "move 2 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1375, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.05, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3051432936-t3-1-sw6",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [0, 2, 3, 4],
+        [4, 5, 0, 3]
+      ],
+      "seed": 3051432936,
+      "history": [
+        [0, "move 1 mega, move 3"],
+        [1, "switch 3, move 1 1 mega"],
+        [0, "move 1, move 1"],
+        [1, "move 4, move 3 2"],
+        [0, "move 1, move 1"],
+        [1, "move 3, move 2 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3101773473-t1-0-sw2",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [2, 3, 1, 4],
+        [2, 5, 0, 4]
+      ],
+      "seed": 3101773473,
+      "history": [
+        [0, "move 3 mega, move 3 2"],
+        [1, "move 1 1, move 1 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3084990678-t1-1-sw2",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [0, 1, 3, 4],
+        [0, 5, 1, 2]
+      ],
+      "seed": 3084990678,
+      "history": [
+        [0, "move 2 1 mega, move 1 1"],
+        [1, "move 1 2, move 2 1 mega"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.2625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.5125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-rain-3084990678-t2-0-sw5",
+      "teams": ["team1", "sample-rain"],
+      "configs": [
+        [0, 1, 3, 4],
+        [0, 5, 1, 2]
+      ],
+      "seed": 3084990678,
+      "history": [
+        [0, "move 2 1 mega, move 1 1"],
+        [1, "move 1 2, move 2 1 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 1, switch 4"],
+        [1, "move 2 2, move 2 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.8, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.925, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-trickroom-787355557-t2-0-sw4",
+      "teams": ["team1", "sample-trickroom"],
+      "configs": [
+        [0, 2, 1, 4],
+        [0, 3, 2, 4]
+      ],
+      "seed": 787355557,
+      "history": [
+        [0, "move 2 1 mega, move 1"],
+        [1, "move 1, move 2 2"],
+        [0, "move 1, switch 3"],
+        [1, "move 3 2, move 2 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.15, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.4, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-trickroom-787355557-t2-1-sw4",
+      "teams": ["team1", "sample-trickroom"],
+      "configs": [
+        [0, 2, 1, 4],
+        [0, 3, 2, 4]
+      ],
+      "seed": 787355557,
+      "history": [
+        [0, "move 2 1 mega, move 1"],
+        [1, "move 1, move 2 2"],
+        [0, "move 1, switch 3"],
+        [1, "move 3 2, move 2 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.7875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.2375, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-trickroom-804134154-t1-0-sw2",
+      "teams": ["team1", "sample-trickroom"],
+      "configs": [
+        [2, 3, 4, 5],
+        [4, 5, 0, 3]
+      ],
+      "seed": 804134154,
+      "history": [
+        [0, "move 1 mega, move 1 1"],
+        [1, "move 3 1, move 2 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.25, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.475, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-trickroom-753810114-t1-0-sw2",
+      "teams": ["team1", "sample-trickroom"],
+      "configs": [
+        [2, 3, 4, 5],
+        [2, 4, 0, 3]
+      ],
+      "seed": 753810114,
+      "history": [
+        [0, "move 3 mega, move 1 1"],
+        [1, "move 4, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-sample-trickroom-770584625-t1-0-sw2",
+      "teams": ["team1", "sample-trickroom"],
+      "configs": [
+        [4, 5, 0, 1],
+        [2, 5, 0, 3]
+      ],
+      "seed": 770584625,
+      "history": [
+        [0, "move 2, move 1 2"],
+        [1, "move 1, move 3 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.025, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3473577719-t1-1-sw2",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [4, 5, 2, 3],
+        [3, 5, 1, 4]
+      ],
+      "seed": 3473577719,
+      "history": [
+        [0, "move 1 1, move 2 2"],
+        [1, "move 1 2, move 3 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3490345028-t2-1-sw4",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [0, 4, 2, 3],
+        [1, 2, 3, 4]
+      ],
+      "seed": 3490345028,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 3, move 2 1"],
+        [0, "move 1, move 2"],
+        [1, "switch 4, move 2 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3490345028-t3-0-sw7",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [0, 4, 2, 3],
+        [1, 2, 3, 4]
+      ],
+      "seed": 3490345028,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 3, move 2 1"],
+        [0, "move 1, move 2"],
+        [1, "switch 4, move 2 1"],
+        [1, "switch 3, switch 4"],
+        [0, "move 1, move 2"],
+        [1, "move 1 1, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3507124689-t1-0-sw2",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [1, 2, 0, 4],
+        [2, 4, 3, 5]
+      ],
+      "seed": 3507124689,
+      "history": [
+        [0, "move 1 1, move 2 1 mega"],
+        [1, "move 2 2, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.15, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.45, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3507124689-t1-1-sw2",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [1, 2, 0, 4],
+        [2, 4, 3, 5]
+      ],
+      "seed": 3507124689,
+      "history": [
+        [0, "move 1 1, move 2 1 mega"],
+        [1, "move 2 2, move 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.7625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.7875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3523896110-t1-1-sw2",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [0, 4, 1, 3],
+        [1, 4, 3, 5]
+      ],
+      "seed": 3523896110,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 3, move 2 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.0625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.3, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-team2-3523896110-t4-0-sw10",
+      "teams": ["team1", "team2"],
+      "configs": [
+        [0, 4, 1, 3],
+        [1, 4, 3, 5]
+      ],
+      "seed": 3523896110,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 3, move 2 2"],
+        [1, "pass, switch 3"],
+        [0, "move 1, move 2"],
+        [1, "move 4, move 3 2"],
+        [0, "move 1, move 2"],
+        [1, "move 2 2, move 2 2"],
+        [1, "switch 4, pass"],
+        [0, "move 2 1, move 1 2"],
+        [1, "move 2 2, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1398847250-t1-0-sw2",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 4, 1, 3],
+        [4, 5, 1, 2]
+      ],
+      "seed": 1398847250,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 1 1, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.45, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.2, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1398847250-t1-1-sw2",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 4, 1, 3],
+        [4, 5, 1, 2]
+      ],
+      "seed": 1398847250,
+      "history": [
+        [0, "move 1 mega, move 2"],
+        [1, "move 1 1, move 1 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.4875, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.75, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1382070625-t4-0-sw8",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 3, 1, 5],
+        [2, 3, 1, 4]
+      ],
+      "seed": 1382070625,
+      "history": [
+        [0, "switch 3, move 3 1"],
+        [1, "move 1 mega, move 1 2"],
+        [0, "move 3, move 3 1"],
+        [1, "move 2 1, switch 4"],
+        [0, "move 4, move 1 2"],
+        [1, "move 2 1, move 1 1"],
+        [0, "move 1 1, move 2 1"],
+        [1, "move 2 1, move 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.7875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1382070625-t4-1-sw8",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 3, 1, 5],
+        [2, 3, 1, 4]
+      ],
+      "seed": 1382070625,
+      "history": [
+        [0, "switch 3, move 3 1"],
+        [1, "move 1 mega, move 1 2"],
+        [0, "move 3, move 3 1"],
+        [1, "move 2 1, switch 4"],
+        [0, "move 4, move 1 2"],
+        [1, "move 2 1, move 1 1"],
+        [0, "move 1 1, move 2 1"],
+        [1, "move 2 1, move 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 4,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.325, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1432388664-t1-1-sw2",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 3, 4, 5],
+        [3, 5, 0, 4]
+      ],
+      "seed": 1432388664,
+      "history": [
+        [0, "move 1 mega, move 3 2"],
+        [1, "switch 4, move 2 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.35, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.45, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1432388664-t2-0-sw5",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 3, 4, 5],
+        [3, 5, 0, 4]
+      ],
+      "seed": 1432388664,
+      "history": [
+        [0, "move 1 mega, move 3 2"],
+        [1, "switch 4, move 2 2"],
+        [1, "pass, switch 3"],
+        [0, "move 2 1, move 1 1"],
+        [1, "move 1 1, move 2 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.9625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.825, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team1-user-team-1-1415614087-t1-0-sw2",
+      "teams": ["team1", "user-team-1"],
+      "configs": [
+        [0, 3, 2, 4],
+        [2, 5, 0, 4]
+      ],
+      "seed": 1415614087,
+      "history": [
+        [0, "move 1 mega, move 3 1"],
+        [1, "move 1 mega, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.025, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1738471586-t1-0-sw2",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [2, 5, 3, 4],
+        [0, 5, 2, 3]
+      ],
+      "seed": 1738471586,
+      "history": [
+        [0, "move 1 2, move 1 2"],
+        [1, "move 1 1, switch 4"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.4375, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.7625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1755218225-t1-1-sw2",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [3, 4, 1, 2],
+        [0, 4, 1, 5]
+      ],
+      "seed": 1755218225,
+      "history": [
+        [0, "move 3 1, move 2 2"],
+        [1, "move 1 2, move 3"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.0625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.075, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1755218225-t2-0-sw5",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [3, 4, 1, 2],
+        [0, 4, 1, 5]
+      ],
+      "seed": 1755218225,
+      "history": [
+        [0, "move 3 1, move 2 2"],
+        [1, "move 1 2, move 3"],
+        [1, "pass, switch 3"],
+        [0, "move 2 1, move 2 1"],
+        [1, "switch 4, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.95, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.95, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1771998108-t2-1-sw4",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [1, 3, 4, 5],
+        [3, 4, 0, 5]
+      ],
+      "seed": 1771998108,
+      "history": [
+        [0, "move 1 2, move 1 1"],
+        [1, "move 1 1, move 2"],
+        [0, "move 2 2, move 1 1"],
+        [1, "switch 3, move 3"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.0125, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.2125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1771998108-t5-0-sw12",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [1, 3, 4, 5],
+        [3, 4, 0, 5]
+      ],
+      "seed": 1771998108,
+      "history": [
+        [0, "move 1 2, move 1 1"],
+        [1, "move 1 1, move 2"],
+        [0, "move 2 2, move 1 1"],
+        [1, "switch 3, move 3"],
+        [1, "pass, switch 3"],
+        [0, "move 3, move 2 2"],
+        [1, "move 3, move 1 1"],
+        [0, "move 3, move 1 2"],
+        [1, "move 1 1, move 4 2"],
+        [1, "pass, switch 4"],
+        [0, "move 4, move 4 2"],
+        [1, "move 2 1, move 3 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 5,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.9125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.9, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1788780011-t1-0-sw2",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [3, 4, 0, 2],
+        [0, 2, 1, 3]
+      ],
+      "seed": 1788780011,
+      "history": [
+        [0, "move 2 2, move 2 2"],
+        [1, "move 1 2, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.2625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.35, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-rain-1788780011-t1-1-sw2",
+      "teams": ["team2", "sample-rain"],
+      "configs": [
+        [3, 4, 0, 2],
+        [0, 2, 1, 3]
+      ],
+      "seed": 1788780011,
+      "history": [
+        [0, "move 2 2, move 2 2"],
+        [1, "move 1 2, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.75, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.75, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2276013181-t1-1-sw2",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [0, 4, 1, 5],
+        [0, 5, 1, 3]
+      ],
+      "seed": 2276013181,
+      "history": [
+        [0, "move 3 mega, move 1"],
+        [1, "move 3 2, move 4 mega"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.0125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.175, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2276013181-t2-0-sw5",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [0, 4, 1, 5],
+        [0, 5, 1, 3]
+      ],
+      "seed": 2276013181,
+      "history": [
+        [0, "move 3 mega, move 1"],
+        [1, "move 3 2, move 4 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 1, move 1"],
+        [1, "move 2, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2259235562-t1-0-sw2",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [0, 5, 1, 4],
+        [0, 4, 1, 2]
+      ],
+      "seed": 2259235562,
+      "history": [
+        [0, "move 3 mega, move 1 1"],
+        [1, "move 3 1, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2242455687-t2-1-sw4",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [1, 3, 0, 5],
+        [1, 2, 4, 5]
+      ],
+      "seed": 2242455687,
+      "history": [
+        [0, "move 3, move 2 1"],
+        [1, "move 2, move 3 2"],
+        [0, "move 2 1, move 2 2"],
+        [1, "move 1, move 3 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.225, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2242455687-t4-0-sw9",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [1, 3, 0, 5],
+        [1, 2, 4, 5]
+      ],
+      "seed": 2242455687,
+      "history": [
+        [0, "move 3, move 2 1"],
+        [1, "move 2, move 3 2"],
+        [0, "move 2 1, move 2 2"],
+        [1, "move 1, move 3 1"],
+        [1, "switch 3, switch 4"],
+        [0, "move 4, move 1 2"],
+        [1, "move 2 1, move 3 mega"],
+        [0, "switch 3, move 1 2"],
+        [1, "move 3 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2225676596-t1-1-sw2",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [2, 5, 3, 4],
+        [0, 4, 2, 5]
+      ],
+      "seed": 2225676596,
+      "history": [
+        [0, "move 4 2, move 4"],
+        [1, "move 2 1, move 1 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.275, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.1125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-sample-trickroom-2225676596-t2-0-sw5",
+      "teams": ["team2", "sample-trickroom"],
+      "configs": [
+        [2, 5, 3, 4],
+        [0, 4, 2, 5]
+      ],
+      "seed": 2225676596,
+      "history": [
+        [0, "move 4 2, move 4"],
+        [1, "move 2 1, move 1 2"],
+        [1, "pass, switch 3"],
+        [0, "switch 4, move 1 1"],
+        [1, "move 3 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.475, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.6875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1894208277-t1-1-sw2",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [3, 4, 0, 5],
+        [3, 4, 1, 5]
+      ],
+      "seed": 1894208277,
+      "history": [
+        [0, "move 3 2, move 1"],
+        [1, "switch 3, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.9625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1894208277-t2-0-sw5",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [3, 4, 0, 5],
+        [3, 4, 1, 5]
+      ],
+      "seed": 1894208277,
+      "history": [
+        [0, "move 3 2, move 1"],
+        [1, "switch 3, move 1 1"],
+        [1, "switch 3, pass"],
+        [0, "move 2 2, move 1"],
+        [1, "move 1 1, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.0125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1877454214-t2-0-sw4",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [1, 5, 0, 4],
+        [3, 4, 1, 2]
+      ],
+      "seed": 1877454214,
+      "history": [
+        [0, "move 3, move 1 2"],
+        [1, "move 3 1, move 3 1"],
+        [0, "move 3, move 1 1"],
+        [1, "move 1 2, move 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.5875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.6875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1927757951-t1-1-sw2",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [3, 5, 1, 2],
+        [1, 3, 0, 2]
+      ],
+      "seed": 1927757951,
+      "history": [
+        [0, "move 1 1, move 1 2"],
+        [1, "move 3, switch 4"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.775, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.7875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1927757951-t4-0-sw9",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [3, 5, 1, 2],
+        [1, 3, 0, 2]
+      ],
+      "seed": 1927757951,
+      "history": [
+        [0, "move 1 1, move 1 2"],
+        [1, "move 3, switch 4"],
+        [1, "switch 3, switch 4"],
+        [0, "switch 3, move 1 1"],
+        [1, "move 2 2 mega, move 1 1"],
+        [0, "move 4, move 4"],
+        [1, "pass, move 3 1"],
+        [0, "move 3, move 1 2"],
+        [1, "pass, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 1, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 1, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-team1-1910987488-t1-0-sw2",
+      "teams": ["team2", "team1"],
+      "configs": [
+        [1, 5, 0, 3],
+        [0, 5, 1, 2]
+      ],
+      "seed": 1910987488,
+      "history": [
+        [0, "move 2 2, move 1 1"],
+        [1, "move 2 2 mega, move 4 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.4625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.35, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2096809356-t1-0-sw2",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [1, 2, 3, 5],
+        [0, 4, 1, 5]
+      ],
+      "seed": 2096809356,
+      "history": [
+        [0, "move 2 2, move 1 2"],
+        [1, "move 1 mega, move 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.075, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.275, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2096809356-t1-1-sw2",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [1, 2, 3, 5],
+        [0, 4, 1, 5]
+      ],
+      "seed": 2096809356,
+      "history": [
+        [0, "move 2 2, move 1 2"],
+        [1, "move 1 mega, move 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.8375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.75, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2080046971-t1-1-sw2",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [0, 2, 1, 3],
+        [1, 4, 2, 5]
+      ],
+      "seed": 2080046971,
+      "history": [
+        [0, "move 1 mega, move 1 2"],
+        [1, "move 1 2, move 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.05, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.225, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2080046971-t2-0-sw5",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [0, 2, 1, 3],
+        [1, 4, 2, 5]
+      ],
+      "seed": 2080046971,
+      "history": [
+        [0, "move 1 mega, move 1 2"],
+        [1, "move 1 2, move 2"],
+        [1, "pass, switch 3"],
+        [0, "move 2 2, move 1 2"],
+        [1, "move 3, move 2 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.825, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2063255767-t1-0-sw2",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [0, 2, 1, 4],
+        [0, 3, 1, 2]
+      ],
+      "seed": 2063255767,
+      "history": [
+        [0, "move 2 1 mega, move 1 2"],
+        [1, "move 1 mega, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, switch 4",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "team2-user-team-1-2046480964-t1-0-sw2",
+      "teams": ["team2", "user-team-1"],
+      "configs": [
+        [1, 5, 0, 4],
+        [2, 5, 3, 4]
+      ],
+      "seed": 2046480964,
+      "history": [
+        [0, "move 4, move 1 1"],
+        [1, "move 2 2 mega, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.025, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.075, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1313508603-t1-0-sw2",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 2, 0, 3],
+        [3, 5, 1, 4]
+      ],
+      "seed": 1313508603,
+      "history": [
+        [0, "move 1 2, move 3 mega"],
+        [1, "move 3 2, move 1 2 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.2125, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.0625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1313508603-t4-1-sw11",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 2, 0, 3],
+        [3, 5, 1, 4]
+      ],
+      "seed": 1313508603,
+      "history": [
+        [0, "move 1 2, move 3 mega"],
+        [1, "move 3 2, move 1 2 mega"],
+        [0, "pass, switch 3"],
+        [1, "move 3 1, move 2 1"],
+        [0, "move 3, move 1"],
+        [0, "switch 4, pass"],
+        [1, "move 4 1, switch 4"],
+        [0, "move 1 2, move 1"],
+        [1, "switch 3, pass"],
+        [0, "move 3 1, move 1"],
+        [1, "switch 3, move 4 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 4,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.3375, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.4125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1330346503-t1-0-sw2",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 4, 2, 5],
+        [1, 2, 3, 5]
+      ],
+      "seed": 1330346503,
+      "history": [
+        [0, "move 3, move 2"],
+        [1, "move 2 1, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.0125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.05, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1347126186-t1-0-sw2",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 2, 3, 5],
+        [0, 2, 1, 3]
+      ],
+      "seed": 1347126186,
+      "history": [
+        [0, "move 1 1, move 3 mega"],
+        [1, "move 1 1, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.025, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1363904829-t1-1-sw2",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 2, 0, 4],
+        [3, 4, 0, 1]
+      ],
+      "seed": 1363904829,
+      "history": [
+        [0, "move 3, move 2 1 mega"],
+        [1, "move 3 2, switch 4"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.75, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.7, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-rain-1363904829-t4-0-sw10",
+      "teams": ["user-team-1", "sample-rain"],
+      "configs": [
+        [1, 2, 0, 4],
+        [3, 4, 0, 1]
+      ],
+      "seed": 1363904829,
+      "history": [
+        [0, "move 3, move 2 1 mega"],
+        [1, "move 3 2, switch 4"],
+        [1, "switch 3, pass"],
+        [0, "move 1 1, move 1"],
+        [1, "move 1 1, move 2 1"],
+        [1, "switch 4, pass"],
+        [0, "move 4, move 4"],
+        [1, "move 1, move 2 2"],
+        [0, "move 1 1, move 2 1"],
+        [1, "move 1, move 2 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 4,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.55, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2472832822-t2-1-sw4",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [1, 4, 0, 3],
+        [1, 4, 2, 5]
+      ],
+      "seed": 2472832822,
+      "history": [
+        [0, "switch 4, move 1 1"],
+        [1, "move 3 1, move 3 1"],
+        [0, "move 1 2, move 1 2"],
+        [1, "move 2, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.175, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.3125, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2472832822-t3-0-sw7",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [1, 4, 0, 3],
+        [1, 4, 2, 5]
+      ],
+      "seed": 2472832822,
+      "history": [
+        [0, "switch 4, move 1 1"],
+        [1, "move 3 1, move 3 1"],
+        [0, "move 1 2, move 1 2"],
+        [1, "move 2, move 1 1"],
+        [1, "pass, switch 3"],
+        [0, "move 1 1, move 2"],
+        [1, "move 3 2, move 3 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.825, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.4, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2456052121-t2-0-sw4",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [0, 2, 1, 3],
+        [0, 3, 2, 5]
+      ],
+      "seed": 2456052121,
+      "history": [
+        [0, "move 2 1 mega, move 3"],
+        [1, "move 3 1, move 1 1"],
+        [0, "move 1, move 1"],
+        [1, "move 3 1, move 2 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.5875, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.325, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2439281164-t1-0-sw2",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [1, 3, 0, 2],
+        [2, 5, 0, 4]
+      ],
+      "seed": 2439281164,
+      "history": [
+        [0, "move 3, move 1 2"],
+        [1, "move 1, move 2 1 mega"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.9, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.775, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2422500479-t1-0-sw2",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [4, 5, 2, 3],
+        [1, 4, 0, 3]
+      ],
+      "seed": 2422500479,
+      "history": [
+        [0, "move 1 2, move 3 1"],
+        [1, "move 3 1, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.25, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-sample-trickroom-2422500479-t1-1-sw2",
+      "teams": ["user-team-1", "sample-trickroom"],
+      "configs": [
+        [4, 5, 2, 3],
+        [1, 4, 0, 3]
+      ],
+      "seed": 2422500479,
+      "history": [
+        [0, "move 1 2, move 3 1"],
+        [1, "move 3 1, move 1 2"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.65, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2471614768-t1-0-sw2",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [1, 5, 0, 3],
+        [2, 4, 3, 5]
+      ],
+      "seed": 2471614768,
+      "history": [
+        [0, "move 3, move 1 2"],
+        [1, "move 2 2 mega, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.65, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2471614768-t1-1-sw2",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [1, 5, 0, 3],
+        [2, 4, 3, 5]
+      ],
+      "seed": 2471614768,
+      "history": [
+        [0, "move 3, move 1 2"],
+        [1, "move 2 2 mega, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.8375, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.5875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2488395655-t2-1-sw4",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [0, 4, 3, 5],
+        [0, 3, 1, 5]
+      ],
+      "seed": 2488395655,
+      "history": [
+        [0, "move 2 2 mega, move 1 1"],
+        [1, "switch 4, move 1 2"],
+        [0, "move 1, move 2"],
+        [1, "move 1 2, switch 3"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 2,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.0125, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2488395655-t3-0-sw7",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [0, 4, 3, 5],
+        [0, 3, 1, 5]
+      ],
+      "seed": 2488395655,
+      "history": [
+        [0, "move 2 2 mega, move 1 1"],
+        [1, "switch 4, move 1 2"],
+        [0, "move 1, move 2"],
+        [1, "move 1 2, switch 3"],
+        [1, "pass, switch 3"],
+        [0, "move 2 2, move 2"],
+        [1, "move 1 2, move 1 2"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.9625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2438056670-t1-1-sw2",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [0, 5, 2, 4],
+        [0, 4, 2, 3]
+      ],
+      "seed": 2438056670,
+      "history": [
+        [0, "move 2 2 mega, move 1 2"],
+        [1, "move 2 1 mega, move 1 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 3",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1625, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.075, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2438056670-t2-0-sw5",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [0, 5, 2, 4],
+        [0, 4, 2, 3]
+      ],
+      "seed": 2438056670,
+      "history": [
+        [0, "move 2 2 mega, move 1 2"],
+        [1, "move 2 1 mega, move 1 1"],
+        [1, "pass, switch 3"],
+        [0, "move 2 2, move 1 2"],
+        [1, "move 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 2,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0.8125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.85, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2454835373-t1-1-sw2",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [4, 5, 0, 2],
+        [1, 2, 3, 4]
+      ],
+      "seed": 2454835373,
+      "history": [
+        [0, "move 2, move 3 1"],
+        [1, "move 1 2, move 2 2 mega"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.0625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.0625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team1-2454835373-t3-0-sw7",
+      "teams": ["user-team-1", "team1"],
+      "configs": [
+        [4, 5, 0, 2],
+        [1, 2, 3, 4]
+      ],
+      "seed": 2454835373,
+      "history": [
+        [0, "move 2, move 3 1"],
+        [1, "move 1 2, move 2 2 mega"],
+        [1, "switch 3, pass"],
+        [0, "move 2, switch 3"],
+        [1, "move 3 1, move 2 2"],
+        [0, "move 1 2, switch 4"],
+        [1, "move 2 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 3,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.95, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.9875, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team2-1329449994-t1-0-sw2",
+      "teams": ["user-team-1", "team2"],
+      "configs": [
+        [0, 3, 4, 5],
+        [1, 5, 2, 4]
+      ],
+      "seed": 1329449994,
+      "history": [
+        [0, "move 2 2 mega, move 3 1"],
+        [1, "move 2 2, move 1 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 3, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.1625, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.05, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team2-1312671129-t1-0-sw2",
+      "teams": ["user-team-1", "team2"],
+      "configs": [
+        [2, 3, 1, 5],
+        [2, 4, 0, 5]
+      ],
+      "seed": 1312671129,
+      "history": [
+        [0, "move 2 1 mega, move 1 2"],
+        [1, "move 1 1, move 1"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.7, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.825, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team2-1312671129-t1-1-sw2",
+      "teams": ["user-team-1", "team2"],
+      "configs": [
+        [2, 3, 1, 5],
+        [2, 4, 0, 5]
+      ],
+      "seed": 1312671129,
+      "history": [
+        [0, "move 2 1 mega, move 1 2"],
+        [1, "move 1 1, move 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, pass",
+      "candidates": [
+        { "choice": "switch 3, pass", "winRate": 0.2125, "games": 80, "stage": 1 },
+        { "choice": "switch 4, pass", "winRate": 0.4625, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team2-1362964704-t1-1-sw2",
+      "teams": ["user-team-1", "team2"],
+      "configs": [
+        [0, 1, 3, 5],
+        [2, 4, 0, 3]
+      ],
+      "seed": 1362964704,
+      "history": [
+        [0, "move 1 mega, move 1 1"],
+        [1, "move 2 1, move 1"]
+      ],
+      "side": 1,
+      "kind": "switch",
+      "turn": 1,
+      "best": "switch 4, switch 3",
+      "candidates": [
+        { "choice": "switch 3, switch 4", "winRate": 0, "games": 80, "stage": 1 },
+        { "choice": "switch 4, switch 3", "winRate": 0.025, "games": 80, "stage": 1 }
+      ]
+    },
+    {
+      "id": "user-team-1-team2-1346188919-t1-0-sw2",
+      "teams": ["user-team-1", "team2"],
+      "configs": [
+        [4, 5, 0, 3],
+        [0, 1, 4, 5]
+      ],
+      "seed": 1346188919,
+      "history": [
+        [0, "move 1 1, move 3 2"],
+        [1, "move 2 2 mega, move 4"]
+      ],
+      "side": 0,
+      "kind": "switch",
+      "turn": 1,
+      "best": "pass, switch 4",
+      "candidates": [
+        { "choice": "pass, switch 3", "winRate": 0.1875, "games": 80, "stage": 1 },
+        { "choice": "pass, switch 4", "winRate": 0.5375, "games": 80, "stage": 1 }
+      ]
+    }
+  ]
+}

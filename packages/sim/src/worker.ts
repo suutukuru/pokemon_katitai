@@ -26,6 +26,7 @@ interface TeacherTask {
   configs: [Config, Config];
   seed: number;
   opts: SearchOptions;
+  kinds?: ("move" | "switch")[];
 }
 parentPort!.on(
   "message",
@@ -34,7 +35,7 @@ parentPort!.on(
       const t = msg.teacher;
       parentPort!.postMessage({
         id: msg.id,
-        results: teacherBattle(ctx, t.teams, t.a, t.b, t.configs, t.seed, t.opts),
+        results: teacherBattle(ctx, t.teams, t.a, t.b, t.configs, t.seed, t.opts, t.kinds),
       });
       return;
     }

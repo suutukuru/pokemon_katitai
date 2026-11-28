@@ -11,7 +11,14 @@ import {
   type ActionMetrics,
   type EvalRates,
 } from "./eval.js";
-import { chooseFor, policyDistribution, searchCandidates, type WeightedJoint } from "./policy.js";
+import {
+  chooseFor,
+  forcedSwitchOptions,
+  policyDistribution,
+  searchCandidates,
+  switchChoice,
+  type WeightedJoint,
+} from "./policy.js";
 import { snap } from "./replay.js";
 import { mixSeed, Rng } from "./rng.js";
 import { markLogSent, startBattle, type Config, type SimContext } from "./runner.js";
@@ -37,6 +44,8 @@ export function teacherBattle(
   configs: [Config, Config],
   seed: number,
   opts: SearchOptions,
+  /** which decisions to label */
+  kinds: readonly ("move" | "switch")[] = ["move"],
 ): TeacherPosition[] {
   const tags = engineTags();
   const battle = startBattle(ctx, a, b, configs[0], configs[1], seed);
@@ -54,7 +63,44 @@ export function teacherBattle(
   let guard = 0;
   while (!battle.ended && battle.turn <= ctx.maxTurns && guard++ < ctx.maxTurns * 4) {
     markLogSent(battle);
-    if (needsMove(battle, 0) && needsMove(battle, 1)) {
+    // forced switches: every legal switch-in, evaluated by rollouts from this exact point
+    if (kinds.includes("switch"))
+      for (const s of [0, 1] as const) {
+        const side = battle.sides[s];
+        const req = side.activeRequest;
+        if (!req?.forceSwitch || side.isChoiceDone() || battle.ended) continue;
+        const choices = forcedSwitchOptions(side, req);
+        if (choices.length < 2) continue;
+        const cands = choices.map((choice) => ({ choice, slots: [], score: 0 }));
+        const ev = successiveHalving(
+          ctx,
+          snap(battle),
+          s,
+          cands,
+          [],
+          { options: cands.length, stages: [opts.stages.at(-1)!].map((x) => ({ ...x, keep: 1 })) },
+          mixSeed(seed, 0x5c, battle.turn, s, history.length),
+        );
+        const best = ev.reduce((x, y) => (y.winRate > x.winRate ? y : x), ev[0]!);
+        out.push({
+          id: `${teams[0]}-${teams[1]}-${seed}-t${battle.turn}-${s}-sw${history.length}`,
+          teams,
+          configs,
+          seed,
+          history: history.map((h) => [h[0], h[1]] as [0 | 1, string]),
+          side: s,
+          kind: "switch",
+          turn: Math.max(1, battle.turn),
+          best: best.choice,
+          candidates: ev.map((e) => ({
+            choice: e.choice,
+            winRate: r4(e.winRate),
+            games: e.games,
+            stage: e.stage,
+          })),
+        });
+      }
+    if (kinds.includes("move") && needsMove(battle, 0) && needsMove(battle, 1)) {
       const state = snap(battle);
       for (const s of [0, 1] as const) {
         const side = battle.sides[s];
@@ -78,6 +124,7 @@ export function teacherBattle(
           seed,
           history: history.map((h) => [h[0], h[1]] as [0 | 1, string]),
           side: s,
+          kind: "move",
           turn: battle.turn,
           best: best.choice,
           candidates: ev.map((e) => ({
@@ -155,6 +202,8 @@ export interface TeacherEval {
   meanRegret: number;
   /** share of the policy's probability that fell on candidates the teacher evaluated */
   coverage: number;
+  /** forced switches (the policy's choice is deterministic): agreement and teacher win rate */
+  forcedSwitch: { n: number; top1: number; meanPolicyRate: number; meanBestRate: number };
 }
 
 /** Compare the current policy with the teacher's labels. Deterministic. */
@@ -168,7 +217,21 @@ export function evaluateAgainstTeacher(
   let bestSum = 0;
   let polSum = 0;
   let covSum = 0;
+  const sw = { n: 0, top1: 0, rateSum: 0, bestSum: 0 };
   for (const pos of data.positions) {
+    if (pos.kind === "switch") {
+      const battle = replayPosition(ctx, data, pos);
+      const side = battle.sides[pos.side];
+      const req = side.activeRequest;
+      if (!req?.forceSwitch) throw new Error(`${pos.id}: not at a forced switch after replay`);
+      const pick = switchChoice(battle, side, req, tags, ctx.params);
+      const rate = new Map(pos.candidates.map((c) => [c.choice, c.winRate]));
+      sw.n++;
+      if (pick === pos.best) sw.top1++;
+      sw.rateSum += rate.get(pick) ?? 0;
+      sw.bestSum += rate.get(pos.best) ?? 0;
+      continue;
+    }
     const battle = replayPosition(ctx, data, pos);
     const side = battle.sides[pos.side];
     const dist = policyDistribution(battle, side, tags, ctx.params, temperature);
@@ -226,9 +289,15 @@ export function evaluateAgainstTeacher(
     polSum += mass > 0 ? val / mass : 0;
     covSum += mass;
   }
-  const n = data.positions.length;
+  const n = data.positions.length - sw.n;
   return {
     positions: n,
+    forcedSwitch: {
+      n: sw.n,
+      top1: sw.n ? r4(sw.top1 / sw.n) : 0,
+      meanPolicyRate: sw.n ? r4(sw.rateSum / sw.n) : 0,
+      meanBestRate: sw.n ? r4(sw.bestSum / sw.n) : 0,
+    },
     temperature,
     actions: metrics,
     rates: {
@@ -263,5 +332,13 @@ export function compareTeacherEvals(
   push("meanPolicyRate", before.meanPolicyRate, after.meanPolicyRate);
   push("meanRegret", before.meanRegret, after.meanRegret);
   push("coverage", before.coverage, after.coverage);
+  if (before.forcedSwitch?.n && after.forcedSwitch?.n) {
+    push("forcedSwitch.top1", before.forcedSwitch.top1, after.forcedSwitch.top1);
+    push(
+      "forcedSwitch.meanPolicyRate",
+      before.forcedSwitch.meanPolicyRate,
+      after.forcedSwitch.meanPolicyRate,
+    );
+  }
   return rows;
 }

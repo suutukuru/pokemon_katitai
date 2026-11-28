@@ -122,7 +122,7 @@
     "evalReplayRetries": 64,
     "outspedKoDiscount": 0,
     "outspedProtectBonus": 0,
-    "outspedSwitchBonus": 0.1,
+    "outspedSwitchBonus": 0,
     "priorityKoBonus": 0,
     "overkillPenalty": 0,
     "focusKoBonus": 0,
@@ -130,6 +130,15 @@
     "redirectAttackBonus": 0,
     "koSpread": 0,
     "jointInteraction": 0,
-    "allyProtectRefund": 0
+    "allyProtectRefund": 0,
+    "damageModel": 0,
+    "forcedSwitchModel": 1,
+    "switchOffenseWeight": 1,
+    "switchDefenseWeight": 1,
+    "switchSpeedWeight": 0.6,
+    "switchMatchupWeight": 0,
+    "switchResistBonus": 0,
+    "switchResistRatio": 0.5,
+    "intimidateCycleBonus": 0.1
   }
 }

@@ -113,6 +113,7 @@ export interface TeacherTask {
   configs: [[number, number, number, number], [number, number, number, number]];
   seed: number;
   opts: SearchOptions;
+  kinds?: ("move" | "switch")[];
 }
 
 /** Label positions with the search in parallel (one battle per worker at a time); task order kept. */

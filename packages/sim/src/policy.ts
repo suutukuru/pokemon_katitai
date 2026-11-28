@@ -70,6 +70,7 @@ export function estimateDamage(
   spreadTargets: number,
 ): number {
   if (move.category === "Status") return 0;
+  if (params["damageModel"] === 1) return showdownDamage(b, atk, def, move, tags, spreadTargets);
   let type = move.type;
   const ate = tags.abilities.typeChange[atk.ability];
   if (ate && type === ate.from) type = ate.to;
@@ -100,6 +101,77 @@ export function estimateDamage(
   if (atk.item === "expertbelt" && eff > 1) dmg *= 1.2;
   const acc = move.accuracy === true ? 1 : move.accuracy / 100;
   return dmg * acc;
+}
+
+interface PsDamageInternals {
+  prng: { clone(): unknown };
+  randomizer(d: number): number;
+  trunc(x: number): number;
+  dex: { getActiveMove(id: string): Record<string, unknown> };
+  actions: {
+    getDamage(src: PsPokemon, tgt: PsPokemon, move: unknown, quiet: boolean): unknown;
+  };
+  singleEvent(e: string, ...args: unknown[]): unknown;
+  runEvent(e: string, ...args: unknown[]): unknown;
+  activeMove: unknown;
+  activePokemon: unknown;
+  activeTarget: unknown;
+}
+
+/**
+ * R-4: expected damage as Showdown computes it (all modifiers: items, abilities, terrain, screens,
+ * Helping Hand, boosts, weather …), with the mean damage roll, no random crit (always-crit moves
+ * still crit) and Showdown's PRNG untouched. Multi-hit: 2–5 hits count as 3, each hit computed.
+ * Times accuracy.
+ */
+export function showdownDamage(
+  b: PsBattle,
+  atk: PsPokemon,
+  def: PsPokemon,
+  move: PsMove,
+  tags: EngineTags,
+  spreadTargets: number,
+): number {
+  const bb = b as unknown as PsDamageInternals;
+  const savedPrng = bb.prng;
+  const hadOwn = Object.prototype.hasOwnProperty.call(bb, "randomizer");
+  const savedRandomizer = bb.randomizer;
+  const savedActive = [bb.activeMove, bb.activePokemon, bb.activeTarget] as const;
+  bb.prng = savedPrng.clone() as PsDamageInternals["prng"];
+  bb.randomizer = (d: number) => bb.trunc(bb.trunc(d * 92.5) / 100);
+  try {
+    const active = bb.dex.getActiveMove(move.id);
+    // some handlers read the move being used from the battle
+    bb.activeMove = active;
+    bb.activePokemon = atk;
+    bb.activeTarget = def;
+    // -ate abilities, Weather Ball …: type and power are set by ModifyType / ModifyMove events
+    // before damage, as in Showdown's runMove
+    bb.singleEvent("ModifyType", active, null, atk, def, active, active);
+    bb.runEvent("ModifyType", atk, def, active, active);
+    bb.singleEvent("ModifyMove", active, null, atk, def, active, active);
+    bb.runEvent("ModifyMove", atk, def, active, active);
+    const type = active["type"] as string;
+    if (tags.abilities.typeImmunity[def.ability] === type) return 0;
+    if (active["willCrit"] === undefined) active["willCrit"] = false;
+    active["spreadHit"] = spreadTargets > 1;
+    const mh = move.multihit;
+    const hits = Array.isArray(mh) ? (atk.ability === "skilllink" ? mh[1] : 3) : (mh ?? 1);
+    let total = 0;
+    for (let h = 1; h <= hits; h++) {
+      active["hit"] = h;
+      const d = bb.actions.getDamage(atk, def, active, true);
+      if (typeof d !== "number") return 0;
+      total += d;
+    }
+    const acc = move.accuracy === true ? 1 : move.accuracy / 100;
+    return total * acc;
+  } finally {
+    [bb.activeMove, bb.activePokemon, bb.activeTarget] = savedActive;
+    bb.prng = savedPrng;
+    if (hadOwn) bb.randomizer = savedRandomizer;
+    else delete (bb as Partial<PsDamageInternals>).randomizer;
+  }
 }
 
 /** Turn order of one action as Showdown computes it (priority incl. Prankster etc., speed incl.
@@ -177,6 +249,24 @@ function threatsTo(
     }
   }
   return { worst, ko };
+}
+
+/** The foe move doing the largest fraction of `mon`'s max HP. */
+function worstMoveAgainst(
+  b: PsBattle,
+  mon: PsPokemon,
+  foes: PsPokemon[],
+  tags: EngineTags,
+  params: PolicyParams,
+): { foe: PsPokemon; move: PsMove; frac: number } | undefined {
+  let best: { foe: PsPokemon; move: PsMove; frac: number } | undefined;
+  for (const f of foes)
+    for (const ms of (f as unknown as { moveSlots: { id: string }[] }).moveSlots ?? []) {
+      const mv = b.dex.moves.get(ms.id);
+      const frac = estimateDamage(b, f, mon, mv, tags, params, 1) / mon.maxhp;
+      if (frac > 0 && (!best || frac > best.frac)) best = { foe: f, move: mv, frac };
+    }
+  return best;
 }
 
 /** Probability `mon`, acting with `order`, is not KO'd first (any single faster KO move). */
@@ -372,14 +462,31 @@ export function slotOptions(
   });
   // Voluntary switches: low base value, more attractive when this Pokémon is likely to be KO'd.
   if (!active.trapped && params["switchBase"] !== undefined) {
+    // R-5: compare the switch-in with staying in (matchup, resisting the biggest threat, Intimidate)
+    const wMatch = p(params, "switchMatchupWeight");
+    const wResist = p(params, "switchResistBonus");
+    const wIntim = p(params, "intimidateCycleBonus");
+    const mine = wMatch ? switchMatchup(b, side, me, tags, params) : 0;
+    const worst = wResist ? worstMoveAgainst(b, me, liveFoes, tags, params) : undefined;
+    const foePhysical = liveFoes.some((f) =>
+      ((f as unknown as { moveSlots?: { id: string }[] }).moveSlots ?? []).some(
+        (x) => b.dex.moves.get(x.id).category === "Physical",
+      ),
+    );
     req.side.pokemon.forEach((pk, i) => {
       if (pk.active || pk.condition.endsWith(" fnt")) return;
       const mon = side.pokemon[i];
       if (!mon) return;
-      const score =
+      let score =
         p(params, "switchBase") +
         (myThreat >= 1 ? p(params, "switchThreatBonus") : 0) +
         koFirst * p(params, "outspedSwitchBonus");
+      if (wMatch) score += wMatch * (switchMatchup(b, side, mon, tags, params) - mine);
+      if (worst) {
+        const taken = estimateDamage(b, worst.foe, mon, worst.move, tags, params, 1) / mon.maxhp;
+        if (taken <= p(params, "switchResistRatio") * worst.frac) score += wResist;
+      }
+      if (wIntim && mon.ability === "intimidate" && foePhysical) score += wIntim;
       out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score, kind: "switch" });
     });
   }
@@ -489,20 +596,94 @@ export interface DecisionTrace {
   chosen: number;
 }
 
-/** Choice for a forced switch request: send in the healthiest benched Pokémon. */
-function switchChoice(side: PsSide, req: PsRequest): string {
-  const used = new Set<number>();
-  return (req.forceSwitch ?? [])
-    .map((must) => {
-      if (!must) return "pass";
-      const idx = req.side.pokemon.findIndex(
-        (pk, i) => !pk.active && !used.has(i) && !pk.condition.endsWith(" fnt"),
+/**
+ * R-5: how well `mon` would do on the field now: the best fraction of a foe's HP it can take with
+ * one move, minus the worst fraction of its own HP a foe can take, plus the share of foes it
+ * outspeeds (weights switchOffenseWeight / switchDefenseWeight / switchSpeedWeight).
+ */
+export function switchMatchup(
+  b: PsBattle,
+  side: PsSide,
+  mon: PsPokemon,
+  tags: EngineTags,
+  params: PolicyParams,
+): number {
+  const foes = alive(side.foe.active);
+  if (foes.length === 0) return 0;
+  const moves = (m: PsPokemon) =>
+    ((m as unknown as { moveSlots?: { id: string }[] }).moveSlots ?? []).map((x) =>
+      b.dex.moves.get(x.id),
+    );
+  let offense = 0;
+  for (const f of foes)
+    for (const mv of moves(mon))
+      offense = Math.max(
+        offense,
+        Math.min(1, estimateDamage(b, mon, f, mv, tags, params, 1) / Math.max(1, f.hp)),
       );
-      if (idx < 0) return "pass";
-      used.add(idx);
-      return `switch ${idx + 1}`;
-    })
-    .join(", ");
+  let defense = 0;
+  for (const f of foes)
+    for (const mv of moves(f))
+      defense = Math.max(
+        defense,
+        Math.min(1, estimateDamage(b, f, mon, mv, tags, params, 1) / Math.max(1, mon.hp)),
+      );
+  const spe = (m: PsPokemon) => (m as unknown as { getActionSpeed(): number }).getActionSpeed();
+  const faster = foes.filter((f) => spe(mon) > spe(f)).length / foes.length;
+  return (
+    p(params, "switchOffenseWeight") * offense -
+    p(params, "switchDefenseWeight") * defense +
+    p(params, "switchSpeedWeight") * faster
+  );
+}
+
+/** Every legal answer to a forced switch request ("switch 3, pass", …). */
+export function forcedSwitchOptions(side: PsSide, req: PsRequest): string[] {
+  const bench = req.side.pokemon
+    .map((pk, i) => ({ pk, i }))
+    .filter(({ pk }) => !pk.active && !pk.condition.endsWith(" fnt"))
+    .map(({ i }) => i);
+  let out: { parts: string[]; used: number[] }[] = [{ parts: [], used: [] }];
+  for (const must of req.forceSwitch ?? []) {
+    out = out.flatMap((o) => {
+      if (!must) return [{ parts: [...o.parts, "pass"], used: o.used }];
+      const free = bench.filter((i) => !o.used.includes(i));
+      if (free.length === 0) return [{ parts: [...o.parts, "pass"], used: o.used }];
+      return free.map((i) => ({ parts: [...o.parts, `switch ${i + 1}`], used: [...o.used, i] }));
+    });
+  }
+  void side;
+  return [...new Set(out.map((o) => o.parts.join(", ")))];
+}
+
+/**
+ * Choice for a forced switch request. `forcedSwitchModel` 0: the first healthy benched Pokémon
+ * (old behaviour); 1: the switch-ins with the best matchup against the foes on the field.
+ */
+export function switchChoice(
+  b: PsBattle,
+  side: PsSide,
+  req: PsRequest,
+  tags: EngineTags,
+  params: PolicyParams,
+): string {
+  const opts = forcedSwitchOptions(side, req);
+  if (params["forcedSwitchModel"] !== 1 || opts.length <= 1) return opts[0] ?? "pass";
+  const value = new Map<number, number>();
+  const of = (i: number) => {
+    if (!value.has(i)) value.set(i, switchMatchup(b, side, side.pokemon[i]!, tags, params));
+    return value.get(i)!;
+  };
+  let best = opts[0]!;
+  let bestScore = -Infinity;
+  for (const o of opts) {
+    const score = [...o.matchAll(/switch (\d+)/g)].reduce((a, m) => a + of(Number(m[1]) - 1), 0);
+    if (score > bestScore + 1e-12) {
+      best = o;
+      bestScore = score;
+    }
+  }
+  return best;
 }
 
 /** My side (p1) plays its best guess with less randomness; the opponent keeps `temperature`. */
@@ -547,7 +728,7 @@ export function chooseFor(
 ): string {
   const req = side.activeRequest;
   if (!req || req.wait) return "";
-  if (req.forceSwitch) return switchChoice(side, req);
+  if (req.forceSwitch) return switchChoice(b, side, req, tags, params);
   if (!req.active) return "";
   const T = sideTemperature(side.id, params);
   const joints = enumerateJoints(b, side, req, tags, params).sort(byScore);

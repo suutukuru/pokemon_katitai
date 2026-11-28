@@ -5,6 +5,13 @@ import { FsPackSource } from "@ca/data/node";
 import { parseShowdown } from "@ca/ingest";
 import {
   actionOrder,
+  chooseFor,
+  estimateDamage,
+  forcedSwitchOptions,
+  markLogSent,
+  Rng,
+  switchChoice,
+  switchMatchup,
   movesFirst,
   policyDistribution,
   simContext,
@@ -149,5 +156,144 @@ describe("R-2: both slots scored together", () => {
     const ratios = joint.filter(noShared).map((j) => j.prob / indMap.get(key(j))!);
     // same up to one normalizing constant
     for (const r of ratios) expect(r / ratios[0]!).toBeCloseTo(1, 6);
+  });
+});
+
+describe("R-4: damage estimate with every modifier (Showdown's own calculation)", () => {
+  it("is within ±10% of @ca/calc (@smogon/calc) across items, boosts, screens and weather", async () => {
+    const { ChampionsCalc } = await import("@ca/calc");
+    const { PokemonSetSchema } = await import("@ca/schema");
+    const golden = (
+      await import("../../calc/test/golden/ingame-stats.json", { with: { type: "json" } })
+    ).default;
+    const calc = new ChampionsCalc(ctx.pack, ctx.spec);
+    const base = golden.members.map((m) => PokemonSetSchema.parse(m.set));
+    const params = { ...ctx.params, damageModel: 1 };
+    type Cond = {
+      name: string;
+      atkItem?: string;
+      defItem?: string;
+      boost?: number;
+      screens?: boolean;
+      weather?: "Rain" | "Sun";
+    };
+    const conds: Cond[] = [
+      { name: "plain" },
+      { name: "+1", boost: 1 },
+      { name: "screens", screens: true },
+      { name: "rain", weather: "Rain" },
+      { name: "sun", weather: "Sun" },
+      { name: "band", atkItem: "choiceband" },
+      { name: "vest", defItem: "assaultvest" },
+    ];
+    let checked = 0;
+    const bad: string[] = [];
+    for (const c of conds)
+      base.forEach((a0, i) =>
+        base.forEach((d0, j) => {
+          if (i === j) return;
+          const a = { ...a0, ...(c.atkItem ? { item: c.atkItem } : {}) };
+          const d = { ...d0, ...(c.defItem ? { item: c.defItem } : {}) };
+          const team1 = [a, ...base.filter((_, k) => k !== i)].slice(0, 4);
+          const team2 = [d, ...base.filter((_, k) => k !== j)].slice(0, 4);
+          const b = startBattle(ctx, team1, team2, [0, 1, 2, 3], [0, 1, 2, 3], 1);
+          const atk = b.sides[0].active[0]!;
+          const def = b.sides[1].active[0]!;
+          if (c.boost) Object.assign(atk.boosts, { atk: c.boost, spa: c.boost });
+          // undo lead effects (Intimidate, Drought …) so both calculators see the same state
+          if (!c.boost) Object.assign(atk.boosts, { atk: 0, spa: 0 });
+          Object.assign(def.boosts, { def: 0, spd: 0 });
+          const bb = b as unknown as {
+            field: { clearWeather(): void; setWeather(w: string, src: unknown): void };
+            sides: { addSideCondition(c: string, src: unknown): void }[];
+          };
+          bb.field.clearWeather();
+          if (c.weather) bb.field.setWeather(c.weather === "Rain" ? "raindance" : "sunnyday", atk);
+          if (c.screens) {
+            bb.sides[1]!.addSideCondition("reflect", def);
+            bb.sides[1]!.addSideCondition("lightscreen", def);
+          }
+          for (const m of a.moves) {
+            const mv = b.dex.moves.get(m);
+            if (mv.category === "Status" || Array.isArray(mv.multihit) || mv.id === "tripleaxel")
+              continue;
+            const spread = ["allAdjacentFoes", "allAdjacent"].includes(mv.target) ? 2 : 1;
+            const acc = mv.accuracy === true ? 1 : mv.accuracy / 100;
+            const ours = estimateDamage(b, atk, def, mv, tags, params, spread) / acc;
+            const r = calc.damage(
+              { set: a, ...(c.boost ? { boosts: { atk: c.boost, spa: c.boost } } : {}) },
+              { set: d },
+              m,
+              {
+                ...(c.weather ? { weather: c.weather } : {}),
+                ...(c.screens ? { defenderSide: { reflect: true, lightScreen: true } } : {}),
+              },
+            );
+            const mean = r.distribution.reduce((x, o) => x + o.damage * o.p, 0);
+            if (mean <= 0 && ours <= 0) continue;
+            checked++;
+            const ratio = ours / Math.max(1, mean);
+            if (Math.abs(ratio - 1) > 0.1)
+              bad.push(
+                `${c.name} ${a.species} ${m} → ${d.species}: ${ours.toFixed(1)} vs ${mean.toFixed(1)}`,
+              );
+          }
+        }),
+      );
+    expect(checked).toBeGreaterThan(150);
+    expect(bad).toEqual([]);
+  }, 60_000);
+});
+
+describe("R-5: switching", () => {
+  /** Play until some side has a forced switch with at least two choices. */
+  function atForcedSwitch(seed: number) {
+    for (let s = seed; s < seed + 40; s++) {
+      const b = startBattle(ctx, mine, rain, [0, 1, 2, 5], [0, 1, 2, 3], s);
+      const rng = new Rng(s);
+      for (let g = 0; g < 200 && !b.ended; g++) {
+        for (const side of b.sides) {
+          const req = side.activeRequest;
+          if (req?.forceSwitch && !side.isChoiceDone() && forcedSwitchOptions(side, req).length > 1)
+            return { b, side, req };
+        }
+        markLogSent(b);
+        for (const side of b.sides) {
+          if (b.ended || side.isChoiceDone() || !side.activeRequest || side.activeRequest.wait)
+            continue;
+          const c = chooseFor(b, side, tags, ctx.params, rng);
+          if (!b.choose(side.id, c)) b.choose(side.id, "default");
+        }
+      }
+    }
+    throw new Error("no forced switch found");
+  }
+
+  it("forced switch: every legal answer is listed; model 1 sends in the best matchup", () => {
+    const { b, side, req } = atForcedSwitch(1);
+    const opts = forcedSwitchOptions(side, req);
+    expect(new Set(opts).size).toBe(opts.length);
+    for (const o of opts) expect(o.split(", ")).toHaveLength(req.forceSwitch!.length);
+    const old = switchChoice(b, side, req, tags, { ...ctx.params, forcedSwitchModel: 0 });
+    expect(old).toBe(opts[0]);
+    const params = { ...ctx.params, forcedSwitchModel: 1 };
+    const pick = switchChoice(b, side, req, tags, params);
+    const value = (o: string) =>
+      [...o.matchAll(/switch (\d+)/g)].reduce(
+        (a, m) => a + switchMatchup(b, side, side.pokemon[Number(m[1]) - 1]!, tags, params),
+        0,
+      );
+    for (const o of opts) expect(value(pick)).toBeGreaterThanOrEqual(value(o) - 1e-9);
+    expect(b.choose(side.id, pick)).toBe(true);
+  });
+
+  it("a threatened Pokémon switches more to a teammate that resists the biggest threat", () => {
+    const b = fresh();
+    const side = b.sides[0];
+    const zero = { ...ctx.params, switchResistBonus: 0 };
+    const on2 = { ...ctx.params, switchResistBonus: 0.5, switchResistRatio: 0.9 };
+    const sw = (prm: Record<string, number>) =>
+      slotMass(policyDistribution(b, side, tags, prm, T), 0, (_c, kind) => kind === "switch");
+    expect(sw(on2)).toBeGreaterThan(sw(zero));
   });
 });

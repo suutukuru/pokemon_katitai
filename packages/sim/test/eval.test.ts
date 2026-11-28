@@ -193,3 +193,37 @@ describe("search as teacher (sim:teacher)", () => {
     expect(evaluateAgainstTeacher(ctx, data, T)).toEqual(e);
   }, 60_000);
 });
+
+describe("search as teacher: forced switches", () => {
+  it("labels forced switches that replay to the same request", async () => {
+    const { teacherBattle, evaluateAgainstTeacher, replayPosition } =
+      await import("../src/index.js");
+    const opts = { options: 6, stages: [{ rollouts: 2, keep: 1 }] };
+    const positions = [3, 4, 5, 6].flatMap((seed) =>
+      teacherBattle(
+        ctx,
+        ["a", "b"],
+        mine,
+        rain,
+        [
+          [0, 1, 2, 5],
+          [0, 1, 2, 3],
+        ],
+        seed,
+        opts,
+        ["switch"],
+      ),
+    );
+    expect(positions.length).toBeGreaterThan(0);
+    const data = { regulationId: "M-C", generator: {}, teams: { a: mine, b: rain }, positions };
+    for (const pos of positions) {
+      expect(pos.kind).toBe("switch");
+      expect(
+        replayPosition(ctx, data, pos).sides[pos.side].activeRequest?.forceSwitch,
+      ).toBeDefined();
+    }
+    const e = evaluateAgainstTeacher(ctx, data, T);
+    expect(e.forcedSwitch.n).toBe(positions.length);
+    expect(e.positions).toBe(0);
+  }, 60_000);
+});
