@@ -237,7 +237,20 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
   }
   if (sub === "eval" && args[1]) {
     const data = TeacherDatasetSchema.parse(JSON.parse(env.readText(args[1])));
-    const ev = evaluateAgainstTeacher(ctx, data, temperature);
+    // `--set key=value` (repeatable): try other weights.simulation values without editing the pack
+    const params = { ...ctx.params };
+    args.forEach((x, i) => {
+      if (x !== "--set") return;
+      const [k, v] = (args[i + 1] ?? "").split("=");
+      if (!k || v === undefined || !Number.isFinite(Number(v)) || params[k] === undefined)
+        throw new Error(`--set ${args[i + 1] ?? ""}: unknown weights.simulation key or bad number`);
+      params[k] = Number(v);
+    });
+    const ev = evaluateAgainstTeacher(
+      { ...ctx, params },
+      data,
+      params["temperature"] ?? temperature,
+    );
     const base = opt("baseline");
     const diff = base
       ? compareTeacherEvals(JSON.parse(env.readText(base)) as TeacherEval, ev)
@@ -265,6 +278,8 @@ export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io)
   io.err(
     "usage: pnpm sim:teacher build [--teams a.txt,b.txt] [--battles 2] [--scale 1] [--out f.json]",
   );
-  io.err("       pnpm sim:teacher eval <f.json> [--json] [--baseline 前回.json]");
+  io.err(
+    "       pnpm sim:teacher eval <f.json> [--json] [--baseline 前回.json] [--set key=value ...]",
+  );
   return 2;
 }

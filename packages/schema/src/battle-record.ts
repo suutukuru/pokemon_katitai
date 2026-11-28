@@ -37,7 +37,8 @@ export const RecordTurnSchema = z.object({
   state: z.tuple([z.array(RecordMonStateSchema), z.array(RecordMonStateSchema)]).optional(),
   /** Per side, per active slot. */
   actions: z.tuple([z.array(RecordSlotActionSchema), z.array(RecordSlotActionSchema)]),
-  /** Pokémon sent in after a faint at the end of this turn, per side (species). */
+  /** Pokémon sent in by switch requests during / after this turn (U-turn, Eject Button, after a
+   * faint), per side, in order (species). */
   replacements: z.tuple([z.array(IdSchema), z.array(IdSchema)]).optional(),
 });
 export type RecordTurn = z.infer<typeof RecordTurnSchema>;

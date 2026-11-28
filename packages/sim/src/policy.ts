@@ -5,6 +5,15 @@ import type { Rng } from "./rng.js";
 /** Policy parameters (weights.json `simulation`). */
 export type PolicyParams = Record<string, number>;
 
+/** Damage one option deals to one foe (for scoring both slots together). */
+export interface Hit {
+  /** index into side.foe.active */
+  foe: number;
+  dmg: number;
+  hp: number;
+  maxhp: number;
+}
+
 export interface SlotOption {
   /** Showdown choice fragment, e.g. "move 1 2 mega" or "switch 3". */
   choice: string;
@@ -13,6 +22,13 @@ export interface SlotOption {
   targetSpecies?: string;
   switchTo?: string;
   score: number;
+  /** What the damage part of `score` is made of (joint scoring re-adds it per foe). */
+  hits?: Hit[];
+  /** Probability this slot gets to act before being KO'd (R-1); damage value is weighted by it. */
+  acts?: number;
+  /** ally-hit penalty already subtracted from `score` (undone if the ally protects) */
+  allyPenalty?: number;
+  kind?: "attack" | "protect" | "switch" | "redirect" | "setup" | "status";
 }
 
 export interface JointOption {
@@ -86,26 +102,107 @@ export function estimateDamage(
   return dmg * acc;
 }
 
-/** Largest fraction of `mon`'s current HP any foe could take with one move (threat level). */
-function threatTo(
+/** Turn order of one action as Showdown computes it (priority incl. Prankster etc., speed incl.
+ * Tailwind, Trick Room, paralysis, Choice Scarf). */
+export interface ActionOrder {
+  priority: number;
+  speed: number;
+}
+
+interface PsInternals {
+  prng: { clone(): unknown };
+  getActionSpeed(a: Record<string, unknown>): void;
+  dex: { getActiveMove(id: string): unknown };
+}
+
+/** Showdown's own priority/speed for `mon` using `moveId` (no battle state or RNG is changed). */
+export function actionOrder(
   b: PsBattle,
+  mon: PsPokemon,
+  moveId: string,
+  targetLoc: number,
+): ActionOrder {
+  const bb = b as unknown as PsInternals;
+  const saved = bb.prng;
+  bb.prng = saved.clone() as PsInternals["prng"];
+  try {
+    const action: Record<string, unknown> = {
+      choice: "move",
+      move: bb.dex.getActiveMove(moveId),
+      pokemon: mon,
+      targetLoc,
+      fractionalPriority: 0,
+      order: 200,
+    };
+    bb.getActionSpeed(action);
+    return { priority: action["priority"] as number, speed: action["speed"] as number };
+  } finally {
+    bb.prng = saved;
+  }
+}
+
+/** Probability that `x` moves before `y` (speed ties are coin flips). */
+export function movesFirst(x: ActionOrder, y: ActionOrder): number {
+  if (x.priority !== y.priority) return x.priority > y.priority ? 1 : 0;
+  if (x.speed !== y.speed) return x.speed > y.speed ? 1 : 0;
+  return 0.5;
+}
+
+/** Foe position number for a targeted choice (Showdown target loc 1/2). */
+const locOf = (side: PsSide, foe: PsPokemon) => side.foe.active.indexOf(foe) + 1;
+
+/** A foe move that is expected to KO `mon`, with its turn order. */
+interface KoThreat {
+  order: ActionOrder;
+}
+
+/** Largest fraction of `mon`'s current HP any foe could take with one move, and the KO moves. */
+function threatsTo(
+  b: PsBattle,
+  side: PsSide,
   mon: PsPokemon,
   foes: PsPokemon[],
   tags: EngineTags,
   params: PolicyParams,
-): number {
+): { worst: number; ko: KoThreat[] } {
   let worst = 0;
+  const ko: KoThreat[] = [];
+  const myLoc = side.active.indexOf(mon) + 1;
   for (const f of foes) {
     for (const ms of (f as unknown as { moveSlots: { id: string }[] }).moveSlots ?? []) {
       const mv = b.dex.moves.get(ms.id);
-      worst = Math.max(worst, estimateDamage(b, f, mon, mv, tags, params, 1) / Math.max(1, mon.hp));
+      const frac = estimateDamage(b, f, mon, mv, tags, params, 1) / Math.max(1, mon.hp);
+      worst = Math.max(worst, frac);
+      if (frac >= 1) ko.push({ order: actionOrder(b, f, mv.id, myLoc) });
     }
   }
-  return worst;
+  return { worst, ko };
+}
+
+/** Probability `mon`, acting with `order`, is not KO'd first (any single faster KO move). */
+function actsBeforeKo(order: ActionOrder, ko: KoThreat[]): number {
+  let outsped = 0;
+  for (const t of ko) outsped = Math.max(outsped, movesFirst(t.order, order));
+  return 1 - outsped;
 }
 
 const alive = (xs: (PsPokemon | null)[]) =>
   xs.filter((x): x is PsPokemon => !!x && !x.fainted && x.hp > 0);
+
+/**
+ * Chance that expected damage `d` KOs a foe with `hp` left. The estimate is a mean (rolls, crits,
+ * accuracy, Protect and switching all add spread), so the KO is not 0/1 at d = hp: it rises
+ * linearly from d = hp·(1−w) to d = hp·(1+w), w = weights.simulation.koSpread.
+ */
+export function koChance(d: number, hp: number, spread: number): number {
+  if (hp <= 0) return 1;
+  if (spread <= 0) return d >= hp ? 1 : 0;
+  return Math.min(1, Math.max(0, (d / hp - (1 - spread)) / (2 * spread)));
+}
+
+/** Value of dealing `d` damage to a foe: HP fraction taken plus the KO bonus × KO chance. */
+const hitValue = (h: { hp: number; maxhp: number }, d: number, koBonus: number, spread: number) =>
+  Math.min(d, h.hp) / h.maxhp + koBonus * koChance(d, h.hp, spread);
 
 /** Score every legal option for one active slot. */
 export function slotOptions(
@@ -124,7 +221,17 @@ export function slotOptions(
   const ally = side.active[1 - slot] ?? null;
   const mega = active.canMegaEvo ? " mega" : "";
   const out: SlotOption[] = [];
-  const myThreat = threatTo(b, me, liveFoes, tags, params);
+  const threat = threatsTo(b, side, me, liveFoes, tags, params);
+  const myThreat = threat.worst;
+  const koBonus = p(params, "koBonus");
+  const discount = p(params, "outspedKoDiscount");
+  const spread = p(params, "koSpread");
+  // R-1: chance I am KO'd before a normal-priority action of mine
+  const baseOrder: ActionOrder = {
+    priority: 0,
+    speed: (me as unknown as { getActionSpeed(): number }).getActionSpeed(),
+  };
+  const koFirst = 1 - actsBeforeKo(baseOrder, threat.ko);
   active.moves.forEach((rm: PsRequestMove, i) => {
     if (rm.disabled) return;
     const dexMove = b.dex.moves.get(rm.id);
@@ -132,26 +239,56 @@ export function slotOptions(
     const mv: PsMove = { ...dexMove, target: rm.target ?? "self" };
     const n = i + 1;
     if (mv.category !== "Status") {
+      const firstFoe = liveFoes[0];
+      const order = actionOrder(b, me, mv.id, firstFoe ? locOf(side, firstFoe) : 0);
+      // R-1: damage only counts if I get to move; faster KO threats discount it.
+      const acts = 1 - discount * (1 - actsBeforeKo(order, threat.ko));
+      const prioKo = order.priority > 0 ? p(params, "priorityKoBonus") : 0;
       const dmgTo = (t: PsPokemon, k: number) => estimateDamage(b, me, t, mv, tags, params, k);
-      const value = (t: PsPokemon, d: number) =>
-        Math.min(d, t.hp) / t.maxhp + (d >= t.hp ? p(params, "koBonus") : 0);
+      const hit = (t: PsPokemon, d: number): Hit => ({
+        foe: foes.indexOf(t),
+        dmg: d,
+        hp: t.hp,
+        maxhp: t.maxhp,
+      });
+      const valueOf = (hs: Hit[]) =>
+        hs.reduce(
+          (a, h) =>
+            a +
+            acts * (hitValue(h, h.dmg, koBonus, spread) + prioKo * koChance(h.dmg, h.hp, spread)),
+          0,
+        );
       if (SPREAD_TARGETS.has(mv.target)) {
         const targets =
           mv.target === "allAdjacent"
             ? [...liveFoes, ...(ally && !ally.fainted ? [ally] : [])]
             : liveFoes;
-        let score = 0;
-        for (const t of liveFoes) score += value(t, dmgTo(t, targets.length));
-        if (mv.target === "allAdjacent" && ally && !ally.fainted)
-          score -= p(params, "allyHitPenalty") * value(ally, dmgTo(ally, targets.length));
+        const hits = liveFoes.map((t) => hit(t, dmgTo(t, targets.length)));
+        let score = valueOf(hits);
+        let allyPenalty = 0;
+        if (mv.target === "allAdjacent" && ally && !ally.fainted) {
+          allyPenalty =
+            p(params, "allyHitPenalty") *
+            hitValue(ally, dmgTo(ally, targets.length), koBonus, spread);
+          score -= allyPenalty;
+        }
         if (tags.moves.speedControl[mv.id]) score += p(params, "speedDropBonus") * liveFoes.length;
         if (mv.id === "fakeout")
           score += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
-        out.push({ choice: `move ${n}${mega}`, moveId: mv.id, score });
+        out.push({
+          choice: `move ${n}${mega}`,
+          moveId: mv.id,
+          score,
+          hits,
+          acts,
+          ...(allyPenalty ? { allyPenalty } : {}),
+          kind: "attack",
+        });
       } else if (NEEDS_TARGET.has(mv.target)) {
         foes.forEach((t, ti) => {
           if (!t || t.fainted) return;
-          let score = value(t, dmgTo(t, 1));
+          const hits = [hit(t, dmgTo(t, 1))];
+          let score = valueOf(hits);
           if (mv.id === "fakeout")
             score += me.activeMoveActions === 0 ? p(params, "fakeOutValue") : -5;
           if (tags.moves.speedControl[mv.id]) score += p(params, "speedDropBonus");
@@ -160,24 +297,39 @@ export function slotOptions(
             moveId: mv.id,
             targetSpecies: t.species.id,
             score,
+            hits,
+            acts,
+            kind: "attack",
           });
         });
       } else {
         const t = liveFoes[0];
-        if (t)
-          out.push({ choice: `move ${n}${mega}`, moveId: mv.id, score: value(t, dmgTo(t, 1)) });
+        if (t) {
+          const hits = [hit(t, dmgTo(t, 1))];
+          out.push({
+            choice: `move ${n}${mega}`,
+            moveId: mv.id,
+            score: valueOf(hits),
+            hits,
+            acts,
+            kind: "attack",
+          });
+        }
       }
       return;
     }
     // status moves
     let score = p(params, "statusMoveValue");
+    let kind: SlotOption["kind"] = "status";
     let target = "";
     if (PROTECT.has(mv.id)) {
+      kind = "protect";
       score =
         p(params, "protectBase") +
         (myThreat >= 1
           ? p(params, "protectThreatBonus")
-          : myThreat * p(params, "protectThreatBonus") * 0.5);
+          : myThreat * p(params, "protectThreatBonus") * 0.5) +
+        koFirst * p(params, "outspedProtectBonus");
       if (me.volatiles["stall"]) score -= p(params, "protectRepeatPenalty");
     } else if (mv.id === "tailwind") {
       score = side.sideConditions["tailwind"] ? -1 : p(params, "tailwindValue");
@@ -190,6 +342,7 @@ export function slotOptions(
           ? p(params, "trickRoomValue")
           : -0.3;
     } else if (tags.moves.redirection.includes(mv.id)) {
+      kind = "redirect";
       score = ally && !ally.fainted ? p(params, "redirectionValue") : -1;
     } else if (tags.moves.screens.includes(mv.id)) {
       score = side.sideConditions[mv.id] ? -1 : p(params, "screenValue");
@@ -201,6 +354,7 @@ export function slotOptions(
           : -1;
       if (sleepable[0]) target = ` ${foes.indexOf(sleepable[0]) + 1}`;
     } else if (mv.boosts && mv.target === "self") {
+      kind = "setup";
       score = p(params, "setupValue");
     } else if (mv.heal) {
       score = me.hp / me.maxhp < 0.5 ? p(params, "setupValue") * 2 : -0.5;
@@ -214,7 +368,7 @@ export function slotOptions(
       if (!ally || ally.fainted) return;
       target = ` -${2 - slot}`;
     }
-    out.push({ choice: `move ${n}${target}${mega}`, moveId: mv.id, score });
+    out.push({ choice: `move ${n}${target}${mega}`, moveId: mv.id, score, kind });
   });
   // Voluntary switches: low base value, more attractive when this Pokémon is likely to be KO'd.
   if (!active.trapped && params["switchBase"] !== undefined) {
@@ -222,8 +376,11 @@ export function slotOptions(
       if (pk.active || pk.condition.endsWith(" fnt")) return;
       const mon = side.pokemon[i];
       if (!mon) return;
-      const score = p(params, "switchBase") + (myThreat >= 1 ? p(params, "switchThreatBonus") : 0);
-      out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score });
+      const score =
+        p(params, "switchBase") +
+        (myThreat >= 1 ? p(params, "switchThreatBonus") : 0) +
+        koFirst * p(params, "outspedSwitchBonus");
+      out.push({ choice: `switch ${i + 1}`, switchTo: mon.species.id, score, kind: "switch" });
     });
   }
   if (out.length === 0) out.push({ choice: "move 1", score: 0 });
@@ -236,22 +393,90 @@ function conflicts(slots: SlotOption[]): boolean {
   return new Set(sw).size !== sw.length;
 }
 
+/**
+ * R-2: score both slots' actions together. Starts from the sum of the slot scores, then for every
+ * foe hit by both slots replaces the two separate damage values with the value of the combined
+ * damage (capped at the foe's HP, KO bonus once), penalizes attacking a foe one slot KOs alone
+ * (overkill), rewards KOs that need both (focus), undoes the ally-hit penalty when the ally
+ * protects, and rewards redirection + setup/attack.
+ */
+export function jointScore(slots: SlotOption[], params: PolicyParams): number {
+  let score = slots.reduce((a, s) => a + s.score, 0);
+  if (slots.length !== 2) return score;
+  const [x, y] = slots as [SlotOption, SlotOption];
+  const koBonus = p(params, "koBonus");
+  const spread = p(params, "koSpread");
+  const interaction = p(params, "jointInteraction");
+  const wx = x.acts ?? 1;
+  const wy = y.acts ?? 1;
+  for (const hx of x.hits ?? []) {
+    const hy = (y.hits ?? []).find((h) => h.foe === hx.foe);
+    if (!hy) continue;
+    const vx = hitValue(hx, hx.dmg, koBonus, spread);
+    const vy = hitValue(hy, hy.dmg, koBonus, spread);
+    // Each slot acts with probability w; then (sharing a target) the combined damage is worth
+    // V(dx+dy), not V(dx)+V(dy). The interaction is scaled by `jointInteraction`: an estimated KO
+    // is far from certain (misses, Protect, switches, rolls), so backup damage keeps some value.
+    const both = hitValue(hx, hx.dmg + hy.dmg, koBonus, spread);
+    score += interaction * wx * wy * (both - vx - vy);
+    // overkill: the part of the KO one slot already secures alone; focus: what only both get
+    const alone = Math.max(koChance(hx.dmg, hx.hp, spread), koChance(hy.dmg, hy.hp, spread));
+    const together = koChance(hx.dmg + hy.dmg, hx.hp, spread);
+    score -= wx * wy * p(params, "overkillPenalty") * alone;
+    score += wx * wy * p(params, "focusKoBonus") * (together - alone);
+  }
+  for (const [s, other] of [
+    [x, y],
+    [y, x],
+  ] as const) {
+    if (s.allyPenalty && other.kind === "protect")
+      score += p(params, "allyProtectRefund") * s.allyPenalty;
+    if (s.kind === "redirect" && other.kind === "setup") score += p(params, "redirectSetupBonus");
+    if (s.kind === "redirect" && other.kind === "attack") score += p(params, "redirectAttackBonus");
+  }
+  return score;
+}
+
+/** Every legal joint action with its joint score (unsorted, before mega dedupe). */
+function enumerateJoints(
+  b: PsBattle,
+  side: PsSide,
+  req: PsRequest,
+  tags: EngineTags,
+  params: PolicyParams,
+): JointOption[] {
+  const perSlot = (req.active ?? []).map((_, slot) =>
+    slotOptions(b, side, slot, req, tags, params),
+  );
+  let joint: SlotOption[][] = [[]];
+  for (const opts of perSlot) joint = joint.flatMap((j) => opts.map((o) => [...j, o]));
+  return joint
+    .filter((slots) => !conflicts(slots))
+    .map((slots) => ({
+      choice: dedupeMega(slots.map((s) => s.choice)).join(", "),
+      slots,
+      score: jointScore(slots, params),
+    }));
+}
+
+const byScore = (a: JointOption, c: JointOption) =>
+  c.score - a.score || a.choice.localeCompare(c.choice);
+
 /** Selection probabilities: softmax of the scores at the given temperature. */
-export function softmaxProbs(opts: SlotOption[], temperature: number): number[] {
+export function softmaxProbs(opts: { score: number }[], temperature: number): number[] {
   const max = Math.max(...opts.map((o) => o.score));
   const w = opts.map((o) => Math.exp((o.score - max) / Math.max(1e-6, temperature)));
   const total = w.reduce((a, x) => a + x, 0);
   return w.map((x) => x / total);
 }
 
-function softmaxPick(opts: SlotOption[], temperature: number, rng: Rng): number {
-  const probs = softmaxProbs(opts, temperature);
+function samplePick(probs: number[], rng: Rng): number {
   let r = rng.next();
-  for (let i = 0; i < opts.length; i++) {
+  for (let i = 0; i < probs.length; i++) {
     r -= probs[i]!;
     if (r <= 0) return i;
   }
-  return opts.length - 1;
+  return probs.length - 1;
 }
 
 /** One recorded decision (for battle reports). */
@@ -294,10 +519,8 @@ export interface WeightedJoint {
 }
 
 /**
- * The policy's probability distribution over joint actions at a move request (used by the
- * evaluation against real battles, sim:eval). Currently each slot is sampled independently from
- * a softmax of its own scores, so the joint is the product; joints switching both slots to the
- * same Pokémon are dropped and the rest renormalized.
+ * The policy's probability distribution over joint actions at a move request: a softmax of the
+ * joint scores (with no joint corrections this equals sampling each slot independently).
  */
 export function policyDistribution(
   b: PsBattle,
@@ -308,20 +531,12 @@ export function policyDistribution(
 ): WeightedJoint[] {
   const req = side.activeRequest;
   if (!req?.active) return [];
-  let joint: WeightedJoint[] = [{ slots: [], prob: 1 }];
-  req.active.forEach((_, slot) => {
-    const opts = slotOptions(b, side, slot, req, tags, params);
-    const probs = softmaxProbs(opts, temperature);
-    joint = joint.flatMap((j) =>
-      opts.map((o, k) => ({ slots: [...j.slots, o], prob: j.prob * probs[k]! })),
-    );
-  });
-  const legal = joint.filter((j) => !conflicts(j.slots));
-  const total = legal.reduce((a, j) => a + j.prob, 0);
-  return legal.map((j) => ({ ...j, prob: total > 0 ? j.prob / total : 0 }));
+  const joints = enumerateJoints(b, side, req, tags, params).sort(byScore);
+  const probs = softmaxProbs(joints, temperature);
+  return joints.map((j, i) => ({ slots: j.slots, prob: probs[i]! }));
 }
 
-/** Sample this turn's choice for a side. */
+/** Sample this turn's choice for a side (joint action, R-2). */
 export function chooseFor(
   b: PsBattle,
   side: PsSide,
@@ -333,34 +548,39 @@ export function chooseFor(
   const req = side.activeRequest;
   if (!req || req.wait) return "";
   if (req.forceSwitch) return switchChoice(side, req);
+  if (!req.active) return "";
   const T = sideTemperature(side.id, params);
-  const picks = (req.active ?? []).map((_, slot) => {
-    const opts = slotOptions(b, side, slot, req, tags, params);
-    const i = softmaxPick(opts, T, rng);
-    const mon = side.active[slot];
-    if (trace && mon && !mon.fainted) {
-      const probs = softmaxProbs(opts, T);
+  const joints = enumerateJoints(b, side, req, tags, params).sort(byScore);
+  if (joints.length === 0) return "default";
+  const probs = softmaxProbs(joints, T);
+  const k = samplePick(probs, rng);
+  const pick = joints[k]!;
+  if (trace) {
+    // per-slot marginals of the joint distribution, in the report's per-slot format
+    pick.slots.forEach((chosen, slot) => {
+      const mon = side.active[slot];
+      if (!mon || mon.fainted) return;
+      const marg = new Map<string, { option: SlotOption; prob: number }>();
+      joints.forEach((j, i) => {
+        const o = j.slots[slot]!;
+        const e = marg.get(o.choice) ?? { option: o, prob: 0 };
+        e.prob += probs[i]!;
+        marg.set(o.choice, e);
+      });
+      const options = [...marg.values()].sort(
+        (a, c) => c.prob - a.prob || a.option.choice.localeCompare(c.option.choice),
+      );
       trace.push({
         turn: b.turn,
         side: side.id === "p1" ? 0 : 1,
         species: mon.species.id,
         hpPct: Math.round((mon.hp / mon.maxhp) * 100),
-        options: opts.map((option, k) => ({ option, prob: probs[k]! })),
-        chosen: i,
+        options,
+        chosen: options.findIndex((o) => o.option.choice === chosen.choice),
       });
-    }
-    return opts[i]!;
-  });
-  // resolve a double switch to the same Pokémon: the later slot takes its best other option
-  if (conflicts(picks)) {
-    const req2 = req;
-    const slot = picks.length - 1;
-    const alt = slotOptions(b, side, slot, req2, tags, params).find(
-      (o) => o.choice !== picks[0]!.choice,
-    );
-    if (alt) picks[slot] = alt;
+    });
   }
-  return dedupeMega(picks.map((x) => x.choice)).join(", ");
+  return pick.choice;
 }
 
 /** Only one Mega Evolution per turn/side. */
@@ -384,20 +604,7 @@ export function jointOptions(
 ): JointOption[] {
   const req = side.activeRequest;
   if (!req?.active) return [];
-  const perSlot = req.active.map((_, slot) =>
-    slotOptions(b, side, slot, req, tags, params).slice(0, limit),
-  );
-  let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
-  for (const opts of perSlot) {
-    joint = joint.flatMap((j) =>
-      opts.map((o) => ({ choice: "", slots: [...j.slots, o], score: j.score + o.score })),
-    );
-  }
-  return joint
-    .filter((j) => !conflicts(j.slots))
-    .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
-    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice))
-    .slice(0, limit);
+  return enumerateJoints(b, side, req, tags, params).sort(byScore).slice(0, limit);
 }
 
 /**
@@ -414,23 +621,18 @@ export function searchCandidates(
 ): JointOption[] {
   const req = side.activeRequest;
   if (!req?.active) return [];
-  const perSlot = req.active.map((_, slot) => slotOptions(b, side, slot, req, tags, params));
-  let joint: JointOption[] = [{ choice: "", slots: [], score: 0 }];
-  for (const opts of perSlot)
-    joint = joint.flatMap((j) =>
-      opts.map((o) => ({ choice: "", slots: [...j.slots, o], score: j.score + o.score })),
-    );
-  const all = joint
-    .filter((j) => !conflicts(j.slots))
-    .map((j) => ({ ...j, choice: dedupeMega(j.slots.map((s) => s.choice)).join(", ") }))
-    .sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
+  const all = enumerateJoints(b, side, req, tags, params).sort(byScore);
   const picked = new Map<string, JointOption>();
   for (const j of all.slice(0, width)) picked.set(j.choice, j);
-  perSlot.forEach((opts, slot) => {
-    for (const o of opts) {
-      const best = all.find((j) => j.slots[slot]?.choice === o.choice);
-      if (best) picked.set(best.choice, best);
+  const nSlots = req.active.length;
+  for (let slot = 0; slot < nSlots; slot++) {
+    const seen = new Set<string>();
+    for (const j of all) {
+      const c = j.slots[slot]!.choice;
+      if (seen.has(c)) continue;
+      seen.add(c);
+      picked.set(j.choice, j);
     }
-  });
-  return [...picked.values()].sort((a, c) => c.score - a.score || a.choice.localeCompare(c.choice));
+  }
+  return [...picked.values()].sort(byScore);
 }

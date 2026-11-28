@@ -1,0 +1,126 @@
+{
+  "positions": 178,
+  "temperature": 0.35,
+  "actions": {
+    "slot": {
+      "n": 325,
+      "top1": 180,
+      "top3": 266,
+      "logProb": -479.3140745716753
+    },
+    "joint": {
+      "n": 178,
+      "top1": 68,
+      "top3": 108,
+      "logProb": -479.128189920564
+    },
+    "byCategory": {
+      "protect": {
+        "n": 21,
+        "top1": 8,
+        "top3": 17,
+        "logProb": -35.90464870269763
+      },
+      "fakeout": {
+        "n": 7,
+        "top1": 6,
+        "top3": 7,
+        "logProb": -10.999266288562293
+      },
+      "switch": {
+        "n": 22,
+        "top1": 0,
+        "top3": 6,
+        "logProb": -56.68280467632104
+      },
+      "speedControl": {
+        "n": 33,
+        "top1": 17,
+        "top3": 30,
+        "logProb": -49.85281959354482
+      },
+      "attack": {
+        "n": 229,
+        "top1": 148,
+        "top3": 197,
+        "logProb": -299.76017606085196
+      },
+      "other": {
+        "n": 13,
+        "top1": 1,
+        "top3": 9,
+        "logProb": -26.114359249697685
+      },
+      "focus": {
+        "n": 23,
+        "top1": 9,
+        "top3": 13,
+        "logProb": -61.654127445335455
+      }
+    },
+    "unmatched": 0,
+    "unknown": 0
+  },
+  "rates": {
+    "slot": {
+      "n": 325,
+      "top1": 0.5538,
+      "top3": 0.8185,
+      "meanLogProb": -1.4748
+    },
+    "joint": {
+      "n": 178,
+      "top1": 0.382,
+      "top3": 0.6067,
+      "meanLogProb": -2.6917
+    },
+    "byCategory": {
+      "protect": {
+        "n": 21,
+        "top1": 0.381,
+        "top3": 0.8095,
+        "meanLogProb": -1.7097
+      },
+      "fakeout": {
+        "n": 7,
+        "top1": 0.8571,
+        "top3": 1,
+        "meanLogProb": -1.5713
+      },
+      "switch": {
+        "n": 22,
+        "top1": 0,
+        "top3": 0.2727,
+        "meanLogProb": -2.5765
+      },
+      "speedControl": {
+        "n": 33,
+        "top1": 0.5152,
+        "top3": 0.9091,
+        "meanLogProb": -1.5107
+      },
+      "attack": {
+        "n": 229,
+        "top1": 0.6463,
+        "top3": 0.8603,
+        "meanLogProb": -1.309
+      },
+      "other": {
+        "n": 13,
+        "top1": 0.0769,
+        "top3": 0.6923,
+        "meanLogProb": -2.0088
+      },
+      "focus": {
+        "n": 23,
+        "top1": 0.3913,
+        "top3": 0.5652,
+        "meanLogProb": -2.6806
+      }
+    }
+  },
+  "meanBestRate": 0.623,
+  "meanPolicyRate": 0.4572,
+  "meanRegret": 0.1659,
+  "coverage": 0.9729
+}

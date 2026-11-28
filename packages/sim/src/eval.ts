@@ -336,25 +336,33 @@ export function evaluateActions(
     formMap = new Map(
       battle.sides.flatMap((sd) => sd.pokemon.map((m) => [m.species.id, setSpecies(m)] as const)),
     );
-    const choices: string[] = [];
+    /** per side, per slot: the choice to apply, or alternatives to try in turn (unknown actions) */
+    const choices: string[][][] = [];
     for (const s of [0, 1] as const) {
       const side = battle.sides[s];
       const req = side.activeRequest;
       if (!req?.active || req.wait || req.forceSwitch) {
-        choices.push("default");
+        choices.push([["default"]]);
         continue;
       }
       const dist = policyDistribution(battle, side, tags, ctx.params, temperature);
       const acts = turn.actions[s];
       const nSlots = req.active.length;
-      // map record actions (alive slots in order) to request slots
+      // map record actions to request slots: by species when the turn's state is known (the
+      // reconstruction may hold the same two Pokémon in swapped positions), else in slot order
       const slotActs: (RecordSlotAction | null)[] = [];
+      const st = turn.state?.[s];
       let k = 0;
       for (let i = 0; i < nSlots; i++) {
         const mon = side.active[i];
-        slotActs.push(mon && !mon.fainted ? (acts[k++] ?? { unknown: true }) : null);
+        if (!mon || mon.fainted) {
+          slotActs.push(null);
+          continue;
+        }
+        const at = st ? st.findIndex((m) => m.species === setSpecies(mon)) : k++;
+        slotActs.push(acts[at] ?? { unknown: true });
       }
-      const picks: string[] = [];
+      const picks: string[][] = [];
       const matchSets: (Set<string> | null)[] = [];
       slotActs.forEach((a, i) => {
         const marg = new Map<string, { o: SlotOption; p: number }>();
@@ -364,22 +372,31 @@ export function evaluateActions(
           e.p += j.prob;
           marg.set(o.choice, e);
         }
-        const top = [...marg.values()].sort((x, y) => y.p - x.p)[0];
+        const ranked = [...marg.values()].sort((x, y) => y.p - x.p);
+        const top = ranked[0];
+        // an unobserved action: try the policy's options in order until the turn's outcome
+        // agrees with the record (a priority KO it never made would otherwise derail the replay)
+        // (a switch is always visible in a log, so an unobserved action is never one)
+        const alternatives = [
+          ...new Set(
+            ranked.filter((e) => !e.o.switchTo).map((e) => e.o.choice.replace(/ mega$/, "")),
+          ),
+        ];
         if (!a || "pass" in a) {
-          picks.push(top?.o.choice ?? "pass");
+          picks.push([top?.o.choice ?? "pass"]);
           matchSets.push(null);
           return;
         }
         if ("unknown" in a) {
           metrics.unknown++;
-          picks.push((top?.o.choice ?? "default").replace(/ mega$/, ""));
+          picks.push(alternatives.length ? alternatives : ["default"]);
           matchSets.push(null);
           return;
         }
         const ms = [...marg.values()].filter((e) => matches(e.o, a));
         if (ms.length === 0) {
           metrics.unmatched++;
-          picks.push((top?.o.choice ?? "default").replace(/ mega$/, ""));
+          picks.push(alternatives.length ? alternatives : ["default"]);
           matchSets.push(null);
           return;
         }
@@ -390,7 +407,7 @@ export function evaluateActions(
         addTo(metrics.slot, rank, p);
         addTo(metrics.byCategory[categoryOf(a, tags, battle)], rank, p);
         matchSets.push(new Set(ms.map((e) => e.o.choice)));
-        picks.push(choiceFor(dist, i, a, !!req.active![i]?.canMegaEvo) ?? "default");
+        picks.push([choiceFor(dist, i, a, !!req.active![i]?.canMegaEvo) ?? "default"]);
       });
       // joint: only when every live slot's action is known
       const live = slotActs.map((a, i) => ({ a, i })).filter((x) => x.a && !("pass" in x.a));
@@ -418,8 +435,21 @@ export function evaluateActions(
         )
           addTo(metrics.byCategory.focus, rank, p);
       }
-      choices.push(dedupe(picks).join(", "));
+      choices.push(picks);
     }
+    // mixed-radix over every side's alternatives: attempt k picks one combination
+    const choiceAt = (s: 0 | 1, attempt: number) => {
+      let k = attempt;
+      for (const side of [0, 1] as const) {
+        const parts = choices[side]!.map((alts) => {
+          const c = alts[k % alts.length]!;
+          k = Math.floor(k / alts.length);
+          return c;
+        });
+        if (side === s) return dedupe(parts).join(", ");
+      }
+      return "default";
+    };
     // Run the turn. Our dice differ from the real battle's, so when the outcome (who is active
     // next turn, whether the battle ended) disagrees with the record, retry the turn from the same
     // position with other dice (weights.simulation.evalReplayRetries).
@@ -433,7 +463,7 @@ export function evaluateActions(
       for (const s of [0, 1] as const) {
         const id = s === 0 ? "p1" : "p2";
         if (battle.sides[s].isChoiceDone()) continue;
-        if (!battle.choose(id, choices[s]!)) battle.choose(id, "default");
+        if (!battle.choose(id, choiceAt(s, attempt))) battle.choose(id, "default");
       }
       replacements[0] = [...(turn.replacements?.[0] ?? [])];
       replacements[1] = [...(turn.replacements?.[1] ?? [])];

@@ -60,6 +60,8 @@ export function parseShowdownReplayLog(log: string): ParsedReplayLog {
   /** Active slots at the start of the current turn (null = empty), for slot → state index. */
   let turnActive: [(string | null)[], (string | null)[]] = [[], []];
   const key = (side: 0 | 1, name: string) => `${side}:${name}`;
+  /** each Pokémon's last recorded move action (to fill a charge turn's target) */
+  const lastMove = new Map<string, RecordSlotAction>();
 
   const finishTurn = () => {
     if (!st.cur) return;
@@ -136,9 +138,18 @@ export function parseShowdownReplayLog(log: string): ParsedReplayLog {
           brought[id.side].push(prev?.species ?? species);
         if (st.cur && tag === "switch") {
           const si = stateIndex(id.side, id.slot);
-          if (afterUpkeep) st.cur.replacements![id.side].push(prev?.species ?? species);
-          else if (active[id.side][id.slot] !== null && !actions[id.side][si])
-            actions[id.side][si] = { switch: prev?.species ?? species };
+          const sp = prev?.species ?? species;
+          const fromEffect = [a3, ...rest].some((x) => x?.startsWith("[from]"));
+          // a choice: the slot is occupied and has not acted yet; anything else answers a
+          // switch request (U-turn, Eject Button, after a faint) and is kept in order
+          if (
+            !afterUpkeep &&
+            !fromEffect &&
+            active[id.side][id.slot] !== null &&
+            !actions[id.side][si]
+          )
+            actions[id.side][si] = { switch: sp };
+          else st.cur.replacements![id.side].push(sp);
         }
         active[id.side][id.slot] = id.name;
         break;
@@ -162,11 +173,25 @@ export function parseShowdownReplayLog(log: string): ParsedReplayLog {
           tgt && slotName && !spread && !(tgt.side === id.side && tgt.slot === id.slot)
             ? mons.get(key(tgt.side, slotName))?.species
             : undefined;
-        actions[id.side][si] = {
-          move: toID(a2 ?? ""),
+        const moveId = toID(a2 ?? "");
+        // 2nd turn of a charge move: the target chosen on the charge turn shows only now
+        const charged = lastMove.get(key(id.side, id.name));
+        if (
+          extra.includes("[from] lockedmove") &&
+          target &&
+          charged &&
+          "move" in charged &&
+          charged.move === moveId &&
+          !charged.target
+        )
+          charged.target = target;
+        const act: RecordSlotAction = {
+          move: moveId,
           ...(target ? { target } : {}),
           ...(megaPending[id.side][si] ? { mega: true } : {}),
         };
+        actions[id.side][si] = act;
+        lastMove.set(key(id.side, id.name), act);
         break;
       }
       case "-mega": {

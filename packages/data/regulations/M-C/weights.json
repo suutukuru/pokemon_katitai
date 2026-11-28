@@ -119,6 +119,17 @@
     "searchKeep3": 1,
     "switchBase": 0.05,
     "switchThreatBonus": 0.3,
-    "evalReplayRetries": 64
+    "evalReplayRetries": 64,
+    "outspedKoDiscount": 0,
+    "outspedProtectBonus": 0,
+    "outspedSwitchBonus": 0.1,
+    "priorityKoBonus": 0,
+    "overkillPenalty": 0,
+    "focusKoBonus": 0,
+    "redirectSetupBonus": 0,
+    "redirectAttackBonus": 0,
+    "koSpread": 0,
+    "jointInteraction": 0,
+    "allyProtectRefund": 0
   }
 }

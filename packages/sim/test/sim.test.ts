@@ -249,7 +249,7 @@ describe("what-if replay analysis", () => {
       expect(t.whatIf!.filter((w) => w.chosen)).toHaveLength(1);
       for (const w of t.whatIf!) {
         expect(w.games).toBe(2);
-        expect(w.slots.every((s) => s.species !== "")).toBe(true);
+        expect(w.slots.every((s) => s.species !== "" || !s.moveId)).toBe(true);
       }
     }
     expect(r.members.filter((m) => m.side === 0)).toHaveLength(4);
