@@ -52,6 +52,7 @@ pnpm report:meta <自分.txt> [--top 10]           # 上位構築との結果を
 pnpm report:battle <自分.txt> <相手|pokedb:M-7:4> [--games 30]  # 1戦ごとの中身（評価値・選ぶ確率・出来事・HP）を画像に
 pnpm report:replay <自分.txt> <相手|pokedb:M-7:68> [--pick lose|win] [--rollouts 16]  # 1戦を操作できる再生ページ(HTML1枚)＋各ターンの「もしこう動いていたら」勝率
 pnpm sim:eval <記録.json|records/> [--json] [--baseline 前回.json] [--no-selection]  # 方針が実戦の行動・選出をどれだけ当てるか（ADR-0011）
+pnpm sim:teacher eval docs/sim-eval/teacher-positions.json --baseline docs/sim-eval/baseline-teacher.json  # 記録が無い間の物差し: 方針と探索（先生役）の一致・期待勝率
 pnpm report:book <自分.txt> [--top 10]           # 上位構築すべてと「両者が毎ターン勝率最大の行動を選ぶ」対戦をして、全部を1つのHTMLで再生
 pnpm team:fill <下書き.txt> --candidates a,b,c [--top 6]  # 残り枠の候補ペアを上位構築との勝率で比較
 pnpm data:import-smogon <chaos.json> --month YYYY-MM  # Smogon 使用率(手動で一度だけ保存)→ usage/<reg>/
@@ -93,7 +94,7 @@ pnpm e2e                                         # Playwright（Pixel 7 表示�
 ## 自分のパーティ・相手のパーティ
 
 - `my-teams/*.txt` に自分のパーティ（コピーして改造案を作る）、`opponents/*.txt` に対策したい構築（技構成込み）。
-- `records/*.json` に実戦の対戦記録（手入力 or 自分で保存した Showdown ログ。形式は `records/README.md`）。方針を変えたら `pnpm sim:eval records/ --baseline docs/sim-eval/baseline.json` で前後比較し、悪化した変更は取り込まない。
+- `records/*.json` に実戦の対戦記録（手入力 or 自分で保存した Showdown ログ。形式は `records/README.md`）。方針を変えたら `pnpm sim:eval records/ --baseline docs/sim-eval/baseline.json` で前後比較し、悪化した変更は取り込まない。記録が無い間は `pnpm sim:teacher eval`（`docs/sim-eval/README.md`）で比べる。
 - シミュレーションの予算・行動方針の重みは `weights.json` の `simulation`。`--scale 2` で全段階の対戦数を2倍に。
 
 ## 外部データの扱い

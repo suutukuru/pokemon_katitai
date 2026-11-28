@@ -8,3 +8,4 @@ export * from "./i18n.js";
 export * from "./engine-data.js";
 export * from "./teamdb.js";
 export * from "./battle-record.js";
+export * from "./teacher.js";

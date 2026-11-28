@@ -1,6 +1,6 @@
 // Node-only: run battle jobs across worker threads (`@ca/sim/pool`).
 import { Worker } from "node:worker_threads";
-import type { PokemonSet } from "@ca/schema";
+import type { PokemonSet, TeacherPosition } from "@ca/schema";
 import type { BattleJob, Executor } from "./analyze.js";
 import type { BattleResult } from "./runner.js";
 import type { ReplayData } from "./replay.js";
@@ -95,6 +95,57 @@ export async function runBestPlayPool(
             w.on("message", onMsg);
             w.once("error", reject);
             w.postMessage({ id: i, best: tasks[i] });
+          });
+          onDone?.(i);
+        }
+      }),
+    );
+  } finally {
+    await Promise.all(pool.map((w) => w.terminate()));
+  }
+  return results;
+}
+
+export interface TeacherTask {
+  teams: [string, string];
+  a: PokemonSet[];
+  b: PokemonSet[];
+  configs: [[number, number, number, number], [number, number, number, number]];
+  seed: number;
+  opts: SearchOptions;
+}
+
+/** Label positions with the search in parallel (one battle per worker at a time); task order kept. */
+export async function runTeacherPool(
+  regulationId: string,
+  tasks: TeacherTask[],
+  workers: number,
+  onDone?: (i: number) => void,
+): Promise<TeacherPosition[][]> {
+  const pool = Array.from(
+    { length: Math.max(1, Math.min(workers, tasks.length)) },
+    () =>
+      new Worker(new URL("./worker.ts", import.meta.url), {
+        workerData: { regulationId, mine: [], theirs: [] },
+        execArgv: ["--import", "tsx"],
+      }),
+  );
+  const results: TeacherPosition[][] = new Array<TeacherPosition[]>(tasks.length);
+  let next = 0;
+  try {
+    await Promise.all(
+      pool.map(async (w) => {
+        while (next < tasks.length) {
+          const i = next++;
+          results[i] = await new Promise<TeacherPosition[]>((resolve, reject) => {
+            const onMsg = (msg: { id: number; results: TeacherPosition[] }) => {
+              if (msg.id !== i) return;
+              w.off("message", onMsg);
+              resolve(msg.results);
+            };
+            w.on("message", onMsg);
+            w.once("error", reject);
+            w.postMessage({ id: i, teacher: tasks[i] });
           });
           onDone?.(i);
         }

@@ -1,5 +1,19 @@
-import { BattleRecordSchema } from "@ca/schema";
 import {
+  BattleRecordSchema,
+  TeacherDatasetSchema,
+  type PokemonSet,
+  type TeacherDataset,
+  type TeacherPosition,
+} from "@ca/schema";
+import { parseShowdown } from "@ca/ingest";
+import type { TeacherTask } from "@ca/sim/pool";
+import {
+  allConfigs,
+  compareTeacherEvals,
+  evaluateAgainstTeacher,
+  mixSeed,
+  searchOptionsFrom,
+  type TeacherEval,
   analyzeMatchup,
   budgetFrom,
   compareSummaries,
@@ -143,4 +157,114 @@ export async function simEvalCommand(args: string[], env: EvalEnv, io: Io): Prom
     }
   }
   return 0;
+}
+
+export interface TeacherEnv extends EvalEnv {
+  runTeacher: (tasks: TeacherTask[], onDone: (i: number) => void) => Promise<TeacherPosition[][]>;
+  writeText: (path: string, text: string) => void;
+}
+
+const TEACHER_DEFAULT_TEAMS = [
+  "packages/data/teams/samples/user-team-1.txt",
+  "packages/data/teams/samples/sample-rain.txt",
+  "packages/data/teams/samples/sample-trickroom.txt",
+];
+
+/**
+ * `sim:teacher build [--teams a.txt,b.txt,..] [--battles 2] [--scale 1] [--seed 1] [--out f.json]`
+ * `sim:teacher eval <f.json> [--json] [--baseline 前回.json]`
+ */
+export async function simTeacherCommand(args: string[], env: TeacherEnv, io: Io): Promise<number> {
+  const opt = (k: string) => {
+    const i = args.indexOf(`--${k}`);
+    return i >= 0 ? args[i + 1] : undefined;
+  };
+  const ctx = simContext(env.pack, env.spec);
+  const temperature = ctx.params["temperature"];
+  if (temperature === undefined) throw new Error("weights.simulation.temperature is missing");
+  const sub = args[0];
+  if (sub === "build") {
+    const files = (opt("teams") ?? TEACHER_DEFAULT_TEAMS.join(",")).split(",");
+    const legal = { legal: { species: env.pack.legal.species, items: env.pack.legal.items } };
+    const teams: Record<string, PokemonSet[]> = {};
+    for (const f of files) {
+      const key = f.replace(/^.*\//, "").replace(/\.txt$/, "");
+      teams[key] = parseShowdown(env.readText(f), legal).members;
+    }
+    const keys = Object.keys(teams).sort();
+    const battles = Number(opt("battles") ?? 2);
+    const scale = Number(opt("scale") ?? 1);
+    const seed = Number(opt("seed") ?? 1);
+    const opts = searchOptionsFrom(ctx.params, scale);
+    const tasks: TeacherTask[] = [];
+    keys.forEach((ka, i) =>
+      keys.forEach((kb, j) => {
+        if (i === j) return;
+        const ca = allConfigs(teams[ka]!.length, env.pack.rules.bringCount);
+        const cb = allConfigs(teams[kb]!.length, env.pack.rules.bringCount);
+        for (let k = 0; k < battles; k++) {
+          const s = mixSeed(seed, i, j, k);
+          tasks.push({
+            teams: [ka, kb],
+            a: teams[ka]!,
+            b: teams[kb]!,
+            configs: [ca[s % ca.length]!, cb[(s >>> 8) % cb.length]!],
+            seed: s,
+            opts,
+          });
+        }
+      }),
+    );
+    io.err(`… ${tasks.length}戦を探索でラベル付け（search scale ${scale}）`);
+    let done = 0;
+    const res = await env.runTeacher(tasks, () => io.err(`  ${++done}/${tasks.length}`));
+    const data: TeacherDataset = {
+      regulationId: env.pack.id,
+      generator: {
+        searchWidth: opts.options,
+        stages: opts.stages.map((s) => `${s.rollouts}/${s.keep}`).join(" "),
+        battles: tasks.length,
+        seed,
+        temperature,
+      },
+      teams,
+      positions: res.flat(),
+    };
+    const out = opt("out") ?? "docs/sim-eval/teacher-positions.json";
+    env.writeText(out, JSON.stringify(data) + "\n");
+    io.out(`${data.positions.length}局面を ${out} に書きました`);
+    return 0;
+  }
+  if (sub === "eval" && args[1]) {
+    const data = TeacherDatasetSchema.parse(JSON.parse(env.readText(args[1])));
+    const ev = evaluateAgainstTeacher(ctx, data, temperature);
+    const base = opt("baseline");
+    const diff = base
+      ? compareTeacherEvals(JSON.parse(env.readText(base)) as TeacherEval, ev)
+      : undefined;
+    if (args.includes("--json")) io.out(JSON.stringify(diff ? { ...ev, diff } : ev, null, 2));
+    else {
+      io.out(`方針と探索（先生役）の比較（${ev.positions}局面、温度 ${ev.temperature}）`);
+      io.out(row("1匹ごと", ev.rates.slot));
+      io.out(row("2匹まとめて", ev.rates.joint));
+      for (const [k, t] of Object.entries(ev.rates.byCategory))
+        if (t.n) io.out(row(CATEGORY_JA[k] ?? k, t));
+      io.out(
+        `  探索の最善手の勝率 ${pct(ev.meanBestRate)} / 方針の期待勝率 ${pct(ev.meanPolicyRate)}（失う勝率 ${pct(ev.meanRegret)}、探索が評価した候補に乗った確率 ${pct(ev.coverage)}）`,
+      );
+      if (diff) {
+        io.out(`■ 基準値（${base}）との比較（後 − 前）`);
+        for (const d of diff)
+          io.out(
+            `  ${d.metric.padEnd(28)} ${d.before.toFixed(4)} → ${d.after.toFixed(4)}  (${d.delta >= 0 ? "+" : ""}${d.delta.toFixed(4)})`,
+          );
+      }
+    }
+    return 0;
+  }
+  io.err(
+    "usage: pnpm sim:teacher build [--teams a.txt,b.txt] [--battles 2] [--scale 1] [--out f.json]",
+  );
+  io.err("       pnpm sim:teacher eval <f.json> [--json] [--baseline 前回.json]");
+  return 2;
 }

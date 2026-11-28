@@ -26,6 +26,7 @@
     "sim": "tsx packages/cli/src/bin.ts sim",
     "sim:meta": "tsx packages/cli/src/bin.ts sim:meta",
     "sim:eval": "tsx packages/cli/src/bin.ts sim:eval",
+    "sim:teacher": "tsx packages/cli/src/bin.ts sim:teacher",
     "report:meta": "tsx packages/cli/src/bin.ts report:meta",
     "team:fill": "tsx packages/cli/src/bin.ts team:fill",
     "report:book": "tsx packages/cli/src/bin.ts report:book",

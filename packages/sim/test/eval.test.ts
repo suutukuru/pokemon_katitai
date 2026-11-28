@@ -153,3 +153,43 @@ describe("policy evaluation against records (sim:eval)", () => {
     });
   });
 });
+
+describe("search as teacher (sim:teacher)", () => {
+  it("labels positions that replay exactly, and the evaluation is deterministic", async () => {
+    const { teacherBattle, evaluateAgainstTeacher, replayPosition } =
+      await import("../src/index.js");
+    const opts = {
+      options: 6,
+      stages: [
+        { rollouts: 1, keep: 2 },
+        { rollouts: 2, keep: 1 },
+      ],
+    };
+    const positions = teacherBattle(
+      ctx,
+      ["a", "b"],
+      mine,
+      rain,
+      [
+        [0, 1, 2, 5],
+        [0, 1, 2, 3],
+      ],
+      5,
+      opts,
+    );
+    expect(positions.length).toBeGreaterThan(2);
+    const data = { regulationId: "M-C", generator: {}, teams: { a: mine, b: rain }, positions };
+    for (const pos of positions) {
+      const b = replayPosition(ctx, data, pos);
+      expect(b.turn).toBe(pos.turn);
+      expect(b.sides[pos.side].activeRequest?.active).toBeDefined();
+      expect(pos.candidates.some((c) => c.choice === pos.best)).toBe(true);
+    }
+    const e = evaluateAgainstTeacher(ctx, data, T);
+    expect(e.positions).toBe(positions.length);
+    expect(e.actions.joint.n).toBe(positions.length);
+    expect(e.coverage).toBeGreaterThan(0.5);
+    expect(e.meanRegret).toBeGreaterThanOrEqual(-1);
+    expect(evaluateAgainstTeacher(ctx, data, T)).toEqual(e);
+  }, 60_000);
+});

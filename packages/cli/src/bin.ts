@@ -4,7 +4,7 @@ import { gameSpec, loadPack, PackValidationError } from "@ca/data";
 import { FsPackSource, readTeamDbFiles, readUsageSnapshots } from "@ca/data/node";
 import { metaCommand } from "./meta-commands.js";
 import { runSimMeta, simCommand, simMetaCommand, type SimEnv } from "./sim-commands.js";
-import { simEvalCommand } from "./eval-commands.js";
+import { simEvalCommand, simTeacherCommand } from "./eval-commands.js";
 import { renderMetaReport } from "./report.js";
 import { renderBattleReport } from "./battle-report.js";
 import {
@@ -32,7 +32,7 @@ import { mkdirSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { basename, resolve as resolvePath } from "node:path";
 import { parseShowdown } from "@ca/ingest";
 import { baseDex, dexWithNewSpecies, displayName, estimateTeam, queryTeams } from "@ca/data";
-import { runBestPlayPool, workerPoolExecutor } from "@ca/sim/pool";
+import { runBestPlayPool, runTeacherPool, workerPoolExecutor } from "@ca/sim/pool";
 import { cpus } from "node:os";
 import { calcCommand, teamCheck, type TeamEnv } from "./team-commands.js";
 import { regDiff, regNew, regValidate, type Io } from "./commands.js";
@@ -140,6 +140,25 @@ try {
               .map((f) => resolvePath(p, f))
           : [p];
       code = await simEvalCommand(args, { ...simEnv(args), listRecordFiles }, io);
+      break;
+    }
+    case "sim:teacher": {
+      const env = simEnv(args);
+      const wi = args.indexOf("--workers");
+      const workers = wi >= 0 ? Number(args[wi + 1]) : Math.max(1, cpus().length);
+      code = await simTeacherCommand(
+        args,
+        {
+          ...env,
+          listRecordFiles: (p) => [p],
+          runTeacher: (tasks, onDone) => runTeacherPool(env.pack.id, tasks, workers, onDone),
+          writeText: (p, t) => {
+            mkdirSync(resolvePath(p, ".."), { recursive: true });
+            writeFileSync(p, t);
+          },
+        },
+        io,
+      );
       break;
     }
     case "report:meta": {

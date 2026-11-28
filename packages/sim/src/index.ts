@@ -8,3 +8,4 @@ export * from "./trace.js";
 export * from "./replay.js";
 export * from "./bestplay.js";
 export * from "./eval.js";
+export * from "./teacher.js";

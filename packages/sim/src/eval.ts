@@ -36,8 +36,8 @@ export interface Tally {
   /** sum of ln(p(actual)) */
   logProb: number;
 }
-const tally = (): Tally => ({ n: 0, top1: 0, top3: 0, logProb: 0 });
-function addTo(t: Tally, rank: number, prob: number) {
+export const tally = (): Tally => ({ n: 0, top1: 0, top3: 0, logProb: 0 });
+export function addTo(t: Tally, rank: number, prob: number) {
   t.n++;
   if (rank === 1) t.top1++;
   if (rank <= 3) t.top3++;
@@ -61,7 +61,7 @@ export interface ActionMetrics {
   /** slots whose action is not observable (flinch, sleep, fainted first …) */
   unknown: number;
 }
-const actionMetrics = (): ActionMetrics => ({
+export const actionMetrics = (): ActionMetrics => ({
   slot: tally(),
   joint: tally(),
   byCategory: Object.fromEntries(
@@ -136,7 +136,7 @@ export interface EvalRates {
   byCategory: Record<string, TallyRates>;
 }
 
-const r4 = (x: number) => Math.round(x * 1e4) / 1e4;
+export const r4 = (x: number) => Math.round(x * 1e4) / 1e4;
 export const tallyRates = (t: Tally): TallyRates => ({
   n: t.n,
   top1: t.n ? r4(t.top1 / t.n) : 0,
@@ -215,7 +215,8 @@ function matches(o: SlotOption, a: RecordSlotAction): boolean {
 }
 
 /** 1-based rank of `value` among `all` (ties count in the actual action's favour). */
-const rankOf = (value: number, all: number[]) => 1 + all.filter((x) => x > value + 1e-12).length;
+export const rankOf = (value: number, all: number[]) =>
+  1 + all.filter((x) => x > value + 1e-12).length;
 
 function syncState(
   side: PsSide,
